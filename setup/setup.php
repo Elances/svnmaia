@@ -4,6 +4,12 @@ header("content-type:text/html; charset=gb2312");
 $_SESSION['role']='admin';
 error_reporting(0);
 $succ='disabled';
+//检测系统配置
+if(!function_exists('mysql_connect'))
+	$sys='<strong>Error</strong>:检测到php不支持mysql，请在安装编译php时开启--with-mysql参数；并确认php.ini加载了php_mysql模块<br>';
+$php_v=phpversion();
+if(($php_v{0})<5)
+	$sys .= "<strong>Error</strong>:php版本太低($php_v)，程序无法正常运行<br>";
 if(!empty($_POST['dbname']))
 {
 	$server=$_POST['server'];
@@ -19,7 +25,7 @@ if(!empty($_POST['dbname']))
 		exit;
 	}
 	include('../include/basefunction.php');
-	$svnpasswd= cryptMD5Pass($svnpasswd);
+	$svnpasswd= cryptMD5Pass($svnpasswd);	
 	$mlink=mysql_connect($server,$dbuser,$dbpasswd);
 	$conn_error=mysql_error();
  	$sql_enc = "set names 'utf8'";
@@ -171,6 +177,13 @@ legend{color:#1E7ACE;padding:3px 20px;border:2px solid #A4CDF2;background:#FFFFF
 <br>详情参阅<a href='http://www.scmbbs.com/cn/maia/2009/5/maia001.php'>Maia SVN 管理系统安装说明</a>
 <br>&nbsp;
 </div>
+<?php
+if(!empty($sys))
+{
+	$notsucc='disabled';	
+	echo "<div style='color:red;'>系统检测到如下错误，请先修正：<br>".$sys.'</div>';
+}
+?>
 <div id='step1'>
 <form method='post' action='' name='formconf'>
 <fieldset>
