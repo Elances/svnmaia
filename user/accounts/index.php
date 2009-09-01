@@ -10,7 +10,7 @@ header("content-type:text/html; charset=gb2312");
 				 有，则显示修改密码界面，传入给chpasswd.php；生成user和某字符串的加密签名参数
 */
 include('../../../../config.inc');
-$mlink=mysql_connect(SERVER,USERNAME2,PASSWORD2) or die("数据库链接失败！请联系<a href='mailto:yahoo-scm@list.alibaba-inc.com'>管理员</a>");
+$mlink=mysql_connect(SERVER,USERNAME2,PASSWORD2) or die("数据库链接失败！请联系管理员");
 if (!mysql_select_db(DBNAME))
 {
   exit;

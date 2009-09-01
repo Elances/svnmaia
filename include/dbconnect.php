@@ -1,5 +1,5 @@
 <?php
-	$mlink=mysql_connect(SERVER,USERNAME2,PASSWORD2) or die("数据库链接失败！请联系<a href='mailto:yahoo-scm@list.alibaba-inc.com'>管理员</a>");
+	$mlink=mysql_connect(SERVER,USERNAME2,PASSWORD2) or die("数据库链接失败！请联系管理员");
 	mysql_select_db(DBNAME) or die("不能选择数据库！");
 //	mysql_query("SET NAMES UTF8"); 
 $program_char='gbk';
