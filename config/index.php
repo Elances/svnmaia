@@ -43,6 +43,10 @@ $err_svn="<span class='err'><strong>Error:</strong>$v file not found!</span>";
 	if($para=='svn'){
 		if(is_file($v))$v=dirname($v).'/';
 	}
+	if($para=='smtp_passwd')
+	{
+		$v=base64_encode($v);
+	}
 			$para=mysql_real_escape_string($para);	
 			$v="'".mysql_real_escape_string($v)."'";
 			$query="update svnauth_para set value=$v where para=\"$para\"";
@@ -79,8 +83,18 @@ $err_svn="<span class='err'><strong>Error:</strong>$v file not found!</span>";
 	$para_array['email_ext']='@yahoo.com.cn';
 	$para_array['svnurl']='http://'.$_SERVER['HTTP_HOST'];
 	$para_array['svnparentpath']='/home/svn/repos/';
+	$para_array['smtp_port']='25';
 	while (($result)and($row= mysql_fetch_array($result, MYSQL_BOTH))) {
 		$para_array[$row['para']]=$row['value'];
+		if($row['para']=='smtp_passwd')
+		{
+			$para_array[$row['para']]=base64_decode($row['value']);
+		}
+		if($row['para']=='use_smtp_authz')
+		{
+			if($row['value']=='true')$smtp_authz='checked';
+		}
+		
 	}
 }else{
 	echo "Error:不能选择数据库!".DBNAME;
@@ -92,6 +106,7 @@ br{clear:both;}
 .st{margin-left:10px;}
 .ft{background:#B6C6D6;text-align:center;margin:20px 0 20px 0;}
 .rt{position:absolute;left:480px;}
+.rt2{position:absolute;left:520px;}
 .sf{color:blue;font-size:10pt;CURSOR:pointer;background:#FFFFCC;}
 .err{color:red;}
 </style>
@@ -110,6 +125,13 @@ function showreadme(myid)
 {
 	if(document.getElementById(myid).style.display=="none")
 	  document.getElementById(myid).style.display ='inline'
+	else
+	  document.getElementById(myid).style.display = "none";
+}
+function showadvance(myid)
+{
+	if(document.getElementById(myid).style.display=="none")
+	  document.getElementById(myid).style.display =''
 	else
 	  document.getElementById(myid).style.display = "none";
 }
@@ -135,7 +157,15 @@ function showreadme(myid)
 
 <br>7、邮件设置: 
 <br>&nbsp;&nbsp;&nbsp;&nbsp;smtp_server:<input type='text' class='ipt'  readonly name='smtp_server' id='smtp_server'  value="<?php echo $para_array['smtp_server'];?>"> <span class='rt'> <a href="#" onclick="modify('smtp_server')">修改</a></span>
-<br>&nbsp;&nbsp;&nbsp;&nbsp;sendmail:
+<span class='rt2'><input type='button' onclick="showadvance('email_advance')" value='高级' /></span>
+<span id='email_advance' style='display:none;padding-left:20px;line-height:25px;'>
+<br>&nbsp;&nbsp;&nbsp;<input type='checkbox' name='use_smtp_authz' value='true' <?php echo $smtp_authz ?> id='use_authz' onclick="showadvance('smtp_authz')"><label for='use_authz'>SMTP需要认证</label>
+<div id='smtp_authz' style='display:none;'>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;SMTP认证用户名：<input class='ipt'  type='text' name='smtp_user'  value="<?php echo $para_array['smtp_user'];?>">
+<br>&nbsp;&nbsp;&nbsp;&nbsp;SMTP认证密码：<input class='ipt'  type='password' name='smtp_passwd'  value="<?php echo $para_array['smtp_passwd'];?>">
+</div>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;SMTP端口 <input class='ipt'  type='text' name='smtp_port'  value="<?php echo $para_array['smtp_port'];?>">
+</span>
 </div>
 <br>
 <h3>权限设置</h3>
