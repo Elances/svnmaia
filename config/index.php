@@ -14,39 +14,42 @@ include('../../../config.inc');
 include('../include/dbconnect.php');
 if (mysql_select_db(DBNAME))
 {
+	$flag=false;
+	$display='none';
 	if(!empty($_POST['accessfile']))
 	{
 		$file_str="<?php \n";
 		foreach($_POST as $para=>$v)
 		{
-	if(!file_exists($v))
+			if(!file_exists($v))
 				switch($para)
-			{
-			case 'accessfile':
-			 $err_acc="<span class='err'><strong>Error:</strong>$v file not found!</span>";
+				{
+				case 'accessfile':
+			 	$err_acc="<span class='err'><strong>Error:</strong>$v file not found!</span>";
 				break;
-			case 'passwdfile':
-$err_pass="<span class='err'><strong>Error:</strong>$v file not found!</span>";
+				case 'passwdfile':
+					$err_pass="<span class='err'><strong>Error:</strong>$v file not found!</span>";
 				break;
 				case 'htpasswd':
 					if($v!='htpasswd')
-$err_htpa="<span class='err'><strong>Error:</strong>$v file not found!</span>";
+				$err_htpa="<span class='err'><strong>Error:</strong>$v file not found!</span>";
 				break;
 				case 'svnparentpath':
-$err_svnpath="<span class='err'><strong>Error:</strong>$v file not found!</span>";
+				$err_svnpath="<span class='err'><strong>Error:</strong>$v file not found!</span>";
 				case 'svn':
 					if(!empty($v))
-$err_svn="<span class='err'><strong>Error:</strong>$v file not found!</span>";
+					$err_svn="<span class='err'><strong>Error:</strong>$v file not found!</span>";
 				break;
 
+				}
+			if($para=='svn'){
+					if(is_file($v))$v=dirname($v).'/';
 			}
-	if($para=='svn'){
-		if(is_file($v))$v=dirname($v).'/';
-	}
-	if($para=='smtp_passwd')
-	{
-		$v=base64_encode($v);
-	}
+			if($para=='smtp_passwd')
+			{
+					$v=base64_encode($v);
+			}
+			if($para=='use_smtp_authz')$flag=true;
 			$para=mysql_real_escape_string($para);	
 			$v="'".mysql_real_escape_string($v)."'";
 			$query="update svnauth_para set value=$v where para=\"$para\"";
@@ -57,7 +60,6 @@ $err_svn="<span class='err'><strong>Error:</strong>$v file not found!</span>";
 				mysql_query($query);
 			}
 			$file_str .= "\${$para}=$v;\n";
-		
 		}
 		//生成配置文件
 		$file_str .="?>\n";
@@ -68,6 +70,11 @@ $err_svn="<span class='err'><strong>Error:</strong>$v file not found!</span>";
     		}
 		fclose($handle);
 		echo "<script>window.alert('保存成功！')</script>";
+		if(!$flag)
+		{
+			$query="update svnauth_para set value='false' where para='use_smtp_authz'";
+			mysql_query($query);
+		}
 	}
 	//*****列出para参数
 	$query="select para,value from svnauth_para";
@@ -90,11 +97,11 @@ $err_svn="<span class='err'><strong>Error:</strong>$v file not found!</span>";
 		{
 			$para_array[$row['para']]=base64_decode($row['value']);
 		}
-		if($row['para']=='use_smtp_authz')
+		if(($row['para']=='use_smtp_authz')and($row['value']=='true'))
 		{
-			if($row['value']=='true')$smtp_authz='checked';
+			$smtp_authz='checked';
+			$display='';
 		}
-		
 	}
 }else{
 	echo "Error:不能选择数据库!".DBNAME;
@@ -158,9 +165,9 @@ function showadvance(myid)
 <br>7、邮件设置: 
 <br>&nbsp;&nbsp;&nbsp;&nbsp;smtp_server:<input type='text' class='ipt'  readonly name='smtp_server' id='smtp_server'  value="<?php echo $para_array['smtp_server'];?>"> <span class='rt'> <a href="#" onclick="modify('smtp_server')">修改</a></span>
 <span class='rt2'><input type='button' onclick="showadvance('email_advance')" value='高级' /></span>
-<span id='email_advance' style='display:none;padding-left:20px;line-height:25px;'>
+<span id='email_advance' style='display:<?php echo $display ?>;padding-left:20px;line-height:25px;'>
 <br>&nbsp;&nbsp;&nbsp;<input type='checkbox' name='use_smtp_authz' value='true' <?php echo $smtp_authz ?> id='use_authz' onclick="showadvance('smtp_authz')"><label for='use_authz'>SMTP需要认证</label>
-<div id='smtp_authz' style='display:none;'>
+<div id='smtp_authz' style='display:<?php echo $display ?>;'>
 <br>&nbsp;&nbsp;&nbsp;&nbsp;SMTP认证用户名：<input class='ipt'  type='text' name='smtp_user'  value="<?php echo $para_array['smtp_user'];?>">
 <br>&nbsp;&nbsp;&nbsp;&nbsp;SMTP认证密码：<input class='ipt'  type='password' name='smtp_passwd'  value="<?php echo $para_array['smtp_passwd'];?>">
 </div>
