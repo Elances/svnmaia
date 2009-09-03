@@ -2,13 +2,13 @@
 	    
 function send_mail($to, $subject = 'No subject', $body) {
     include(dirname(__FILE__).'/../config/config.php');
-    $loc_host = "svn server";         //发信计算机名，可随意
-    $smtp_acc = $smtp_user; //Smtp认证的用户名，类似scm@scmbbs.com，或者scm
-    $smtp_pass=$smtp_passwd;
-    $smtp_host=$smtp_server;   //SMTP服务器地址，类似 smtp.tom.com
-    if(empty($from))$from="svn-info".$email_ext;     //发信人Email地址，你的发信信箱地址
-    if (!strstr($to,'@'))$to=$to.$email_ext;
-  $headers = "Content-Type: text/plain; charset=\"utf8\"\r\nContent-Transfer-Encoding: base64";
+    $loc_host = "xuejiang";         //发信计算机名，可随意
+    $smtp_acc = "$smtp_user"; //Smtp认证的用户名，类似scm@scmbbs.com，或者scm
+    $smtp_pass=base64_decode($smtp_passwd);       //Smtp认证的密码，一般等同pop3密码
+
+    $smtp_host="$smtp_server";   //SMTP服务器地址，类似 smtp.tom.com
+    $from=$smtp_acc.'@'.$smtp_host;    
+  $headers = "Content-Type: text/plain; charset=\"gb2312\"\r\nContent-Transfer-Encoding: base64";
   $lb="\r\n";             //linebreak
         
     $hdr = explode($lb,$headers);   //解析后的hdr
@@ -22,7 +22,7 @@ function send_mail($to, $subject = 'No subject', $body) {
           //3、发送经过Base64编码的用户名，期待返回334
           array(base64_encode($smtp_acc).$lb,"334","AUTHENTIFICATION error : "),
           //4、发送经过Base64编码的密码，期待返回235
-          array($smtp_pass.$lb,"235","AUTHENTIFICATION error : "));
+          array(base64_encode($smtp_pass).$lb,"235","AUTHENTIFICATION error : "));	  
     //5、发送Mail From，期待返回250
     $smtp[] = array("MAIL FROM: <".$from.">".$lb,"250","MAIL FROM error: ");
     //6、发送Rcpt To。期待返回250
@@ -41,7 +41,7 @@ function send_mail($to, $subject = 'No subject', $body) {
     //8.4、发送一个空行，结束Header发送
     $smtp[] = array($lb,"","");
     //8.5、发送信件主体
-    if($bdy) {foreach($bdy as $b) {$smtp[] = array($b.$lb,"","");}}
+    if($bdy) {foreach($bdy as $b) {$smtp[] = array(base64_encode($b.$lb).$lb,"","");}}
     //9、发送“.”表示信件结束，期待返回250
     $smtp[] = array(".".$lb,"250","DATA(end)error: ");
     //10、发送Quit，退出，期待返回221
