@@ -7,7 +7,8 @@ function send_mail($to, $subject = 'No subject', $body) {
     $smtp_pass=base64_decode($smtp_passwd);       //Smtp认证的密码，一般等同pop3密码
 
     $smtp_host="$smtp_server";   //SMTP服务器地址，类似 smtp.tom.com
-    $from=$smtp_acc.'@'.$smtp_host;    
+    $from=$email_from;
+    if(empty($from))$from='svn-info@'.$smtp_host;    
   $headers = "Content-Type: text/plain; charset=\"gb2312\"\r\nContent-Transfer-Encoding: base64";
   $lb="\r\n";             //linebreak
         

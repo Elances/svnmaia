@@ -185,6 +185,7 @@ function showadvance(myid)
 <h3>公司邮箱</h3>
 <div class='st'>
 <br>邮箱后缀：<input type='text' readonly name='email_ext' id='email_ext' class='ipt' value="<?php echo $para_array['email_ext'];?>"> <span class='rt'><a href="#" onclick="modify('email_ext')">修改</a></span>
+<br>系统管理员邮箱：<input type='text' readonly name='email_from' id='email_from' class='ipt' value="<?php echo $para_array['email_from'];?>"> <span class='rt'><a href="#" onclick="modify('email_from')">修改</a></span>
 </div>
 <div class='ft'>
 <input type='submit' value='提交保存'>
