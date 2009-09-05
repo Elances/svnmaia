@@ -1,14 +1,18 @@
 <?php
 session_start();
-if(!isset($_SESSION['role']))exit;
-header("Content-Type: text/xml;  charset=gb2312");
+header("Content-Type: text/xml;  charset=utf-8");
 $d=$_GET['parentId'];
 $path=escapeshellcmd($_GET['d']);
 include('../config/config.php');
-echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
+echo "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
 echo "<tree>";
 if($d == '0')
 {
+	if(!isset($_SESSION['role']))
+	{
+		echo '</tree>';
+		exit;
+	}
     $sp = opendir( $svnparentpath );
     if( $sp ) {
 	    $id=1;
@@ -27,6 +31,11 @@ if($d == '0')
 
 }else
 {
+	if(!isset($_SESSION['role']))
+	{
+		echo '</tree>';
+		exit;
+	}
 	$dirs_arr=array();
 	$localurl=($svnparentpath{0}=='/')?("file://$svnparentpath/$path"):("file:///$svnparentpath/$path");
 	$svnlist=exec("{$svn}svn list ".$localurl,$dirs_arr);
@@ -35,8 +44,21 @@ if($d == '0')
 	{
 		if($dir{strlen($dir)-1}=='/')
 		{
+			if(substr_count($dir,'?\\')>1)
+			{
+				$pattern = '/\?\\\(\d{3})/i';
+				preg_match_all($pattern,$dir,$out);
+				foreach($out[0] as $key =>$bitde)
+				{
+					$hexbit=dechex($out[1][$key]);
+					$dir=str_replace($bitde,'%'.$hexbit,$dir);
+				}
+				$dir = urldecode($dir);
+			} 
 			$url2="../priv/dirpriv.php?d=$path/$dir";
 			$url="./tree.php?d=$path/$dir";
+		//	$url=htmlentities($url);
+		//	$url2=htmlentities($url2);
 			echo"<tree src=\"$url\" target=\"rt1\" action=\"$url2\" text=\"$dir\"/>\n";
 		    $i++;
 		}
