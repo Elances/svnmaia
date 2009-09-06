@@ -2,7 +2,8 @@
 session_start();
 header("Content-Type: text/xml;  charset=utf-8");
 $d=$_GET['parentId'];
-$path=escapeshellcmd($_GET['d']);
+$path=urlencode(escapeshellcmd($_GET['d']));
+$path=str_replace('%2F','/',$path);
 include('../config/config.php');
 echo "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
 echo "<tree>";
@@ -53,12 +54,11 @@ if($d == '0')
 					$hexbit=dechex($out[1][$key]);
 					$dir=str_replace($bitde,'%'.$hexbit,$dir);
 				}
+				$dir_utf=$dir;
 				$dir = urldecode($dir);
 			} 
 			$url2="../priv/dirpriv.php?d=$path/$dir";
-			$url="./tree.php?d=$path/$dir";
-		//	$url=htmlentities($url);
-		//	$url2=htmlentities($url2);
+			$url="./tree.php?d=$path/$dir_utf";
 			echo"<tree src=\"$url\" target=\"rt1\" action=\"$url2\" text=\"$dir\"/>\n";
 		    $i++;
 		}
