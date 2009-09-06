@@ -45,6 +45,7 @@ if($d == '0')
 	{
 		if($dir{strlen($dir)-1}=='/')
 		{
+			$dir_utf=$dir;
 			if(substr_count($dir,'?\\')>1)
 			{
 				$pattern = '/\?\\\(\d{3})/i';
@@ -57,8 +58,9 @@ if($d == '0')
 				$dir_utf=$dir;
 				$dir = urldecode($dir);
 			} 
-			$url2="../priv/dirpriv.php?d=$path/$dir";
 			$url="./tree.php?d=$path/$dir_utf";
+			$path_raw=urldecode($path);
+			$url2="../priv/dirpriv.php?d=$path_raw/$dir";
 			echo"<tree src=\"$url\" target=\"rt1\" action=\"$url2\" text=\"$dir\"/>\n";
 		    $i++;
 		}
