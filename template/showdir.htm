@@ -1,12 +1,13 @@
 <script language="javascript">
 <!--
 var valueChanged=0;
-function adduser(divid,fromObj,toObj)
+var clned=0;
+function adduser(divid,fromObj,toObj,myflag)
 {
 	if(document.getElementById(divid).style.display !="block")
 	{
 		document.getElementById(divid).style.display="block";
-		return false;
+		if(myflag=='')return false;
 	}
 	var canObj=document.privform.elements[fromObj];
 	var detObj=document.privform.elements[toObj];
@@ -21,7 +22,8 @@ function adduser(divid,fromObj,toObj)
 			valueChanged=1;
 		}
 			
-	}	
+	}
+	if(myflag==1)return false;
 	if(sel != true )alert('请在右边选择您要添加的用户！');
 
 }
@@ -204,6 +206,57 @@ function privcopy()
 	if(document.getElementById('fromdir').value =='')return false;
 	privform.submit();
 }
+function closeopen(toclose,toopen)
+{
+	document.getElementById(toopen).style.display="block";
+	document.getElementById(toclose).style.display="none";
+}
+function searchuser(textObj,seln,myflag)
+{
+	var str=textObj;
+	var desObj=document.privform.elements[seln];	
+	for(var i=0;i<desObj.length;i++)
+	{
+		if(myflag==1)
+		{
+			desObj[i].selected='';
+			continue;
+		}
+		if(desObj[i].value == '')continue
+		var ss=	desObj[i].innerHTML;
+		if(ss.search(str)>=0){
+			desObj[i].selected="selected";
+			return true;
+		}
+	}
+}
+function batchadd()
+{
+	var str=document.getElementById('batchinput').value;
+	var founduser = false;
+	ss=str.split(/[;, \n\r]/);
+	searchuser('','candidate[]',1);
+	for(var i=0;i<ss.length;i++)
+	{
+		if(ss[i] == '')continue;
+		if (searchuser(ss[i],'candidate[]',''))
+		{
+			str=str.replace(ss[i] ,'');
+			founduser = true;
+		}
+	}
+	document.getElementById('batchinput').value=str;
+	adduser('rtdiv','candidate[]','permission_detail[]',1);
+	if(! founduser)alert('这些用户不存在，请确认输入是否正确！');
+}
+function cleartip()
+{
+	if (clned != 0)return 0;
+	clned=1;
+	document.getElementById('batchinput').value='';
+	document.getElementById('batchinput').style.background="yellow"
+
+}
 
 -->
 </script>
@@ -249,7 +302,7 @@ function privcopy()
 </td><td>
 <div class='ct'>
 	<br><br>
-	<p><input type='button' value='<< add user' onclick="adduser('rtdiv','candidate[]','permission_detail[]')"></p>
+	<p><input type='button' value='<< add user' onclick="adduser('rtdiv','candidate[]','permission_detail[]','')"></p>
 	<p><input type='button' value='>> del user' onclick="deluser('candidate[]','permission_detail[]')"></p>
 	<p><input type='button' value='提交保存' class='subBtn' onclick="saveit('det')"></p>
 <div style="[Maiasvn:authz]">
@@ -275,6 +328,7 @@ function privcopy()
 </select>
 </div>
 <div style='float:right;line-height:30px;'>
+&nbsp;&nbsp;<a href='#' onclick="closeopen('rtdiv','batchdiv')">批量添加用户</a>
 	<fieldset>
 		<legend>复制目录权限</legend>
 	<p>从目录：
@@ -282,6 +336,11 @@ function privcopy()
 	<br><button type=button onclick='privcopy()'>复制权限</button>至当前目录</p>
 	</fieldset>
 </div>
+</div>
+<div class='rt' id='batchdiv'>
+	<img src='../img/close.bmp' ALT='close' style='float:right;' onclick="closeopen('batchdiv','rtdiv')">
+	<textarea id='batchinput' rows=13 cols=24 onfocus="cleartip()">提示：多用户名之间请用分号';'或','或空格' '进行分割。</textarea>
+	<button type=button onclick='batchadd()'>添加</button>
 </div>
 </td></tr></table>
 </fieldset>
@@ -302,7 +361,7 @@ function privcopy()
 </div>
 <div class='ct2'>
 	<br>
-	<p><input type='button' value='<< 添加管理员' onclick="adduser('rtdiv2','nomanager[]','manager[]')"></p>
+	<p><input type='button' value='<< 添加管理员' onclick="adduser('rtdiv2','nomanager[]','manager[]','')"></p>
 	<p><input type='button' value='>> 删除管理员' onclick="deluser('nomanager[]','manager[]')"></p>
 	<p><input type='button' value='提交保存' class='subBtn' onclick="saveit('admin')"></p>
 </div>
