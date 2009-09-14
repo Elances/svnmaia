@@ -12,7 +12,7 @@ header("content-type:text/html; charset=gb2312");
 $user=stripslashes(trim($_POST["user"]));
 $sig=stripslashes($_POST["sig"]);
 $para_str=stripslashes($_POST["para"]);
-$newpasswd=escapeshellcmd($_POST['pswd']);
+$newpasswd=($_POST['pswd']);
 $newpasswd1=trim($_POST['pswd0']);
 include('../../../../config.inc');
 include('../../include/basefunction.php');
@@ -62,7 +62,7 @@ if (mysql_affected_rows($mlink) == 0){
 		exit;
 }else
 {
-	exec($cmdpath.' -m -b '. $pwdpath . ' '.$usr.' '.$newpasswd);
+	exec($cmdpath.' -m -b '. $pwdpath . ' '.$usr.' '.$passwd1);
  $query="delete from svn_chpwd  where username=\"$usr\";";
 	mysql_query($query);
   echo "<script>window.alert(\"√‹¬Î÷ÿ÷√≥…π¶£°°°\")</script>"; 

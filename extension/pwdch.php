@@ -42,8 +42,6 @@ if($totalnum>0){
 		mysql_query($query);
 		$err=mysql_error();
 		if (empty($err)){
-			$passwd0=escapeshellcmd($passwd0);
-			$usr=escapeshellcmd($usr);
 	          exec($cmdpath.' -m -b '. $pwdpath . ' '.$usr.' '.$passwd0);
 	//echo  ($cmdpath.' -m -b '. $pwdpath . ' '.$usr.' '.$passwd);
   	         echo "<script>window.alert(\"密码更改成功！　\")</script>"; 
