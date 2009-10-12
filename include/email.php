@@ -10,6 +10,7 @@ function send_mail($to, $subject = 'No subject', $body) {
     $from=$email_from;
     if(empty($from))$from='svn-info@'.$smtp_host;    
   $headers = "Content-Type: text/plain; charset=\"gb2312\"\r\nContent-Transfer-Encoding: base64";
+    //  $headers = "Content-Type: text/plain; charset=\"utf8\"\r\nContent-Transfer-Encoding: 16bit"; //如果企业邮箱是16位编码的，用这个
   $lb="\r\n";             //linebreak
         
     $hdr = explode($lb,$headers);   //解析后的hdr
