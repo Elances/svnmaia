@@ -17,7 +17,7 @@ $addr=$_SERVER['REMOTE_ADDR'];
 include('../../../config.inc');
 $sig=md5($ss.SECRET_KEY.$addr);
 @header("Location:../user/accounts/pwdhelp.php?ss=$ss&sig=$sig&salt=$salt");
-echo "<script>../user/accounts/pwdhelp.php?ss=$ss&sig=$sig&salt=$salt</script>";
+echo "<script>setTimeout('document.location.href=\"../user/accounts/pwdhelp.php?ss=$ss&sig=$sig&salt=$salt\"',0)</script>";
 ?>
 <script lang=javascript>
 	function DelCookie(name) {
