@@ -1,8 +1,14 @@
 <?php
 session_start();
-header("Content-Type: text/xml;  charset=utf-8");
 $d=$_GET['parentId'];
-$path=urlencode(escapeshellcmd($_GET['d']));
+if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+	$path=escapeshellcmd($_GET['d']);
+	header("Content-Type: text/xml;  charset=gb2312");
+}else
+{
+	$path=urlencode(escapeshellcmd($_GET['d']));
+	header("Content-Type: text/xml;  charset=utf-8");
+}
 $path=str_replace('%2F','/',$path);
 include('../config/config.php');
 echo "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
