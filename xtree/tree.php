@@ -51,7 +51,7 @@ if($d == '0')
 	{
 		if($dir{strlen($dir)-1}=='/')
 		{
-			$dir_utf=$dir;
+			$dir_utf=urlencode($dir);
 			if(substr_count($dir,'?\\')>1)
 			{
 				$pattern = '/\?\\\(\d{3})/i';
