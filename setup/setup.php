@@ -66,6 +66,16 @@ CREATE TABLE IF NOT EXISTS `svnauth_user` (
 ) ENGINE=MyISAM $encode ;";
 	mysql_query($query);
 		$usertb_err=mysql_error();
+	//create group table
+		$query="
+CREATE TABLE IF NOT EXISTS `svnauth_group` (
+  `group_id` int(11) NOT NULL auto_increment,
+  `group_name` varchar(40) NOT NULL  UNIQUE,
+  `user_id` int(11) default NULL,
+  PRIMARY KEY  (`group_id`),
+  UNIQUE KEY  (`group_name`,`user_id`),
+) ENGINE=MyISAM $encode ;";
+	mysql_query($query);
 		//create permission table
 		$query="CREATE TABLE IF NOT EXISTS `svnauth_permission` (
   `user_id` varchar(40) NOT NULL,
@@ -74,6 +84,16 @@ CREATE TABLE IF NOT EXISTS `svnauth_user` (
   `permission` varchar(1) NOT NULL,
   `expire` date,
   PRIMARY KEY  (`user_id`,`repository`,`path`,`permission`)
+) ENGINE=MyISAM $encode ;";
+		mysql_query($query);
+	//create group_permission table
+		$query="CREATE TABLE IF NOT EXISTS `svnauth_g_permission` (
+  `group_id` varchar(40) NOT NULL,
+  `repository` varchar(20) NOT NULL,
+  `path` varchar(255) NOT NULL,
+  `permission` varchar(1) NOT NULL,
+  `expire` date,
+  PRIMARY KEY  (`group_id`,`repository`,`path`)
 ) ENGINE=MyISAM $encode ;";
 		mysql_query($query);
 		$perstb_err=mysql_error();

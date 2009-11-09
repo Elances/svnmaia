@@ -347,9 +347,43 @@ function cleartip()
 <input type='hidden' name='repos' value='[Maiasvn:repos]'>
 <input type='hidden' name='path' value='[Maiasvn:path]'>
 <input type='hidden' name='sig' value='[Maiasvn:sig]'>
+<!-- =================================================   -->
+<!-- =============================================== -->
+<h3>组权限</h3>
+<div>
+<select name="group_detail[]" MULTIPLE size=13 class='detsl' onchange="showpriv()"><option value='' >-权限----组名-------</option>
+	[Maiasvn:g_dirprive]
+</select>
+</div>
 
-
-
+<div class='ct'>
+	<br><br>
+	<p><input type='button' value='<< add group' onclick="adduser('g_rtdiv','g_candidate[]','group_detail[]','')"></p>
+	<p><input type='button' value='>> del group' onclick="deluser('g_candidate[]','group_detail[]')"></p>
+	<p><input type='button' value='提交保存' class='subBtn' onclick="saveit('det')"></p>
+	<p><a href=''>组详情</a></p>
+ <div style="[Maiasvn:authz]">
+  <fieldset class='fset'>
+  <legend>组权限</legend>
+  <input type='radio' name='setright'  id='g_setwrite' onclick="rightset('w')"/><label for='g_setwrite'>写权限 </label>
+  <br><input type='radio' name='setright'  id='g_setread' onclick="rightset('r')"/><label for='g_setread'>读权限 </label>
+  <br><input type='radio' name='setright'  id='g_setnone' onclick="rightset('n')"/><label for='g_setnone'>无权限 </label>
+  </fieldset>
+  <p>有效期:<input type='text' style="width:40" name='expire' maxlength=4 onkeyup='setexpire()'>天
+  </p>
+ </div>
+</div>
+<div class='rt' id='g_rtdiv'>
+	<img src='../img/close.bmp' ALT='close' style='float:right;' onclick="document.getElementById('g_rtdiv').style.display='none'">
+	<div style='float:left'>
+	<input type='text' id='g_search2' class='sbar' onkeyup="search('g_search2','g_candidate[]')"/><input type='button' value='定位组' onclick="search('g_search2','g_candidate[]')"><br>
+<select name="g_candidate[]" MULTIPLE size=13 class='cansl'><option value='' label='--请选择--'>-权限----候选组列表--</option>
+[Maiasvn:g_candidate]
+ </select>
+         </div>
+</div>
+<!-- =================================================   -->
+<!-- =================================================   -->
 <h2>[Maiasvn:dir]目录管理员</h2>
 	<fieldset>
 <div class='lf'>
