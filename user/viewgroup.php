@@ -41,10 +41,41 @@ ul, li{
 <?php
 include('../../../config.inc');
 include('../include/dbconnect.php');
-
-
+if (!((isset($_SESSION['username']))and($_SESSION['role']=="admin"))){ 
+	include('../template/footer.tmpl');
+	exit;
+}
+$query="select group_id,group_name from svnauth_group";
+$result = mysql_query($query);
+	echo  <<<SCMBBS
+	<form method="post" action="group_modify.php" name='groupform' onsubmit="return fCheck($ii)">	
+		<table>
+	   <tr>
+	  <td width="40"></td>
+		<td><input name="action" type=submit value="删除" onclick="return confirm('确实要删除这些组吗?');"></td>	
+	   </tr>
+	</table>
+	
+	<table class=detail cellpadding=5px>
+	  <tr class=title>
+	     <td></td><td>组名</td><td></td>
+	  </tr>
+SCMBBS;
+$i=0;
+while (($result)and($row= mysql_fetch_array($result, MYSQL_BOTH))) {
+		//定义行的颜色相隔
+	if ($tr_class=="trc1"){
+		$tr_class="trc2";
+	}else
+	{			
+		$tr_class="trc1";
+	}
+	$group_id=$row['group_id'];
+	$group_name=$row['group_name'];
+	echo "<tr class=$tr_class><td><input  name=\"groupArray[$i]\"  id=\"groupArray[$i]\"  value=\"$group_id\" type=checkbox></td><td>$group_name</td><td><a href='viewgroup.php?gid=$group_id'></a></td></tr>";
+}
+echo "</table>";
 ?>
-
 </body>
 </html>
 

@@ -179,10 +179,12 @@ if ($handle) {
       	    	     	  	$user=trim($user);
 				//找出组成员插入表中
 				if(empty($uid_array[$user]))continue;
-      	    	         $query="insert into svnauth_permission (repository,path,user_id,permission,expire) values (\"$repos\",\"$path\",$uid_array[$user],\"$pm\",\"$expire\")";
-    //  	    	         echo "<br>$query";
-      	    	         mysql_query($query);
-      	    		}
+				# $query="insert into svnauth_permission (repository,path,user_id,permission,expire) values (\"$repos\",\"$path\",$uid_array[$user],\"$pm\",\"$expire\")";
+				$query="insert into svnauth_group(group_name,user_id) values (\"$goru\",$uid_array[$user])";
+				mysql_query($query);
+			
+			  }
+		
       	    	     }
       	    	     //判断是否groupinfo的键名，如果是，则找出改组成员。
       	    	     if(array_key_exists($goru,$groupinfo)){
@@ -190,11 +192,16 @@ if ($handle) {
       	    	     //找出组成员插入表中
 				$user=trim($user);
 				if(empty($uid_array[$user]))continue;
-      	    	         $query="insert into svnauth_permission (repository,path,user_id,permission,expire) values (\"$repos\",\"$path\",$uid_array[$user],\"$pm\",\"$expire\")";
-  //    	    		 echo "<br>$query<br>";
+				$query="insert into svnauth_group(group_name,user_id) values (\"$goru\",$uid_array[$user])";      	    	      
       	    		 mysql_query($query);
       	    		}
-      	    	     }
+		     }
+		     $query="select group_id from svnauth_group where group_name=\'$goru\'";
+		     $myresult=mysql_query($query);
+		     $gid=mysql_result($myresult,0);
+	$query="insert into svnauth_g_permission (repository,path,group_id,permission,expire) values (\"$repos\",\"$path\",$gid,\"$pm\",\"$expire\")";
+    //  	    	         echo "<br>$query";
+      	    	        mysql_query($query);
       	    	   }else
       	    	   {
 			$goru=trim($goru);
