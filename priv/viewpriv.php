@@ -96,3 +96,20 @@ while (($result)and($row= mysql_fetch_array($result, MYSQL_BOTH))) {
 	echo "<tr class=$tr_class><td>$path</td><td>$permission</td><td>$act</td></tr>";
 }
 echo "</table>";
+$query="select svnauth_group.group_name,svnauth_group.group_id from svnauth_groupuser,svnauth_group where svnauth_groupuser.group_id=svnauth_group.group_id and svnauth_groupuser.user_id = $user_id";
+$result = mysql_query($query);
+echo "<h4>所在权限组:</h4>";
+echo "<table>";
+$querystr=$_SERVER['QUERY_STRING'];
+while (($result)and($row= mysql_fetch_array($result, MYSQL_BOTH))) {
+	$groupname=$row['group_name'];
+	$gid=$row['group_id'];
+	if ($tr_class=="trc1"){
+		$tr_class="trc2";
+	}else
+	{			
+		$tr_class="trc1";
+	}
+	echo "<tr class=$tr_class><td><a href='../user/viewgroup.php?gid=$gid&grp=$groupname&fromurl=../priv/viewpriv.php?$querystr>$groupname</a></td></tr>";
+}
+echo "</table>";
