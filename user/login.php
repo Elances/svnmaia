@@ -62,7 +62,16 @@ if($totalnum>0){
 $query="select repository,path from svnauth_dir_admin where svnauth_dir_admin.user_id=\"$user_id\"";
 $result =mysql_query($query);
 $num=mysql_num_rows($result);
-if(($num > 0)and($_SESSION['role']=='user'))$_SESSION['role']='diradmin';
+if(($num > 0)and($_SESSION['role']=='user'))
+{
+  $_SESSION['role']='diradmin';
+  while (($result)and($row= mysql_fetch_array($result, MYSQL_BOTH))) {
+	$repos=$row['repository'];
+	$path=$row['path'];
+	$_SESSION['dir'][]=$repos.$path;
+ } 
+  //print_r($_SESSION['dir']);
+}
 echo "<script>history.go(-2);</script>";
 
 

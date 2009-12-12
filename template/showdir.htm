@@ -261,7 +261,7 @@ function cleartip()
 -->
 </script>
 <style type='text/css'>
-.fset{border:2px solid #A4CDF2;padding:20px;background:#FFFFFF;width:120px}
+.fset{border:2px solid #A4CDF2;padding:10px;background:#FFFFFF;width:120px}
 .rt, .rt2{float:left;display:none;z-index:0;border:2px solid #a4cdf3;}
 .ct,.ct2{[Maiasvn:authz]}
 .tp{text-align:right;}
@@ -349,29 +349,24 @@ function cleartip()
 <input type='hidden' name='sig' value='[Maiasvn:sig]'>
 <!-- =================================================   -->
 <!-- =============================================== -->
-<h3>组权限</h3>
-<div>
+<h3>权限组</h3>
+<div class='lf'>
 <select name="group_detail[]" MULTIPLE size=13 class='detsl' onchange="showpriv()"><option value='' >-权限----组名-------</option>
 	[Maiasvn:g_dirprive]
 </select>
+<p align='right'><a href="" onclick="showgroup()">组详情</a></p>
 </div>
 
 <div class='ct'>
-	<br><br>
 	<p><input type='button' value='<< add group' onclick="adduser('g_rtdiv','g_candidate[]','group_detail[]','')"></p>
 	<p><input type='button' value='>> del group' onclick="deluser('g_candidate[]','group_detail[]')"></p>
 	<p><input type='button' value='提交保存' class='subBtn' onclick="saveit('det')"></p>
-	<p><a href=''>组详情</a></p>
- <div style="[Maiasvn:authz]">
   <fieldset class='fset'>
   <legend>组权限</legend>
   <input type='radio' name='setright'  id='g_setwrite' onclick="rightset('w')"/><label for='g_setwrite'>写权限 </label>
   <br><input type='radio' name='setright'  id='g_setread' onclick="rightset('r')"/><label for='g_setread'>读权限 </label>
   <br><input type='radio' name='setright'  id='g_setnone' onclick="rightset('n')"/><label for='g_setnone'>无权限 </label>
   </fieldset>
-  <p>有效期:<input type='text' style="width:40" name='expire' maxlength=4 onkeyup='setexpire()'>天
-  </p>
- </div>
 </div>
 <div class='rt' id='g_rtdiv'>
 	<img src='../img/close.bmp' ALT='close' style='float:right;' onclick="document.getElementById('g_rtdiv').style.display='none'">

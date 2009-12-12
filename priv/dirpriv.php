@@ -222,7 +222,7 @@ foreach($candidate_array as $user => $v)
 //*********************
 //读取用户组权限
 //**********************
-$query="select group_name,permission from svnauth_g_permission,svnauth_user where svnauth_group.group_id=svnauth_g_permission.group_id and repository='$repos' and path='$dir' order by group_name";
+$query="select group_name,permission from svnauth_g_permission,svnauth_group where svnauth_group.group_id=svnauth_g_permission.group_id and repository='$repos' and path='$dir' order by group_name";
 //echo $query;exit;
 $result = mysql_query($query);
 while($result and($row= mysql_fetch_array($result, MYSQL_BOTH))) {	
