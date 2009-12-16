@@ -307,7 +307,7 @@ foreach($d_group as $group=>$permission)
 $g_candidate_array=array_diff_key($g_candidate_array,$d_group,$cur_group);
 foreach($g_candidate_array as $group => $v)
 {
-	$gid=$uid_array[$group];
+	$gid=$gid_array[$group];
 	if(empty($gid))continue;
 	$g_candidate .="<option value='n $group $gid'>none &nbsp; &nbsp; $group</option>";
 }
@@ -327,7 +327,8 @@ if(! $authz)
 	$candidate='';
 	$dexpire='';
 }
-$vars=array('dir' => $firstdir,'dirprive' => $userright,'g_dirprive' => $groupright,'g_candidate' => $g_candidate,'candidate' => $candidate,'diradmin' => $diradmin,'repos' => $repos,'path' => $dir,'sig' => $sig,'authz' => $showbutton,'dexpire' => $dexpire);  
+$fromurl="../priv/dirpriv.php?d=$repos{$dir}";
+$vars=array('dir' => $firstdir,'dirprive' => $userright,'g_dirprive' => $groupright,'g_candidate' => $g_candidate,'candidate' => $candidate,'diradmin' => $diradmin,'repos' => $repos,'path' => $dir,'sig' => $sig,'authz' => $showbutton,'dexpire' => $dexpire,'fromurl' => $fromurl);  
 while (!feof($handle))
 {
       $line = fgets($handle);
