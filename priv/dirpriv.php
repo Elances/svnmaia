@@ -97,7 +97,8 @@ for($ii=0;$ii<20;$ii++)
 		if(!empty($fulln))$fn="($fulln)";
 		$diradmin .="<option value='$username $uid'>$username{$fn}</option>";
 	}
-	if(($subdir=='/') or (empty($subdir)))break;
+	if($subdir=='\\')$subdir='/';
+	if(($subdir=='/') or ($subdir=='.'))break;
 }
 
 //*******************************
