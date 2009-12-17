@@ -47,7 +47,7 @@ if($d == '0')
 	}
 	$dirs_arr=array();
 	$localurl=($svnparentpath{0}=='/')?("file://$svnparentpath/$path"):("file:///$svnparentpath/$path");
-	$svnlist=exec("{$svn}svn list '$localurl'",$dirs_arr);
+	$svnlist=exec("{$svn}svn list \"$localurl\"",$dirs_arr);
 	$i=1;
 	foreach($dirs_arr as $dir)
 	{
