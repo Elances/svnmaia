@@ -87,7 +87,7 @@ for($ii=0;$ii<20;$ii++)
 	$query="select user_name,full_name,svnauth_user.user_id  from svnauth_dir_admin,svnauth_user where svnauth_dir_admin.user_id=svnauth_user.user_id and repository='$repos' and path='$subdir' order by user_name";
 	//echo $query;exit;
 	$result = mysql_query($query);
-	$subdir=dirname($subdir);
+	if(strlen($subdir)>1)$subdir=dirname($subdir);
 	while (($result)and($row= mysql_fetch_array($result, MYSQL_BOTH))) {
 		$username=$row['user_name'];
 		$fulln=$row['full_name'];
@@ -97,8 +97,8 @@ for($ii=0;$ii<20;$ii++)
 		if(!empty($fulln))$fn="($fulln)";
 		$diradmin .="<option value='$username $uid'>$username{$fn}</option>";
 	}
+	if(($subdir=='/') or (empty($subdir)))break;
 	if($subdir=='\\')$subdir='/';
-	if(($subdir=='/') or ($subdir=='.'))break;
 }
 
 //*******************************
@@ -166,6 +166,7 @@ $subdir=$dir;
 while($result and (! $allflag))
 {
 	$subdir=dirname($subdir);
+	if($subdir=='\\')$subdir='/';
 	$query="select user_name,permission from svnauth_permission,svnauth_user where svnauth_user.user_id=svnauth_permission.user_id and   repository='$repos' and path='$subdir' order by user_name";
 	//echo $query;exit;
 	$s_user=array();
