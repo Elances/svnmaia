@@ -49,6 +49,7 @@ if (mysql_select_db(DBNAME))
 			{
 					$v=base64_encode($v);
 			}
+			if($para=='svnparentpath')$v=str_replace('\\','/',$v);
 			if($para=='use_smtp_authz')$flag=true;
 			$para=mysql_real_escape_string($para);	
 			$v="'".mysql_real_escape_string($v)."'";
