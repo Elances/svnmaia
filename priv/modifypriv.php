@@ -162,7 +162,7 @@ if (mysql_num_rows($result) > 0){
 <br>保存成功，但尚未生效！
 <br>您要：
 <a href="$url">返回继续操作</a> <br>还是：
-<a href="./gen_access.php">立刻生效（生成access文件)</a>?
+<a href="./gen_access.php?fromurl=$url">立刻生效（生成access文件)</a>?
 </p>
 HTML;
 

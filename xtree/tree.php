@@ -11,6 +11,7 @@ if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
 }
 $path=str_replace('%2F','/',$path);
 $path=str_replace('%5C%23','%23',$path);//解决#字符目录无法列出问题
+$path=str_replace('+',' ',$path);
 include('../config/config.php');
 echo "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
 echo "<tree>";
@@ -46,7 +47,7 @@ if($d == '0')
 	}
 	$dirs_arr=array();
 	$localurl=($svnparentpath{0}=='/')?("file://$svnparentpath/$path"):("file:///$svnparentpath/$path");
-	$svnlist=exec("{$svn}svn list ".$localurl,$dirs_arr);
+	$svnlist=exec("{$svn}svn list \"$localurl\"",$dirs_arr);
 	$i=1;
 	foreach($dirs_arr as $dir)
 	{

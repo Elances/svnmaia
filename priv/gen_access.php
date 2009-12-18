@@ -231,6 +231,9 @@ while (($result)and($row= mysql_fetch_array($result, MYSQL_BOTH))) {
 		}else
 			echo "权限生效成功！";
 		fclose($handle);
+		$fromurl=$_GET['fromurl'];
+		if(empty($fromurl))$fromurl='dirpriv.php';	
+		echo "&nbsp;&nbsp;&nbsp;&nbsp;<a href=$fromurl>返回</a>";		
 		
 
 
