@@ -110,6 +110,6 @@ while (($result)and($row= mysql_fetch_array($result, MYSQL_BOTH))) {
 	{			
 		$tr_class="trc1";
 	}
-	echo "<tr class=$tr_class><td><a href='../user/viewgroup.php?gid=$gid&grp=$groupname&fromurl=../priv/viewpriv.php?$querystr>$groupname</a></td></tr>";
+	echo "<tr class=$tr_class><td><a href='../user/viewgroup.php?gid=$gid&grp=$groupname&fromurl=../priv/viewpriv.php?$querystr'>$groupname</a></td></tr>";
 }
 echo "</table>";

@@ -75,6 +75,41 @@ function rightset(str)
 	}
 
 }
+function grightset(str)
+{
+	var detObj=document.privform.elements['group_detail[]'];
+	for(var i=0;i<detObj.length;i++)
+	{
+		if(detObj[i].selected){
+			if(detObj[i].value == '')continue;
+			valueChanged=1;
+		 	var ss=detObj[i].value.split(" ");	
+			detObj[i].value = str+' '+ss[1]+' '+ss[2];
+			if(str=='w'){
+				detObj[i].innerHTML='R W &nbsp;&nbsp; &nbsp; '+ss[1];
+			}else if(str=='r'){
+				detObj[i].innerHTML='R&nbsp; &nbsp; &nbsp; &nbsp; '+ss[1];
+			}else
+				detObj[i].innerHTML='none &nbsp; &nbsp; '+ss[1];
+
+		}
+	}
+
+}
+function showgroup()
+{
+	var detObj=document.privform.elements['group_detail[]'];
+	for(var i=0;i<detObj.length;i++)
+	{
+		if(detObj[i].selected){
+			if(detObj[i].value == '')continue;
+		 	var ss=detObj[i].value.split(" ");	
+			var url="../user/viewgroup.php?gid="+ss[2]+"&grp="+ss[1]+"&fromurl=[Maiasvn:fromurl]";
+			setTimeout('document.location.href="'+url+'"',0);
+			break;
+		}
+	}
+}
 function showpriv()
 {
 	var detObj=document.privform.elements['permission_detail[]'];
@@ -182,7 +217,16 @@ function saveit(Obj)
 	if(Obj=='det')
 	{
 		var detObj=document.privform.elements['permission_detail[]'];
-	}else{
+	        var detObj2=document.privform.elements['group_detail[]'];
+	
+		for(var i=0;i<detObj2.length;i++)
+   		{
+   			detObj2[i].selected = true;
+   			
+   		}
+	}
+	if(Obj=='admin')
+	{
 		var detObj=document.privform.elements['manager[]'];
 		document.getElementById('adminonly').value='true';
 	}
@@ -270,7 +314,8 @@ function cleartip()
 .sbar{width:100px}
 .detsl{background:#fff4bc;}
 .cansl{background:#ece9d8;}
-.sf{position:absolute;text-decoration:underline;color:blue;font-size:10pt;CURSOR:pointer;}	
+.sf{position:absolute;}
+.sf,.af{text-decoration:underline;color:blue;font-size:10pt;CURSOR:pointer;}	
 .tip{display:none;width:300px;text-decoration:none;color:green;font-size:11pt;background:#FFFFCC;position:absolute;z-index:12; }
 </style>
 
@@ -323,7 +368,7 @@ function cleartip()
 	<img src='../img/close.bmp' ALT='close' style='float:right;' onclick="document.getElementById('rtdiv').style.display='none'">
 	<div style='float:left'>
 	<input type='text' id='search2' class='sbar' onkeyup="search('search2','candidate[]')"/><input type='button' value='定位用户' onclick="search('search2','candidate[]')"><br>
-<select name="candidate[]" MULTIPLE size=23 class='cansl'><option value='' label='--请选择--'>-权限----候选用户列表--</option>
+<select name="candidate[]" MULTIPLE size=23 class='cansl' onDblclick="adduser('rtdiv','candidate[]','permission_detail[]','')"><option value='' label='--请选择--'>-权限----候选用户列表--</option>
 [Maiasvn:candidate]
 </select>
 </div>
@@ -350,33 +395,36 @@ function cleartip()
 <!-- =================================================   -->
 <!-- =============================================== -->
 <h3>权限组</h3>
+	<table border=0 ><tr valign='top'><td>
 <div class='lf'>
 <select name="group_detail[]" MULTIPLE size=13 class='detsl' onchange="showpriv()"><option value='' >-权限----组名-------</option>
 	[Maiasvn:g_dirprive]
 </select>
-<p align='right'><a href="" onclick="showgroup()">组详情</a></p>
+<p align='right'><a class=af onclick="showgroup()">组详情</a></p>
 </div>
-
+</td><td>
 <div class='ct'>
 	<p><input type='button' value='<< add group' onclick="adduser('g_rtdiv','g_candidate[]','group_detail[]','')"></p>
 	<p><input type='button' value='>> del group' onclick="deluser('g_candidate[]','group_detail[]')"></p>
 	<p><input type='button' value='提交保存' class='subBtn' onclick="saveit('det')"></p>
   <fieldset class='fset'>
   <legend>组权限</legend>
-  <input type='radio' name='setright'  id='g_setwrite' onclick="rightset('w')"/><label for='g_setwrite'>写权限 </label>
-  <br><input type='radio' name='setright'  id='g_setread' onclick="rightset('r')"/><label for='g_setread'>读权限 </label>
-  <br><input type='radio' name='setright'  id='g_setnone' onclick="rightset('n')"/><label for='g_setnone'>无权限 </label>
+  <input type='radio' name='gsetright'  id='g_setwrite' onclick="grightset('w')"/><label for='g_setwrite'>写权限 </label>
+  <br><input type='radio' name='gsetright'  id='g_setread' onclick="grightset('r')"/><label for='g_setread'>读权限 </label>
+  <br><input type='radio' name='gsetright'  id='g_setnone' onclick="grightset('n')"/><label for='g_setnone'>无权限 </label>
   </fieldset>
 </div>
+</td><td>
 <div class='rt' id='g_rtdiv'>
 	<img src='../img/close.bmp' ALT='close' style='float:right;' onclick="document.getElementById('g_rtdiv').style.display='none'">
 	<div style='float:left'>
 	<input type='text' id='g_search2' class='sbar' onkeyup="search('g_search2','g_candidate[]')"/><input type='button' value='定位组' onclick="search('g_search2','g_candidate[]')"><br>
-<select name="g_candidate[]" MULTIPLE size=13 class='cansl'><option value='' label='--请选择--'>-权限----候选组列表--</option>
+<select name="g_candidate[]" MULTIPLE size=13 onDblclick="adduser('g_rtdiv','g_candidate[]','group_detail[]','')" class='cansl'><option value='' label='--请选择--'>-权限----候选组列表--</option>
 [Maiasvn:g_candidate]
  </select>
          </div>
-</div>
+ </div>
+ </td></tr></table>
 <!-- =================================================   -->
 <!-- =================================================   -->
 <h2>[Maiasvn:dir]目录管理员</h2>

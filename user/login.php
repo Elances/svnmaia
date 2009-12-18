@@ -68,9 +68,9 @@ if(($num > 0)and($_SESSION['role']=='user'))
   while (($result)and($row= mysql_fetch_array($result, MYSQL_BOTH))) {
 	$repos=$row['repository'];
 	$path=$row['path'];
-	$_SESSION['dir'][]=$repos.$path;
+	$_SESSION['s_admindir'][]=$repos.$path;
  } 
-  //print_r($_SESSION['dir']);
+//  var_dump($_SESSION);
 }
 echo "<script>history.go(-2);</script>";
 

@@ -1,5 +1,5 @@
 <?php
-   session_start();
+session_start();
 header("content-type:text/html; charset=gb2312");
   // error_reporting(0);
 ?>
@@ -79,15 +79,16 @@ function isadmin($gid)
 	$result=mysql_query($query);
 	while (($result)and($row= mysql_fetch_array($result, MYSQL_BOTH))) {
 		$path=$row['repository'].$row['path'];
-		foreach($_SESSION['dir'] as $v)
+		foreach($_SESSION['s_admindir'] as $v)
 		{
 			$v=str_replace('/','\/',$v);
 			$p="/^$v\//";
 			if(($path != $v)and(! preg_match($p,$path)))return false;
 		}
 	}
+	return true;
  }
- return true;
+ return false;
 }
 
 if (!isset($_SESSION['username'])){ 
@@ -272,14 +273,19 @@ if(isset($_GET['gid']) )exit;
  $query="select group_id,group_name from svnauth_group group by group_name";
 $result = mysql_query($query);
 	echo  <<<SCMBBS
+<h3>权限组列表</h3>	
 	<form method="post" action="" name='groupform' onsubmit="return fCheck($ii)">	
+SCMBBS;
+if($_SESSION['role']=="admin")
+	echo <<<SCMBBS
 		<table>
 	   <tr>
 	  <td width="40"><input type=hidden name='del_g' value='del_g'></td>
 		<td><input name="action" type=submit value="删除" onclick="return confirm('确实要删除这些组吗?');"></td><td width=100>&nbsp;</td><td><a href="#addgroup" class='bt'>创建组</a></td>	
 	   </tr>
 	</table>
-	
+SCMBBS;
+	echo <<<SCMBBS
 	<table class=detail cellpadding=5px>
 	  <tr class=title>
 	     <td></td><td>组名</td><td></td>
