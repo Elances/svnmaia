@@ -192,6 +192,22 @@ if(isset($_POST['guact']))
 			if($data_c)@include('../priv/gen_access.php');
 		}
 }
+//------
+if(isset($_GET['rowid']))
+{
+	$gid=$_GET['d_gid'];
+	if(! isadmin($gid))
+	{
+		echo "该组目录超出你权限范围，你无权进行此操作";
+		exit;
+	}
+	$rowid=$_GET['rowid'];
+	if(! is_numeric($rowid))exit;
+	$query="delete from svnauth_g_permission where id=$rowid";
+	mysql_query($query);
+        $_GET['gid']=$gid;
+	if (mysql_affected_rows() > 0)@include('../priv/gen_access.php');
+}
 //----------------
 //show users and priv in group
 if(isset($_GET['gid']) )
@@ -262,7 +278,7 @@ HTML;
 	$repos=$row['repository'];
 	$path=$row['path'];
 	$permission=$row['permission'];
-	if($isadmin)$st="<a href='?action=del&id=$id'>删除</a>";
+	if($isadmin)$st="<a href='?d_gid=$gid&rowid=$id'   onclick=\"return confirm('确实要删除吗?')\">删除</a>";
 	echo "<tr class=$tr_class><td>$repos{$path}</td><td width=100>&nbsp;</td><td>$permission</td><td>$st</td></tr>";
 	}
 	echo "</table>";
