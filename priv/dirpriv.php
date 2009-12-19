@@ -269,6 +269,7 @@ $d_group=array();
 while($result and ($subdir != $br_dir))
 {
 	$subdir=dirname($subdir);
+	if($subdir=='\\')$subdir='/';
 	$query="select group_name,permission from svnauth_g_permission,svnauth_group where svnauth_group.group_id=svnauth_g_permission.group_id and   repository='$repos' and path='$subdir' order by group_name";
 	//echo $query;exit;
 	$s_group=array();
@@ -320,6 +321,7 @@ foreach($g_candidate_array as $group => $v)
 //*********************
 $newtopf=array();
 $handle = fopen("../template/showdir.htm", "r");
+$fromurl="../priv/dirpriv.php?d=$repos{$dir}";
 if(! $authz)
 {
 	$repos='scmbbs.com';
@@ -329,7 +331,6 @@ if(! $authz)
 	$candidate='';
 	$dexpire='';
 }
-$fromurl="../priv/dirpriv.php?d=$repos{$dir}";
 $vars=array('dir' => $firstdir,'dirprive' => $userright,'g_dirprive' => $groupright,'g_candidate' => $g_candidate,'candidate' => $candidate,'diradmin' => $diradmin,'repos' => $repos,'path' => $dir,'sig' => $sig,'authz' => $showbutton,'dexpire' => $dexpire,'fromurl' => $fromurl);  
 while (!feof($handle))
 {
