@@ -89,13 +89,13 @@ for($ii=0;$ii<20;$ii++)
 	$result = mysql_query($query);
 	if(strlen($subdir)>1)$subdir=dirname($subdir);
 	while (($result)and($row= mysql_fetch_array($result, MYSQL_BOTH))) {
-		$username=$row['user_name'];
+		$uname=$row['user_name'];
 		$fulln=$row['full_name'];
 		$uid=$row['user_id'];
-		$admin_array[$uid]=$username;
+		$admin_array[$uid]=$uname;
 		$fn='';
 		if(!empty($fulln))$fn="($fulln)";
-		$diradmin .="<option value='$username $uid'>$username{$fn}</option>";
+		$diradmin .="<option value='$uname $uid'>$uname{$fn}</option>";
 	}
 	if(($subdir=='/') or (empty($subdir)))break;
 	if($subdir=='\\')$subdir='/';
