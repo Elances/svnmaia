@@ -108,8 +108,12 @@ $url
 配置管理组\n
 ";
 $subject="svn密码帮助";
-send_mail($email,$subject,$body);
-echo "<br>邮件已发出<br>请注意查收您的邮件 $email";
+$sendinfo =send_mail($email,$subject,$body);
+if ($sendinfo === true) {
+    echo "<br>邮件已发出<br>请注意查收您的邮件 $email";
+}else {
+	echo(is_string($sendinfo) ? $sendinfo : 'reg_email_fail');
+}
 #echo "    <script>setTimeout('document.location.href=\"javascript:window.history.back(-3)\"',5)</script> ";
 if($_SESSION['role']=='admin')
 {
