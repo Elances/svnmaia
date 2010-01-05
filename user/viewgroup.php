@@ -79,14 +79,16 @@ function isadmin($gid)
 	$result=mysql_query($query);
 	while (($result)and($row= mysql_fetch_array($result, MYSQL_BOTH))) {
 		$path=$row['repository'].$row['path'];
+		$t_match=false;
 		foreach($_SESSION['s_admindir'] as $v)
 		{
+			$t_v=$v;
 			$v=str_replace('/','\/',$v);
 			$p="/^$v\//";
-			if(($path != $v)and(! preg_match($p,$path)))return false;
+			if(($path == $t_v)or(preg_match($p,$path)))$t_match=true;
 		}
-	}
-	return true;
+	}	
+	if($t_match)return true;
  }
  return false;
 }
