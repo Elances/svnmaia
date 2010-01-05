@@ -1,81 +1,135 @@
 <?php
-	    
-function send_mail($to, $subject = 'No subject', $body) {
-    include(dirname(__FILE__).'/../config/config.php');
-    $loc_host = "xuejiang";         //发信计算机名，可随意
-    $smtp_acc = "$smtp_user"; //Smtp认证的用户名，类似scm@scmbbs.com，或者scm
-    $smtp_pass=base64_decode($smtp_passwd);       //Smtp认证的密码，一般等同pop3密码
+@ include(dirname(__FILE__).'/../config/config.php');
+$db_charset='gb2312';
+$M_db= new Mailconfig(
+	array(
+		'ifopen'=> 1,
+		'method'=> 1,
+		'host'	=> $smtp_server,
+		'port'	=> $smtp_port,
+		'auth'	=> $use_smtp_authz,
+		'from'	=> $email_from,
+		'user'	=> $smtp_user,
+		'pass'	=> base64_decode($smtp_passwd),
+		'smtphelo'=>$ml_smtphelo,
+		'smtpmxmailname' =>$ml_smtpmxmailname,
+		'mxdns'=>$ml_mxdns,
+		'mxdnsbak'=>$ml_mxdnsbak
+	)
+);
+Class Mailconfig {
+	var $S_method = 1;
+	var $smtp;
+	function Mailconfig($smtp=array()){
+		$this->S_method = $smtp['method'];
+		if(!$this->smtp['ifopen'] = $smtp['ifopen']) {
+			//Showmsg('mail_close');
+			echo "mail close";
+		}
+		if ($this->S_method == 1){
+			//涓嶇敤璁剧疆
+		} elseif($this->S_method == 2){
+			$this->smtp['host'] = $smtp['host'];
+			$this->smtp['port'] = $smtp['port'];
+			$this->smtp['auth'] = $smtp['auth'];
+			$this->smtp['from'] = $smtp['from'];
+			$this->smtp['user'] = $smtp['user'];
+			$this->smtp['pass'] = $smtp['pass'];
+		} elseif($this->S_method == 3){
+			$this->smtp['port'] = $smtp['port'];
+			$this->smtp['auth'] = $smtp['auth'];
+			$this->smtp['from'] = $smtp['from'];
+			$this->smtp['smtphelo']=$smtp['smtphelo'];
+			$this->smtp['smtpmxmailname']=$smtp['smtpmxmailname'];
+			$this->smtp['mxdns']=$smtp['mxdns'];
+			$this->smtp['mxdnsbak']=$smtp['mxdnsbak'];
+			//hacker
+		} else{
+			//hacker
+		}
+	}
 
-    $smtp_host="$smtp_server";   //SMTP服务器地址，类似 smtp.tom.com
-    $from=$email_from;
-    if(empty($from))$from='svn-info@'.$smtp_host;    
-  $headers = "Content-Type: text/plain; charset=\"gb2312\"\r\nContent-Transfer-Encoding: base64";
-    //  $headers = "Content-Type: text/plain; charset=\"utf8\"\r\nContent-Transfer-Encoding: 16bit"; //如果企业邮箱是16位编码的，用这个
-  $lb="\r\n";             //linebreak
-        
-    $hdr = explode($lb,$headers);   //解析后的hdr
-  if($body) {$bdy = preg_replace("/^\./","..",explode($lb,$body));}//解析后的Body
+}
 
-    $smtp = array(
-          //1、EHLO，期待返回220或者250
-          array("EHLO ".$loc_host.$lb,"220,250","HELO error: "),
-          //2、发送Auth Login，期待返回334
-          array("AUTH LOGIN".$lb,"334","AUTH error:"),
-          //3、发送经过Base64编码的用户名，期待返回334
-          array(base64_encode($smtp_acc).$lb,"334","AUTHENTIFICATION error : "),
-          //4、发送经过Base64编码的密码，期待返回235
-          array(base64_encode($smtp_pass).$lb,"235","AUTHENTIFICATION error : "));	  
-    //5、发送Mail From，期待返回250
-    $smtp[] = array("MAIL FROM: <".$from.">".$lb,"250","MAIL FROM error: ");
-    //6、发送Rcpt To。期待返回250
-    $smtp[] = array("RCPT TO: <".$to.">".$lb,"250","1st,RCPT TO error: ");
-    //7、发送DATA，期待返回354
-    $smtp[] = array("DATA".$lb,"354","2st,DATA error: ");
-    //8.0、发送From
-    $smtp[] = array("From: "."<$from>".$lb,"","");
-    $smtp[] = array("Reply-to:scm@".$email_ext.$lb,"","");
-    //8.2、发送To
-    $smtp[] = array("To: ".$to.$lb,"","");
-    //8.1、发送标题
-    $smtp[] = array("Subject: ".$subject.$lb,"","");
-    //8.3、发送其他Header内容
-    foreach($hdr as $h) {$smtp[] = array($h.$lb,"","");}
-    //8.4、发送一个空行，结束Header发送
-    $smtp[] = array($lb,"","");
-    //8.5、发送信件主体
-    if($bdy) {foreach($bdy as $b) {$smtp[] = array(base64_encode($b.$lb).$lb,"","");}}
-    //9、发送“.”表示信件结束，期待返回250
-    $smtp[] = array(".".$lb,"250","DATA(end)error: ");
-    //10、发送Quit，退出，期待返回221
-    $smtp[] = array("QUIT".$lb,"221","QUIT error: ");
-
-    //打开smtp服务器端口
-    $fp = @fsockopen($smtp_host, $smtp_port);
-    if (!$fp)
-    {
-	    echo $result_str="Error: Cannot conect to ".$smtp_host."\n";	   
-    }
-    while($result = @fgets($fp, 1024)){if(substr($result,3,1) == " ") { break; }}
-    
-    $result_str="";
-    //发送smtp数组中的命令/数据
-    foreach($smtp as $req){
-          //发送信息
-          @fputs($fp, $req[0]);
-          //如果需要接收服务器返回信息，则
-          if($req[1]){
-                //接收信息
-                while($result = @fgets($fp, 1024)){
-                    if(substr($result,3,1) == " ") { break; }
-                };
-                if (!strstr($req[1],substr($result,0,3))){
-                    $result_str.=$req[2].$result."
-";
-                }
-          }
-    }
-    //关闭连接
-    @fclose($fp);
-    return $result_str;
+function send_mail($toemail,$subject,$message,$additional=null){
+	global $M_db,$db_charset,$sendtoname;
+	!$sendtoname && $sendtoname = $toemail;
+	!$windid && $windid = 'svn-info';
+	$send_subject = "=?$db_charset?B?".base64_encode(str_replace(array("\r","\n"), array('',' '),$subject)).'?=';
+	$send_message = chunk_split(base64_encode(str_replace("\r\n.", " \r\n..", str_replace("\n", "\r\n", str_replace("\r", "\n", str_replace("\r\n", "\n", str_replace("\n\r", "\r", $message)))))));
+	$send_from = "=?$db_charset?B?".base64_encode($windid)."?= <$fromemail>";
+	$send_to = "=?$db_charset?B?".base64_encode($sendtoname)."?= <$toemail>";
+	!empty($additional) && $additional && substr(str_replace(array("\r","\n"),array('','<rn>'),$additional),-4) != '<rn>' && $additional .= "\r\n";
+	$additional = "To: $send_to\r\nFrom: $send_from\r\nMIME-Version: 1.0\r\nContent-type: text/plain; charset=$db_charset\r\n{$additional}Content-Transfer-Encoding: base64\r\n";
+	if($M_db->S_method == 1){
+		if(@mail($toemail,$send_subject,$send_message,$additional)){
+			return true;
+		} else{
+			return false;
+		}
+	} elseif($M_db->S_method == 2){
+		if(!$fp=fsockopen($M_db->smtp['host'],$M_db->smtp['port'],$errno,$errstr)){
+			//Showmsg('email_connect_failed');
+			echo "email connect failed";
+		}
+		if(strncmp(fgets($fp,512),'220',3)!=0){
+			//Showmsg('email_connect_failed');
+			echo "email connect failed";
+		}
+		if($M_db->smtp['auth']){
+			fwrite($fp,"EHLO phpwind\r\n");
+			while($rt=strtolower(fgets($fp,512))){
+				if(strpos($rt,"-")!==3 || empty($rt)){
+					break;
+				} elseif(strpos($rt,"2")!==0){
+					return false;
+				}
+			}
+			fwrite($fp, "AUTH LOGIN\r\n");
+			if(strncmp(fgets($fp,512),'334',3)!=0){
+				return false;
+			}
+			fwrite($fp, base64_encode($M_db->smtp['user'])."\r\n");
+			if(strncmp(fgets($fp,512),'334',3)!=0){
+				return 'email_user_failed';
+			}
+			fwrite($fp, base64_encode($M_db->smtp['pass'])."\r\n");
+			if(strncmp(fgets($fp,512),'235',3)!=0){
+				return 'email_password_failed';
+			}
+		} else{
+			fwrite($fp, "HELO phpwind\r\n");
+		}
+		$from = $M_db->smtp['from'];
+		$from = preg_replace("/.*\<(.+?)\>.*/", "\\1", $from);
+		fwrite($fp, "MAIL FROM: <$from>\r\n");
+		if(strncmp(fgets($fp,512),'250',3)!=0){
+			return 'email_from_failed';
+		}
+		fwrite($fp, "RCPT TO: <$toemail>\r\n");
+		if(strncmp(fgets($fp,512),'250',3)!=0){
+			return 'email_toemail_failed';
+		}
+		fwrite($fp, "DATA\r\n");
+		if(strncmp(fgets($fp,512),'354',3)!=0){
+			return 'email_data_failed';
+		}
+		$msg  = "Date: ".Date("r")."\r\n";
+		$msg .= "Subject: $send_subject\r\n";
+		$msg .= "$additional\r\n";
+		$msg .= "$send_message\r\n.\r\n";
+		fwrite($fp, $msg);
+		$lastmessage = fgets($fp, 512);
+		if(substr($lastmessage, 0, 3) != 250)
+		{
+			//Showmsg('email_connect_failed');
+			echo "email connect failed";
+		}
+		fwrite($fp, "QUIT\r\n");
+		fclose($fp);
+		return true;
+	}  else{
+		//hacker
+	}
 }
 ?>
