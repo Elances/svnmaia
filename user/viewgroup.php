@@ -77,6 +77,7 @@ function isadmin($gid)
  if ((isset($_SESSION['username']))and($_SESSION['role']=="diradmin")){ 
 	$query="select repository,path from svnauth_g_permission where group_id=$gid";
 	$result=mysql_query($query);
+	$t_allmatch=true;
 	while (($result)and($row= mysql_fetch_array($result, MYSQL_BOTH))) {
 		$path=$row['repository'].$row['path'];
 		$t_match=false;
@@ -87,8 +88,9 @@ function isadmin($gid)
 			$p="/^$v\//";
 			if(($path == $t_v)or(preg_match($p,$path)))$t_match=true;
 		}
+		if(!$t_match)$t_allmatch=false;
 	}	
-	if($t_match)return true;
+	if($t_allmatch)return true;
  }
  return false;
 }
