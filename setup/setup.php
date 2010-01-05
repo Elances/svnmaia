@@ -78,6 +78,7 @@ CREATE TABLE IF NOT EXISTS `svnauth_group` (
 CREATE TABLE IF NOT EXISTS `svnauth_groupuser` (
   `group_id` int(11) NOT NULL auto_increment,
   `user_id` int(11) default NULL,
+ `isowner` bit(1) default 0,
   PRIMARY KEY  (`group_id`,`user_id`)
 ) ENGINE=MyISAM $encode ;";
 	mysql_query($query);

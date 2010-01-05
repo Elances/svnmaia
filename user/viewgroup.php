@@ -167,6 +167,7 @@ if(isset($_POST['guact']))
 		if($data_c)@include('../priv/gen_access.php');
 
 	}else
+	{
 		if(isset($_POST['batchinput']))//add user
 		{			
 			$usrArray=preg_split('/[;, \n\r]/',$_POST['batchinput']);
@@ -195,6 +196,26 @@ if(isset($_POST['guact']))
 			$_GET['gid']=$gid;
 			if($data_c)@include('../priv/gen_access.php');
 		}
+		if(isset($_POST['groupowner']))
+		{
+				$u=safe($_POST['groupowner']);
+				$query="insert into svnauth_groupuser (group_id,user_id,isowner) select $gid,user_id,1 from svnauth_user where user_name=$u";
+			//	echo $query;
+				mysql_query($query);
+	 			$t_e=mysql_error();
+				if (!empty($t_e))
+				{
+					$query="select user_id from svnauth_user where user_name=$u";
+					$result=mysql_query($query);
+					$row= mysql_fetch_array($result, MYSQL_BOTH);
+					$t_uid=$row['user_id'];
+					$query="update svnauth_groupuser set isowner=1 where group_id=$gid and user_id=$t_uid";
+					mysql_query($query);
+					//echo mysql_error();
+					//echo $query;
+				}
+		}
+	}	
 }
 //------
 if(isset($_GET['rowid']))
@@ -220,10 +241,20 @@ if(isset($_GET['gid']) )
 	$grp=$_GET['grp'];
 	if(!is_numeric($gid))exit;
 	if(isadmin($gid))$isadmin=true;
+	$ownerArray="";
 	$fromurl=$_GET['fromurl'];
 	if(empty($fromurl))$fromurl='viewgroup.php';
+	//-------
+	$sql="show columns from svnauth_groupuser";
+	$result=mysql_query($sql);
+  	if(mysql_num_rows($result)<3)
+	{
+		$sql="ALTER TABLE svnauth_groupuser ADD isowner  bit(1) default 0";
+		mysql_query($sql);
+	}
+	//------	
 	echo "导航：<a href='$fromurl'>返回</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#grouppriv'>组权限</a>";
-	$query="select user_name,full_name,svnauth_groupuser.user_id from svnauth_groupuser,svnauth_user where svnauth_groupuser.user_id=svnauth_user.user_id and svnauth_groupuser.group_id=$gid";
+	$query="select user_name,full_name,svnauth_groupuser.user_id,isowner from svnauth_groupuser,svnauth_user where svnauth_groupuser.user_id=svnauth_user.user_id and svnauth_groupuser.group_id=$gid";
 	$result=mysql_query($query);
 	//打印出组用户列表、权限目录
 	echo "<h3>$grp 组详情：</h3><h4>组成员</h4>";
@@ -248,9 +279,11 @@ SCMBBS;
 		$i++;
 		$user_name=$row['user_name'];
 		$uid=$row['user_id'];
+		$isowner=trim($row['isowner']);
 		$fullname=empty($row['full_name'])?'':'('.$row['full_name'].')';
 		$sl="<td><input  name=\"guArray[$i]\"  id=\"guArray[$i]\"  value=\"{$gid}_{$uid}\" type=checkbox></td>";
 		echo "<tr class=$tr_class>$sl<td>$user_name{$fullname}</td></tr>";
+		if(!empty($isowner))$ownerArray.="<tr>$sl<td>$user_name{$fullname}</td></tr>";
 	}
 	echo "</table></td><td valign=top>";
 	if(isset($unknow_usr)){
@@ -265,6 +298,16 @@ SCMBBS;
 </div>
 HTML;
 	echo "</td></tr></table>";
+	//*****************
+	echo "<h4>组所有者</h4>";
+if($isadmin)
+	echo  <<<SCMBBS
+  	<table><tr>
+		<td width=100><input name="act" type=submit value="删除" onclick="return confirm('确实要删除吗?');"></td>
+		<td ><input type='text' name='groupowner' ><input type=submit value='添加所有者'></td>
+	</tr></table>
+SCMBBS;
+	echo "<table>$ownerArray</table>";
 	//&******************	
 	echo "<a id='grouppriv'></a><h4>组权限</h4><table>";
 	if($isadmin)$st='操作';
