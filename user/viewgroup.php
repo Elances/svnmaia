@@ -85,7 +85,7 @@ function isadmin($gid)
 		{
 			$t_v=$v;
 			$v=str_replace('/','\/',$v);
-			$p="/^$v\//";
+			$p="/^$v/";
 			if(($path == $t_v)or(preg_match($p,$path)))$t_match=true;
 		}
 		if(!$t_match)$t_allmatch=false;
