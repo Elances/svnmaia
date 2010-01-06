@@ -55,6 +55,10 @@ function batchadd()
 {
 	guform.submit();
 }	
+function setowner()
+{
+	document.getElementById("editowner").value=1
+}
 
 -->
 </script>
@@ -75,6 +79,15 @@ function isadmin($gid)
  }
  
  if ((isset($_SESSION['username']))and($_SESSION['role']=="diradmin")){ 
+	$sql="select user_id from svnauth_user where user_name='".$_SESSION['username']."'";
+	$t_res=mysql_query($sql);
+	$row= mysql_fetch_array($t_res, MYSQL_BOTH);
+	$t_uid=$row['user_id'];
+	$sql="select isowner from svnauth_groupuser where group_id=$gid and user_id=$t_uid";
+	$t_res=mysql_query($sql);
+	$row= mysql_fetch_array($t_res, MYSQL_BOTH);
+	if(!empty($row['isowner']))return true;
+
 	$query="select repository,path from svnauth_g_permission where group_id=$gid";
 	$result=mysql_query($query);
 	$t_allmatch=true;
@@ -157,17 +170,24 @@ if(isset($_POST['guact']))
 	{		
 		foreach($_POST['guArray'] as $v)
 		{
-			list($gid_nouse,$uid)=explode('_',$v);
-			if(! is_numeric($uid))continue;
-			$query="delete from svnauth_groupuser where group_id=$gid and user_id=$uid ";
+			list($gid_nouse,$t_uid)=explode('_',$v);
+			if(! is_numeric($t_uid))continue;
+			if(empty($_POST["editowner"]))
+			{
+			    $query="delete from svnauth_groupuser where group_id=$gid and user_id=$t_uid ";		
+			    $data_c=true;
+			}else
+			{
+				$query="update svnauth_groupuser set isowner=0 where group_id=$gid and user_id=$t_uid ";
+			}
 			mysql_query($query);
-			$data_c=true;
 		}
 		$_GET['gid']=$gid;
 		if($data_c)@include('../priv/gen_access.php');
 
 	}else
 	{
+		if(!empty($_POST["editowner"]))unset($_POST['batchinput']);
 		if(isset($_POST['batchinput']))//add user
 		{			
 			$usrArray=preg_split('/[;, \n\r]/',$_POST['batchinput']);
@@ -200,7 +220,6 @@ if(isset($_POST['guact']))
 		{
 				$u=safe($_POST['groupowner']);
 				$query="insert into svnauth_groupuser (group_id,user_id,isowner) select $gid,user_id,1 from svnauth_user where user_name=$u";
-			//	echo $query;
 				mysql_query($query);
 	 			$t_e=mysql_error();
 				if (!empty($t_e))
@@ -278,10 +297,10 @@ SCMBBS;
 		}
 		$i++;
 		$user_name=$row['user_name'];
-		$uid=$row['user_id'];
+		$t_uid=$row['user_id'];
 		$isowner=trim($row['isowner']);
 		$fullname=empty($row['full_name'])?'':'('.$row['full_name'].')';
-		$sl="<td><input  name=\"guArray[$i]\"  id=\"guArray[$i]\"  value=\"{$gid}_{$uid}\" type=checkbox></td>";
+		$sl="<td><input  name=\"guArray[$i]\"   value=\"{$gid}_{$t_uid}\" type=checkbox></td>";
 		echo "<tr class=$tr_class>$sl<td>$user_name{$fullname}</td></tr>";
 		if(!empty($isowner))$ownerArray.="<tr>$sl<td>$user_name{$fullname}</td></tr>";
 	}
@@ -299,12 +318,12 @@ SCMBBS;
 HTML;
 	echo "</td></tr></table>";
 	//*****************
-	echo "<h4>组所有者</h4>";
+	echo "<h4>组负责人</h4>";
 if($isadmin)
 	echo  <<<SCMBBS
   	<table><tr>
-		<td width=100><input name="act" type=submit value="删除" onclick="return confirm('确实要删除吗?');"></td>
-		<td ><input type='text' name='groupowner' ><input type=submit value='添加所有者'></td>
+		<td width=100><input name="act" type=submit value="删除" onclick="if(confirm('确实要删除吗?')){setowner();return true;}return false;"><input type=hidden name="editowner" id="editowner" /></td>
+		<td ><input type='text' name='groupowner' ><input type=submit value='添加负责人' onclick='setowner()'></td>
 	</tr></table>
 SCMBBS;
 	echo "<table>$ownerArray</table>";
