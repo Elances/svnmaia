@@ -31,6 +31,7 @@ if (mysql_select_db(DBNAME))
 	foreach($userArray as $value)
 	{
 		$value= safe($value);
+		if(!is_numeric($value))continue;
 		if(!empty($value))$paras_array[]= ' user_id='.$value;
 	}
  

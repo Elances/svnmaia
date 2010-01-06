@@ -28,7 +28,7 @@ if($usr =="")
 $user_id=0;
 //SQL≤È—Ø”Ôæ‰;
 mysql_query("SET NAMES utf8");
-$query = "SELECT supervisor,user_id,password FROM svnauth_user WHERE user_name =\"$usr\";"; 
+$query = "SELECT supervisor,user_id,password FROM svnauth_user WHERE user_name ='$usr';"; 
 
 // ÷¥––≤È—Ø
 $result =mysql_query($query);
