@@ -10,7 +10,7 @@ if(file_exists('../config/config.php'))
 	echo" <script>setTimeout('document.location.href=\"../config/index.php\"',0)</script>";  	
 	exit;
 }
-// error_reporting(0);
+ error_reporting(0);
 if (!isset($_SESSION['username'])){	
 	echo "ÇëÏÈ<a href='../user/loginfrm.php'>µÇÂ¼</a> £¡";
 	echo" <script>setTimeout('document.location.href=\"../user/loginfrm.php\"',0)</script>";  	

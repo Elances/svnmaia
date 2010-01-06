@@ -1,5 +1,6 @@
 <?php
 session_start();
+error_reporting(0);
 $d=$_GET['parentId'];
 if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
 	$path=escapeshellcmd($_GET['d']);
@@ -47,7 +48,6 @@ if($d == '0')
 	}
 	$dirs_arr=array();
 	$localurl=($svnparentpath{0}=='/')?("file://$svnparentpath/$path"):("file:///$svnparentpath/$path");
-	$localurl=escapeshellarg($localurl);
 	$svnlist=exec("{$svn}svn list \"$localurl\"",$dirs_arr);
 	$i=1;
 	foreach($dirs_arr as $dir)

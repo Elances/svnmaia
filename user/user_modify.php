@@ -1,7 +1,6 @@
 <?php
    session_start();
 header("content-type:text/html; charset=gb2312");
-  // error_reporting(0);
 ?>
 <?php
 if (!isset($_SESSION['username'])){	
@@ -9,7 +8,7 @@ if (!isset($_SESSION['username'])){
 	echo" <script>setTimeout('document.location.href=\"./loginfrm.php\"',0)</script>";  	
 	exit;
 }
-//error_reporting(0);
+error_reporting(0);
 include('../../../config.inc');
 function safe($str)
 { 
@@ -32,7 +31,6 @@ if (mysql_select_db(DBNAME))
 	foreach($userArray as $value)
 	{
 		$value= safe($value);
-		if(!is_numeric($value))continue;
 		if(!empty($value))$paras_array[]= ' user_id='.$value;
 	}
  

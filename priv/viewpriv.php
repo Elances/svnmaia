@@ -1,5 +1,6 @@
 <?php
 session_start();
+ error_reporting(0);
 header("content-type:text/html; charset=gb2312");
 if (!isset($_SESSION['username'])){	
 	echo "ÇëÏÈ<a href='../user/loginfrm.php'>µÇÂ¼</a> £¡";

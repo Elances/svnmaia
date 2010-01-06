@@ -1,6 +1,6 @@
 <?php
 session_start();
-// error_reporting(0);
+error_reporting(0);
 if (!isset($_SESSION['username'])){	
 //	exit;
 }
@@ -53,11 +53,11 @@ if (mysql_select_db(DBNAME))
 			if($para=='use_smtp_authz')$flag=true;
 			$para=mysql_real_escape_string($para);	
 			$v="'".mysql_real_escape_string($v)."'";
-			$query="update svnauth_para set value=$v where para=\"$para\"";
+			$query="update svnauth_para set value=$v where para='$para'";
 			$result=mysql_query($query);
 			if(mysql_affected_rows()==0)
 			{
-				$query="insert into svnauth_para (para,value) values(\"$para\",$v)";
+				$query="insert into svnauth_para (para,value) values('$para',$v)";
 				mysql_query($query);
 			}
 			$file_str .= "\${$para}=$v;\n";
