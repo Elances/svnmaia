@@ -25,6 +25,7 @@ include('../../../config.inc');
 include('../include/basefunction.php');
 function safe($str)
 { 
+	$str=htmlspecialchars($str,ENT_QUOTES);
 	return "'".mysql_real_escape_string($str)."'";
 }
 include('../include/dbconnect.php');
@@ -51,12 +52,12 @@ if (mysql_select_db(DBNAME))
 			if(! $clear)
 			{
 				$clear=true;
-				$query="delete from svnauth_dir_admin where repository=\"$repos\" and path=\"$path\"";
+				$query="delete from svnauth_dir_admin where repository='$repos' and path='$path'";
 				mysql_query($query);
 				$err=mysql_error();
 			}
 			if(! is_numeric($uid))continue;
-			$query="insert into svnauth_dir_admin (repository,path,user_id) values(\"$repos\",\"$path\",$uid)";
+			$query="insert into svnauth_dir_admin (repository,path,user_id) values('$repos','$path',$uid)";
 			mysql_query($query);
 			$err .= mysql_error();
 		}
@@ -72,18 +73,18 @@ $dir=($dir{0}=='/')?(substr($dir,1)):($dir);
 $dir=str_replace('//','/',$dir);
 list($f_repos,$dir)=explode('/',$dir,2);
 $dir=($dir{strlen($dir)-1}=='/')?('/'.substr($dir,0,-1)):('/'.$dir);
-				$query="select * from svnauth_permission where repository=\"$f_repos\" and path = \"$dir\" ";
+				$query="select * from svnauth_permission where repository='$f_repos' and path = '$dir' ";
 $result=mysql_query($query);
 if (mysql_num_rows($result) > 0){
 	$clear=false;
 		if(! $clear)
 		{
 				$clear=true;
-				$query="delete from svnauth_permission where repository=\"$repos\" and path=\"$path\"";
+				$query="delete from svnauth_permission where repository='$repos' and path='$path'";
 				mysql_query($query);
 				$err=mysql_error();
 		}
-	$query="insert into svnauth_permission (user_id,repository,path,permission,expire) select user_id,\"$repos\",\"$path\",permission,expire from svnauth_permission where  repository=\"$f_repos\" and path = \"$dir\" ";
+	$query="insert into svnauth_permission (user_id,repository,path,permission,expire) select user_id,'$repos','$path',permission,expire from svnauth_permission where  repository='$f_repos' and path = '$dir' ";
 	mysql_query($query);
 //	$err .= mysql_error();
 
@@ -102,7 +103,7 @@ if (mysql_num_rows($result) > 0){
 			if(! $clear)
 			{
 				$clear=true;
-				$query="delete from svnauth_permission where repository=\"$repos\" and path=\"$path\"";
+				$query="delete from svnauth_permission where repository='$repos' and path='$path'";
 				mysql_query($query);
 				$err=mysql_error();
 			}
@@ -127,7 +128,7 @@ if (mysql_num_rows($result) > 0){
       	    		}}      	    	
 			$rights=safe($rights);
       	    		$expire=strftime("%Y-%m-%d",$expire);		
-			$query="insert into svnauth_permission(user_id,repository,path,permission,expire)values($uid,\"$repos\",\"$path\",$rights,\"$expire\")";
+			$query="insert into svnauth_permission(user_id,repository,path,permission,expire)values($uid,'$repos','$path',$rights,'$expire')";
 			mysql_query($query);
 			$err .= mysql_error();
 		}

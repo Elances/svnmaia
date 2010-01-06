@@ -13,6 +13,7 @@ if (!isset($_SESSION['username'])){
 include('../../../config.inc');
 function safe($str)
 { 
+	$str=htmlspecialchars($str,ENT_QUOTES);
 	return "'".mysql_real_escape_string($str)."'";
 }
 $action= trim($_POST["action"]);
@@ -106,12 +107,12 @@ HTML;
 				$staff_no=$row['staff_no'];
 				$department=$row['department'];
 				$email=$row['email'];
-				echo "<tr><td><input type=hidden name='userArray[]' value=$user_id>
-				 <input type=text name='username[]' value=$user_name></td>
-				 <td><input type=text name='fullname[]' value=$full_name></td>
-				 <td><input type=text name='staff_no[]' value=$staff_no></td>
-				 <td><input type=text name='department[]' value=$department></td>
-				 <td><input type=text name='email[]' value=$email></td></tr>";
+				echo "<tr><td><input type=hidden name='userArray[]' value='$user_id'>
+				 <input type=text name='username[]' value='$user_name'></td>
+				 <td><input type=text name='fullname[]' value='$full_name'></td>
+				 <td><input type=text name='staff_no[]' value='$staff_no'></td>
+				 <td><input type=text name='department[]' value='$department'></td>
+				 <td><input type=text name='email[]' value='$email'></td></tr>";
 			}
 		}else{
 			$query="select user_id,user_name,full_name,email,staff_no,department from svnauth_user where user_name='".$_SESSION['username']."'";
@@ -124,12 +125,12 @@ HTML;
 				$email=$row['email'];
 				$department=$row['department'];
 			echo <<<HTML
-			<tr><td><input type=hidden name='userArray[]' value=$user_id>	
-				 <input type=text readonly name='username[]' value=$user_name ></td>			 
-				 <td><input type=text name='fullname[]' value=$full_name></td>
-				 <td><input type=text name='staff_no[]' value=$staff_no></td>
-				  <td><input type=text name='department[]' value=$department></td>
-				 <td><input type=text name='email[]' value=$email></td></tr>
+			<tr><td><input type=hidden name='userArray[]' value="$user_id">	
+				 <input type=text readonly name='username[]' value="$user_name" ></td>			 
+				 <td><input type=text name='fullname[]' value="$full_name"></td>
+				 <td><input type=text name='staff_no[]' value="$staff_no"></td>
+				  <td><input type=text name='department[]' value="$department"></td>
+				 <td><input type=text name='email[]' value="$email"></td></tr>
 HTML;
 		}	
 		echo <<<HTML
@@ -157,8 +158,8 @@ HTML;
 				$user_id=$row['user_id'];
 				$user_name=$row['user_name'];
 				$full_name=$row['full_name'];
-				echo "<tr><td><input type=hidden name='userArray[]' value=$user_id>
-				 <input type=text readOnly name='username[]' value=$user_name($full_name)></td>
+				echo "<tr><td><input type=hidden name='userArray[]' value='$user_id'>
+				 <input type=text readOnly name='username[]' value='$user_name($full_name)'></td>
 				 <td><input type=password name='passwd1[]' ></td>
 				 <td><input type=password name='passwd2[]' ></td></tr>";
 			}

@@ -171,7 +171,7 @@ if(!is_numeric($page))
 		$i++;
 	}
 	echo "</td></tr></table>";
-	$pw=$_GET['w'];
+	$pw=mysql_real_escape_string($_GET['w']);
 	if(empty($pw))
 	{
 	  $query = "select user_id,user_name,full_name,email,staff_no,department from svnauth_user ORDER BY user_name limit $begin,$perpage;";
