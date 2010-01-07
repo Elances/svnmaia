@@ -1,6 +1,7 @@
 <?php
 //用户注册处理
 header("content-type:text/html; charset=gb2312");
+error_reporting(0);
 include('../../../config.inc');
 include('../include/basefunction.php');
 if(file_exists('../config/config.php'))
