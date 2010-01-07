@@ -1,5 +1,6 @@
 <?php
 session_start();
+error_reporting(0);
 $d=$_GET['parentId'];
 if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
 	$path=escapeshellcmd($_GET['d']);

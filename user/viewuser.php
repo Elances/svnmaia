@@ -1,7 +1,7 @@
 <?php
    session_start();
 header("content-type:text/html; charset=gb2312");
-  // error_reporting(0);
+   error_reporting(0);
 ?>
 <!--
 Author:lixuejiang
@@ -171,12 +171,12 @@ if(!is_numeric($page))
 		$i++;
 	}
 	echo "</td></tr></table>";
-	$pw=$_GET['w'];
+	$pw=mysql_real_escape_string($_GET['w']);
 	if(empty($pw))
 	{
 	  $query = "select user_id,user_name,full_name,email,staff_no,department from svnauth_user ORDER BY user_name limit $begin,$perpage;";
 	}else{
-	  $query = "select user_id,user_name,full_name,email,staff_no,department from svnauth_user where user_name like \"{$pw}%\" ORDER BY user_name;";
+	  $query = "select user_id,user_name,full_name,email,staff_no,department from svnauth_user where user_name like '{$pw}%' ORDER BY user_name;";
 	}
 	if($_GET['p']=='a')
 	  $query = "select user_id,user_name,full_name,email,staff_no,department from svnauth_user ORDER BY user_name;";
@@ -216,7 +216,7 @@ $i=0;
 		$user_id=$row['user_id'];
 		$user_name=$row['user_name'];
 		$full_name=$row['full_name'];
-		(empty($full_name))?($user_str=$user_name):($user_str="$user_name($full_name)")
+		(empty($full_name))?($user_str=$user_name):($user_str="$user_name($full_name)");
 		$staff_no=$row['staff_no'];
 		$department=$row['department'];
 		$email=$row['email'];		$i++;

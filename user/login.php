@@ -28,7 +28,7 @@ if($usr =="")
 $user_id=0;
 //SQL查询语句;
 mysql_query("SET NAMES utf8");
-$query = "SELECT supervisor,user_id,password FROM svnauth_user WHERE user_name =\"$usr\";"; 
+$query = "SELECT supervisor,user_id,password FROM svnauth_user WHERE user_name ='$usr';"; 
 
 // 执行查询
 $result =mysql_query($query);
@@ -59,7 +59,7 @@ if($totalnum>0){
   exit;
 }		
 //用户是否目录管理员
-$query="select repository,path from svnauth_dir_admin where svnauth_dir_admin.user_id=\"$user_id\"";
+$query="select repository,path from svnauth_dir_admin where svnauth_dir_admin.user_id='$user_id'";
 $result =mysql_query($query);
 $num=mysql_num_rows($result);
 if(($num > 0)and($_SESSION['role']=='user'))

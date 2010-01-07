@@ -41,7 +41,7 @@ if ($passwd != $passwd0)
 $passwd=cryptMD5Pass($passwd);
 
 //设置字符集
-$query = "select user_name from svnauth_user WHERE user_name =\"$username\"; ";
+$query = "select user_name from svnauth_user WHERE user_name ='$username'; ";
 $result =mysql_query($query);
 if (mysql_num_rows($result) > 0){
 		echo "用户名已存在！如果忘记密码，请使用“找回密码”功能。"; 
@@ -50,9 +50,11 @@ if (mysql_num_rows($result) > 0){
 }else
 {
   $expire=date("Y-m-d" , strtotime("+$user_t day"));
-  $query = "insert into svnauth_user (user_name,password,full_name,email,staff_no,department,supervisor,expire) values (\"$username\",\"$passwd\",\"$fullname\",\"$email\",\"$staff_no\",\"$department\",0,\"$expire\")";
+  $query = "insert into svnauth_user (user_name,password,full_name,email,staff_no,department,supervisor,expire) values ('$username','$passwd','$fullname','$email','$staff_no','$department',0,'$expire')";
   $result =mysql_query($query) or die('注册失败：'.mysql_error());
   if($result){
+	$username=escapeshellarg($username); 
+	$passwd0=escapeshellarg($passwd0);
   	exec($htpasswd.' -m -b '. $passwdfile . ' '.$username.' '.$passwd0);
   	echo "用户注册成功！"; 
 		mysql_close($mlink);

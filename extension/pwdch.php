@@ -28,7 +28,7 @@ if ($passwd != $passwd0)
 }
 
 //SQL≤È—Ø”Ôæ‰;
-$query = "SELECT user_name,password FROM svnauth_user WHERE user_name =\"$usr\""; 
+$query = "SELECT user_name,password FROM svnauth_user WHERE user_name ='$usr'"; 
 $result =mysql_query($query);
 if($result)$totalnum=mysql_num_rows($result);
 if($totalnum>0){
@@ -37,7 +37,7 @@ if($totalnum>0){
 	  if(verifyPasswd($oldpwd,$fpasswd))
 	  {	  
 		$passwd=cryptMD5Pass($passwd);
-		$query = "update svnauth_user set password=\"$passwd\" WHERE user_name =\"$usr\"";
+		$query = "update svnauth_user set password='$passwd' WHERE user_name ='$usr'";
 // ÷¥––≤È—Ø
 		mysql_query($query);
 		$err=mysql_error();

@@ -1,5 +1,6 @@
 <?php
 session_start();
+ error_reporting(0);
 header("content-type:text/html; charset=gb2312");
 if (!isset($_SESSION['username'])){	
 	echo "ÇëÏÈ<a href='../user/loginfrm.php'>µÇÂ¼</a> £¡";
@@ -37,13 +38,13 @@ function pri_modify()
 		return 0;
 		break;
 		}
-		$query="update svnauth_permission set permission=\"$right\" where user_id=$user_id and repository=\"$repos\" and path=\"$path\"";
+		$query="update svnauth_permission set permission='$right' where user_id=$user_id and repository='$repos' and path='$path'";
 		mysql_query($query);
 		echo mysql_error();
 	}
 	if($action=='del')
 	{
-		$query="delete from svnauth_permission where user_id=$user_id and repository=\"$repos\" and path=\"$path\" ";
+		$query="delete from svnauth_permission where user_id=$user_id and repository='$repos' and path='$path' ";
 		mysql_query($query);
 	}
 }
