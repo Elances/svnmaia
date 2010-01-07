@@ -132,6 +132,27 @@ if (mysql_num_rows($result) > 0){
 			mysql_query($query);
 			$err .= mysql_error();
 		}
+		$detail_array=array();
+	        $detail_array=$_POST['group_detail'];
+		$clear=false;
+		foreach($detail_array as $v)
+		{
+			list($rights,$group,$t_gid,$type)=explode(' ',$v);
+			if(! $clear)
+			{
+				$clear=true;
+				$query="delete from svnauth_g_permission where repository='$repos' and path='$path'";
+				mysql_query($query);
+				$err=mysql_error();
+			}
+			if(trim($type)=='c')continue;
+			if(empty($t_gid))continue;
+			$t_gid=safe($t_gid);
+			$rights=safe($rights);
+			$query="insert into svnauth_g_permission(group_id,repository,path,permission)values($t_gid,'$repos','$path',$rights)";
+			mysql_query($query);
+			$err .= mysql_error();
+		}
 
 	}
 	if(!empty($err))
