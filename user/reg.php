@@ -17,6 +17,7 @@ include('../include/dbconnect.php');
 $passwd=$_POST['passwd'];
 $passwd0=$_POST['passwd0'];
 foreach($_POST as $key=>$value){
+	$value=htmlspecialchars($value,ENT_QUOTES);
 	$_POST["$key"]=mysql_real_escape_string($value,$mlink);
 	if (function_exists('iconv'))$_POST["$key"]=iconv("UTF-8","GB2312",$_POST["$key"]);
 }
