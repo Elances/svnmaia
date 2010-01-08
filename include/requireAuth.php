@@ -11,7 +11,7 @@ if(file_exists('../config/config.php'))
 }
 
 if (($_SESSION['role']!='admin')and($_SESSION['role']!='diradmin')){	
-	echo "您无权限进行此操作，请用管理员身份<a href='../user/loginfrm.php'>登录</a> ！";
+	if(!$scheme)echo "您无权限进行此操作，请用管理员身份<a href='../user/loginfrm.php'>登录</a> ！";
 //	echo" <script>setTimeout('document.location.href=\"../user/loginfrm.php\"',0)</script>"; 	
 	if(!$scheme)exit;
 }
