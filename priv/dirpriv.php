@@ -22,14 +22,19 @@ function checkurl($t_url)
 	global $svnparentpath,$svn;
 	if($t_url=='')return true;
 	if(strpos($t_url,':'))return false;
-//	$t_url=escapeshellcmd($t_url);
-// 	$localurl=($svnparentpath{0}=='/')?("file://$svnparentpath/$t_url"):("file:///$svnparentpath/$t_url");
-//	exec("{$svn}svn info \"$localurl\"",$dirs_arr);
-//	if(count($dirs_arr)>1)
-//	{
-//		return true;
-//	}else
-//		return false;
+//中文目录判断有问题
+	if(isset($_GET['from_d']))
+	{
+	  $t_url=escapeshellcmd($t_url);
+ 	  $localurl=($svnparentpath{0}=='/')?("file://$svnparentpath/$t_url"):("file:///$svnparentpath/$t_url");
+	  exec("{$svn}svn info \"$localurl\"",$dirs_arr);
+	  if(count($dirs_arr)>1)
+	  {
+		return true;
+	  }else
+		return false;
+	}
+	return true;
 }
 $dir=trim(mysql_real_escape_string($_GET['d']));
 $dir=str_replace($svnurl,'',$dir);
