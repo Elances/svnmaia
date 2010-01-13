@@ -210,7 +210,7 @@ if(isset($_POST['guact']))
 				$unknow_usr=trim($unknow_usr);
 				if(!empty($unknow_usr))
 				{
-					echo " <script>window.alert(\"这些用户不存在: $unknow_usr ！\")</script>";
+					echo " <script>window.alert(\"这些用户不存在或者已经在组员中: $unknow_usr ！\")</script>";
 				}else unset($unknow_usr);
 			}
 			$_GET['gid']=$gid;
