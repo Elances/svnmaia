@@ -327,6 +327,7 @@ function cleartip()
 <form method='get' action=''>
 <fieldset>
 <legend>快速查看权限</legend>
+<input type=hidden name='from_d' value='true'>
 <label for='myurl'>输入url：</lable><input type=text id='myurl' name='d' style="width:480;">
 	<input type=submit value='提交'>&nbsp;&nbsp;<font class=sf  onclick="showreadme('urlchop')">svn父目录URL:<span id='urlchop' class='tip' ><b>说明：</b><a href='../config/index.php'>指定svn父目录URL</a>，如你的svn库mysvn1所在url是：http://example.com/repos/mysvn1，则url父目录应为http://example.com/repos
 		   </span></font>
