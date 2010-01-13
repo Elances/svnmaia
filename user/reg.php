@@ -1,6 +1,7 @@
 <?php
 //用户注册处理
 header("content-type:text/html; charset=gb2312");
+error_reporting(0);
 include('../../../config.inc');
 include('../include/basefunction.php');
 if(file_exists('../config/config.php'))
@@ -16,6 +17,7 @@ include('../include/dbconnect.php');
 $passwd=$_POST['passwd'];
 $passwd0=$_POST['passwd0'];
 foreach($_POST as $key=>$value){
+	$value=htmlspecialchars($value,ENT_QUOTES);
 	$_POST["$key"]=mysql_real_escape_string($value,$mlink);
 	if (function_exists('iconv'))$_POST["$key"]=iconv("UTF-8","GB2312",$_POST["$key"]);
 }

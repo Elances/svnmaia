@@ -17,10 +17,34 @@ if(file_exists('../config/config.php'))
 include('../../../config.inc');
 include('../include/basefunction.php');
 include('../include/dbconnect.php');
+function checkurl($t_url)
+{
+	global $svnparentpath,$svn;
+	if($t_url=='')return true;
+	if(strpos($t_url,':'))return false;
+//中文目录判断有问题
+	if(isset($_GET['from_d']))
+	{
+	  $t_url=escapeshellcmd($t_url);
+ 	  $localurl=($svnparentpath{0}=='/')?("file://$svnparentpath/$t_url"):("file:///$svnparentpath/$t_url");
+	  exec("{$svn}svn info \"$localurl\"",$dirs_arr);
+	  if(count($dirs_arr)>1)
+	  {
+		return true;
+	  }else
+		return false;
+	}
+	return true;
+}
 $dir=trim(mysql_real_escape_string($_GET['d']));
 $dir=str_replace($svnurl,'',$dir);
 $dir=($dir{0}=='/')?(substr($dir,1)):($dir);
 $dir=str_replace('//','/',$dir);
+if(!checkurl($dir))
+{
+	echo "<script>alert('the URL is incorrect!')</script>";
+	$dir='/';
+}
 list($repos,$dir)=explode('/',$dir,2);
 $dir=($dir{strlen($dir)-1}=='/')?('/'.substr($dir,0,-1)):('/'.$dir);
 $firstdir="<a href='$svnurl/{$repos}{$dir}' target=_blank>{$repos}{$dir}</a>";
