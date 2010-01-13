@@ -86,7 +86,8 @@ function isadmin($gid)
 	$sql="select isowner from svnauth_groupuser where group_id=$gid and user_id=$t_uid";
 	$t_res=mysql_query($sql);
 	$row= mysql_fetch_array($t_res, MYSQL_BOTH);
-	if(!empty($row['isowner']))return true;
+	$t_isowner=trim($row['isowner']);
+	if(!empty($t_isowner))return true;
 
 	$query="select repository,path from svnauth_g_permission where group_id=$gid";
 	$result=mysql_query($query);
