@@ -368,7 +368,7 @@ function cleartip()
 <div class='rt' id='rtdiv'>
 	<img src='../img/close.bmp' ALT='close' style='float:right;' onclick="document.getElementById('rtdiv').style.display='none'">
 	<div style='float:left'>
-	<input type='text' id='search2' class='sbar' /><input type='button' value='定位用户' onclick="search('search2','candidate[]')"><br>
+	<input type='text' id='search2' class='sbar' onkeyup="search('search2','candidate[]')"/><input type='button' value='定位用户' onclick="search('search2','candidate[]')"><br>
 <select name="candidate[]" MULTIPLE size=23 class='cansl' onDblclick="adduser('rtdiv','candidate[]','permission_detail[]','')"><option value='' label='--请选择--'>-权限----候选用户列表--</option>
 [Maiasvn:candidate]
 </select>

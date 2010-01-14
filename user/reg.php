@@ -9,7 +9,7 @@ if(file_exists('../config/config.php'))
 	include('../config/config.php');
 }else
 {
-	echo "window.alert('请先进行系统设置!')";
+	echo "请先进行系统设置!";
 	echo" <script>setTimeout('document.location.href=\"../config/index.php\"',0)</script>";  	
 	exit;
 }
@@ -23,6 +23,11 @@ foreach($_POST as $key=>$value){
 }
 $username=trim($_POST['username']);
 $username=str_replace(' ','',$username);
+if(!checkUserGroup($username))
+{
+	echo "用户名非法！";
+	exit;
+}
 $fullname=trim($_POST['fullname']);
 $staff_no=$_POST['staff_no'];
 $department=$_POST['department'];
