@@ -129,5 +129,13 @@ function verifyPasswd($inputPass,$correctPass)
 	}
 	return false;	
 }
-
+function checkUserGroup($str)
+{
+	$p="/^[\w._\-\/]{2,50}$/";
+	if(preg_match($p,$str))
+	{
+		return true;
+	}else
+		return false;
+}
 ?>
