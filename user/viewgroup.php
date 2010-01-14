@@ -59,7 +59,17 @@ function setowner()
 {
 	document.getElementById("editowner").value=1
 }
-
+function checkg()
+{
+	var gn=document.getElementById('groupname').value;
+	if(gn == "")return false;	
+	var rs=/^[\w._\/]{2,50}$/.test( gn );
+	if(! rs)
+	{
+		alert('组名非法！仅允许字母、数字和特殊符号._/三种');
+		return false;
+	}
+}
 -->
 </script>
 <body>
@@ -71,6 +81,15 @@ $isadmin=false;
 function safe($str)
 { 
 	return "'".mysql_real_escape_string($str)."'";
+}
+function checkinput($str)
+{
+	$p="/^[\w._\/]{2,50}$/";
+	if(preg_match($p,$str))
+	{
+		return true;
+	}else
+		return false;
 }
 function isadmin($gid)
 {
@@ -118,7 +137,13 @@ if(isset($_POST['groupname']))
 {
 	if(( $_SESSION['role'] =="admin")or($_SESSION['role']=="diradmin"))
 	{
-		$gname=mysql_real_escape_string($_POST['groupname']);
+		$gname=trim($_POST['groupname']);
+		if(! checkinput($gname))
+		{
+			echo "<script>alert('incorrect groupname!');</script>";
+			exit;
+		}
+		$gname=mysql_real_escape_string($gname);
 		$query="insert into svnauth_group set group_name='$gname'";		
 	//	echo $query;
 		mysql_query($query);
@@ -394,7 +419,7 @@ echo "</table></form>";
 <form method="post" action="#" name='newgroupform' >
  <fieldset class='fset'>
  <legend>创建新组</legend>
- 组名：<input name='groupname'type=text><input type=submit value='保存并添加组员'>
+ 组名：<input name='groupname' id='groupname' type=text><input type=submit value='保存并添加组员' onclick='return checkg();'>
  </fieldset>
 </form>
 <?php 	include('../template/footer.tmpl'); ?>
