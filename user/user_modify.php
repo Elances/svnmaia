@@ -137,6 +137,7 @@ HTML;
 		<tr><td><input style="width:80" type=submit value="确定" ></td><td><input style="width:80" type=reset value="取消" onclick="turnback()"></td></tr>
 	</table>
 		</fieldset></form>
+<br><a href="../priv/viewpriv.php?u=$user_id">查看我的权限详情</a>
 HTML;
 	}
 	if( $action == '重置密码')
