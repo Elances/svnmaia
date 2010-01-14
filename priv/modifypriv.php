@@ -86,6 +86,8 @@ if (mysql_num_rows($result) > 0){
 		}
 	$query="insert into svnauth_permission (user_id,repository,path,permission,expire) select user_id,'$repos','$path',permission,expire from svnauth_permission where  repository='$f_repos' and path = '$dir' ";
 	mysql_query($query);
+	$query="insert into svnauth_g_permission (group_id,repository,path,permission,expire) select group_id,'$repos','$path',permission,expire from svnauth_g_permission where  repository='$f_repos' and path = '$dir' ";
+	mysql_query($query);
 //	$err .= mysql_error();
 
 }else
