@@ -88,12 +88,23 @@ while (($result)and($row= mysql_fetch_array($result, MYSQL_BOTH))) {
 		$permission='none';
 		break;
 	}
-	if ($tr_class=="trc1"){
-					$tr_class="trc2";
-				}else
-				{			
-					$tr_class="trc1";
-				}
+	($tr_class=="trc1")?($tr_class="trc2"):($tr_class="trc1");	
 	echo "<tr class=$tr_class><td>$path</td><td>$permission</td><td>$act</td></tr>";
 }
 echo "</table>";
+//--------
+$query="select repository,path from svnauth_dir_admin where svnauth_dir_admin.user_id=$user_id";
+$result =mysql_query($query);
+$adminpath='';
+while (($result)and($row= mysql_fetch_array($result, MYSQL_BOTH))) {
+	$path=$row['repository'].$row['path'];
+	if(empty($path))continue;
+	($tr_class=="trc1")?($tr_class="trc2"):($tr_class="trc1");
+	$adminpath .= "<tr class=$tr_class><td>$path</td></tr>";
+}
+if(!empty($adminpath))
+{
+	echo "<h4>所管理的目录:</h4>";
+	echo "<table>";
+	echo $adminpath."</table>";
+}
