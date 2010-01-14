@@ -63,10 +63,10 @@ function checkg()
 {
 	var gn=document.getElementById('groupname').value;
 	if(gn == "")return false;	
-	var rs=/^[\w._\/]{2,50}$/.test( gn );
+	var rs=/^[\w._\-\/]{2,50}$/.test( gn );
 	if(! rs)
 	{
-		alert('组名非法！仅允许字母、数字和特殊符号._/三种');
+		alert('组名非法！仅允许字母、数字和特殊符号._-/四种');
 		return false;
 	}
 }
@@ -84,7 +84,7 @@ function safe($str)
 }
 function checkinput($str)
 {
-	$p="/^[\w._\/]{2,50}$/";
+	$p="/^[\w._\-\/]{2,50}$/";
 	if(preg_match($p,$str))
 	{
 		return true;
@@ -416,10 +416,10 @@ while (($result)and($row= mysql_fetch_array($result, MYSQL_BOTH))) {
 echo "</table></form>";
 ?>
 <a id='addgroup'></a>
-<form method="post" action="#" name='newgroupform' >
+<form method="post" action="#" name='newgroupform' onsubmit='return checkg();'>
  <fieldset class='fset'>
  <legend>创建新组</legend>
- 组名：<input name='groupname' id='groupname' type=text><input type=submit value='保存并添加组员' onclick='return checkg();'>
+ 组名：<input name='groupname' id='groupname' type=text><input type=submit value='保存并添加组员'/>
  </fieldset>
 </form>
 <?php 	include('../template/footer.tmpl'); ?>
