@@ -70,6 +70,7 @@ if(isset($_POST['flag']))
   }
   if('other'==$optype)
   {
+	  echo "<script>alert('已给申请者发送回执，请登录权限系统进行处理！');</script>";
 	  echo "<script>setTimeout('document.location.href=\"../../default.htm\"',5)</script>";//跳转
 	  $body="Hi,$us\n
     你的svn权限申请已被手工处理，回执如下：$mail_back
@@ -181,7 +182,7 @@ if($result)
 <br><input type='radio' name='optype' value='agreed' id='diradmin'><label for='diradmin'>同意(完全同意所申请的url和权限，将自动处理)</label>
 <br><input type='radio' name='optype' value='denied'  id='superadmin'><label for='superadmin'>拒绝</label>
 <br><input type='radio' name='optype' value='other' id='tolist'><label for='tolist'>手动处理（进入权限管理系统处理）</label>
-<br>回执给申请人:<input type=text name='email_back'>
+<br>回执给申请人:<input type=text name='email_back'  size='40'>
 </div>
 <div class='ft'>
 <input type='submit' value='确定提交'>

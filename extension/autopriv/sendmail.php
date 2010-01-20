@@ -97,7 +97,7 @@ if($dir_admin_op=='checked')
 	if($subdir=='\\')$subdir='/';
 }
 //********发送到超级管理员
-if(($tosuper_op=='checked')or(!$t_found))
+if(($tosuper_op=='checked')or((!$t_found)and ($dir_admin_op=='checked'))
 {
   $query="select user_name,email from svnauth_user where supervisor=1";
   $result = mysql_query($query);
@@ -114,6 +114,12 @@ if(($tosuper_op=='checked')or(!$t_found))
 if($tolist_op=='checked')
 {
 	$listArray=preg_split('/[;, ]/',$email_list);
+	foreach($listArray as $v)
+		if(strpos($v,'@'))$maillist[]=$v;
+}
+if($thenlist_op=='checked')
+{
+	$listArray=preg_split('/[;, ]/',$email_list2);
 	foreach($listArray as $v)
 		if(strpos($v,'@'))$maillist[]=$v;
 }
@@ -177,6 +183,7 @@ foreach($maillist as $mail)
 	申请访问路径：$wurl
 	申请权限：$priv
 	申请说明：$comment
+
 无论您是同意还是拒绝，请点击如下链接进行处理：
 $url
 

@@ -21,6 +21,11 @@ if(isset($_POST['flag']))
 		$str .= '$'."tolist_op='checked';\n";
 		$str .= '$'."email_list='".$_POST['email_list']."';\n";
 	}
+	if($_POST['thenlist_op'])
+	{
+		$str .= '$'."thenlist_op='checked';\n";
+		$str .= '$'."email_list2='".$_POST['email_list2']."';\n";
+	}
 	$str .="?>\n";
 	$handle=fopen('./autopriv.conf','w+');
 	if (fwrite($handle, $str) === FALSE) {
@@ -47,10 +52,12 @@ br{clear:both;}
 <h3>权限自动审批设置</h3>
 <div class='st'>
 <input type='hidden' name='flag' value='1'>
-<br><input type='checkbox' name='dir_admin_op' value='true' <?php echo $dir_admin_op ?> id='diradmin'><label for='diradmin'>发送到目录管理员审批权限</label>
+<br><input type='checkbox' name='dir_admin_op' value='true' <?php echo $dir_admin_op ?> id='diradmin'><label for='diradmin'>发送到目录管理员审批权限。若无，则发送到超级管理员</label>
 <br><input type='checkbox' name='tosuper_op' value='true' <?php echo $tosuper_op ?> id='superadmin'><label for='superadmin'>同时发送到超级管理员</label>
 <br><input type='checkbox' name='tolist_op' value='true' <?php echo $tolist_op ?> id='tolist'><label for='tolist'>同时发送到如下列表：</label>
 <input type=text name='email_list' value="<?php echo $email_list ?>">
+<br><input type='checkbox' name='thenlist_op' value='true' <?php echo $thenlist_op ?> id='thenlist'><label for='thenlist'>无目录管理员则发送到如下列表：</label>
+<input type=text name='email_list2' value="<?php echo $email_list2 ?>">
 </div>
 <div class='ft'>
 <input type='submit' value='提交保存'>
