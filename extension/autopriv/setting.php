@@ -48,7 +48,7 @@ br{clear:both;}
 <div class='st'>
 <input type='hidden' name='flag' value='1'>
 <br><input type='checkbox' name='dir_admin_op' value='true' <?php echo $dir_admin_op ?> id='diradmin'><label for='diradmin'>发送到目录管理员审批权限</label>
-<br><input type='checkbox' name='super_op' value='true' <?php echo $tosuper_op ?> id='superadmin'><label for='superadmin'>同时发送到超级管理员</label>
+<br><input type='checkbox' name='tosuper_op' value='true' <?php echo $tosuper_op ?> id='superadmin'><label for='superadmin'>同时发送到超级管理员</label>
 <br><input type='checkbox' name='tolist_op' value='true' <?php echo $tolist_op ?> id='tolist'><label for='tolist'>同时发送到如下列表：</label>
 <input type=text name='email_list' value="<?php echo $email_list ?>">
 </div>
