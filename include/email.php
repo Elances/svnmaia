@@ -52,7 +52,7 @@ Class Mailconfig {
 }
 
 function send_mail($toemail,$subject,$message,$additional=null){
-	global $M_db,$db_charset,$sendtoname;
+	global $M_db,$db_charset,$sendtoname,$windid;
 	!$sendtoname && $sendtoname = $toemail;
 	!$windid && $windid = 'svn-info';
 	$send_subject = "=?$db_charset?B?".base64_encode(str_replace(array("\r","\n"), array('',' '),$subject)).'?=';

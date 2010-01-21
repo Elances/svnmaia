@@ -48,7 +48,8 @@ br{clear:both;}
  </div>
  <h3>权限申请</h3>
   <div class='st'>
-  权限申请
+<br><a href='./autopriv/setting.php'>自动审批权限设置</a>
+<br><a href='./autopriv/rtpriv.php' target='_blank'>权限申请</a>
   </div>
 <h3>自定义工具集</h3>
 <div class='st'>
