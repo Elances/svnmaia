@@ -12,7 +12,7 @@ error_reporting(0);
 include('../../../../config.inc');
 include('../../config/config.php');
 include('./autopriv.conf');
-include('../include/dbconnect.php');
+include('../../include/dbconnect.php');
 foreach($_POST as $k=>$v)
 {
 	$v=htmlspecialchars($v,ENT_QUOTES);

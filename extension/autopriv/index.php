@@ -10,7 +10,7 @@ error_reporting(0);
 */
 include('../../../../config.inc');
 include('../../config/config.php');
-include('../include/dbconnect.php');
+include('../../include/dbconnect.php');
 if(isset($_POST['flag']))
 {
   $ops=stripslashes(trim($_POST["u"]));
@@ -154,7 +154,7 @@ if($result)
 	$path=$row['path'];
 	$wpriv=$row['permission'];
 	('w'==$wpriv)?($priv='读写'):($priv='只读');
-	$tip="&nbsp;&nbsp;&nbsp;Hi,$us 申请了 $svnurl/$repos/$path 的 $priv 权限，请审慎处理：";
+	$tip="&nbsp;&nbsp;&nbsp;Hi,$us 申请了<font color=red>$svnurl/$repos/$path</font>的<font color=red>$priv</font>权限，请审慎处理：";
 }
 ?>
 <style type='text/css'>

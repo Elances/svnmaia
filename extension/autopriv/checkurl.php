@@ -9,7 +9,7 @@ error_reporting(0);
    
 */
 include('../../../../config.inc');
-include('../include/dbconnect.php');
+include('../../include/dbconnect.php');
 function checkurl($t_url)
 {
 	global $svnparentpath,$svn;
