@@ -10,7 +10,7 @@ error_reporting(0);
 */
 include('../../../../config.inc');
 include('../../config/config.php');
-include('../include/dbconnect.php');
+include('../../include/dbconnect.php');
 if(isset($_POST['flag']))
 {
   $ops=stripslashes(trim($_POST["u"]));
@@ -53,10 +53,11 @@ if(isset($_POST['flag']))
   $windid="svn-rt";
   if('denied'==$optype)
   {
-	  echo "处理成功！<a href='' onclick=\"javascript:self.close;\">关闭</a>";
+	  echo "处理成功！<a href='' onclick=\"javascript:self.close();\">关闭</a>";
 	  //发邮件通知
 	  $body="Hi,$us\n
-	你的svn权限申请已被拒绝，回执如下：$mail_back
+		  你对$svnurl/$repos/$path 的svn权限申请已被拒绝，回执如下：$mail_back
+
 这只是一封系统自动发出的邮件，请勿回复。
 --------------------
 配置管理组
@@ -69,7 +70,8 @@ if(isset($_POST['flag']))
 	  echo "<script>alert('已给申请者发送回执，请登录权限系统进行处理！');</script>";
 	  echo "<script>setTimeout('document.location.href=\"../../default.htm\"',5)</script>";//跳转
 	  $body="Hi,$us\n
-    你的svn权限申请已被手工处理，回执如下：$mail_back
+		  你对$svnurl/$repos/$path 的svn权限申请已被手工处理，回执如下：$mail_back
+
  这只是一封系统自动发出的邮件，请勿回复。
 --------------------
 配置管理组
@@ -105,10 +107,11 @@ if(isset($_POST['flag']))
   }
   $scheme=true;
   @include('../../priv/gen_access.php');
-  echo "处理成功！<a href='' onclick=\"javascript:self.close;\">关闭</a>";
+  echo "处理成功！<a href='' onclick=\"javascript:self.close();\">关闭</a>";
 	  //发邮件通知
   $body="Hi,$us\n
-	  你的svn权限申请已被批准，回执如下：$mail_back
+	  你对$svnurl/$repos/$path 的svn权限申请已被批准，回执如下：$mail_back
+
  这只是一封系统自动发出的邮件，请勿回复。
 --------------------
 配置管理组
@@ -154,7 +157,7 @@ if($result)
 	$path=$row['path'];
 	$wpriv=$row['permission'];
 	('w'==$wpriv)?($priv='读写'):($priv='只读');
-	$tip="&nbsp;&nbsp;&nbsp;Hi,$us 申请了 $svnurl/$repos/$path 的 $priv 权限，请审慎处理：";
+	$tip="&nbsp;&nbsp;&nbsp;Hi,$us 申请了<font color=red>$svnurl/$repos/$path</font>的<font color=red>$priv</font>权限，请审慎处理：";
 }
 ?>
 <style type='text/css'>

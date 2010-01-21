@@ -12,7 +12,7 @@ error_reporting(0);
 include('../../../../config.inc');
 include('../../config/config.php');
 include('./autopriv.conf');
-include('../include/dbconnect.php');
+include('../../include/dbconnect.php');
 foreach($_POST as $k=>$v)
 {
 	$v=htmlspecialchars($v,ENT_QUOTES);
@@ -72,7 +72,7 @@ if(empty($repos) and ($dir=='/'))
 $subdir=$dir;
 $maillist=array();
 //*****目录管理员审批
-if($dir_admin_op=='checked')
+if(($dir_admin_op=='checked')or($thenlist_op=='checked'))
  for($ii=0;$ii<20;$ii++)
 {
 	$query="select user_name,email from svnauth_dir_admin,svnauth_user where svnauth_dir_admin.user_id=svnauth_user.user_id and repository='$repos' and path='$subdir' order by user_name";
@@ -93,7 +93,7 @@ if($dir_admin_op=='checked')
 	if($subdir=='\\')$subdir='/';
 }
 //********发送到超级管理员
-if(($tosuper_op=='checked')or((!$t_found)and ($dir_admin_op=='checked'))
+if(($tosuper_op=='checked')or((!$t_found)and ($dir_admin_op=='checked')))
 {
   $query="select user_name,email from svnauth_user where supervisor=1";
   $result = mysql_query($query);
@@ -113,7 +113,8 @@ if($tolist_op=='checked')
 	foreach($listArray as $v)
 		if(strpos($v,'@'))$maillist[]=$v;
 }
-if($thenlist_op=='checked')
+//******无目录管理员是发送到指定列表
+if((!$t_found)and ($thenlist_op=='checked'))
 {
 	$listArray=preg_split('/[;, ]/',$email_list2);
 	foreach($listArray as $v)

@@ -10,7 +10,6 @@ if (($_SESSION['role'] !='admin'))
 	echo "您无权进行此操作！";
 	exit;
 }
-if(file_exists('./autopriv.conf'))include('./autopriv.conf');
 if(isset($_POST['flag']))
 {
 	$str="<?php\n";
@@ -31,9 +30,10 @@ if(isset($_POST['flag']))
 	if (fwrite($handle, $str) === FALSE) {
 		$tmppath=realpath('./');
    		echo "<strong>Error:</strong>不能写入到文件 $tmppath/autopriv.conf ! 保存失败！";
- 	}
+ 	}else echo "<font color=red>保存成功！</font>";
 	fclose($handle);
 }
+if(file_exists('./autopriv.conf'))include('./autopriv.conf');
 ?>
 <style type='text/css'>
 .ipt{position:absolute;left:220px;clear:both;float:left;background:#ece9d8;width:250px;}
