@@ -13,7 +13,7 @@ include('../../config/config.php');
 include('../include/dbconnect.php');
 if(isset($_POST['flag']))
 {
-  $ops==stripslashes(trim($_POST["u"]));
+  $ops=stripslashes(trim($_POST["u"]));
   $para_str=stripslashes(trim($_POST["c"]));
   $salt=stripslashes(trim($_POST["ss"]));
   $id=stripslashes(trim($_POST["id"]));
