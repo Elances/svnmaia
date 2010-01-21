@@ -12,11 +12,7 @@ error_reporting(0);
 include('../../../../config.inc');
 include('../../config/config.php');
 include('./autopriv.conf');
-$mlink=mysql_connect(SERVER,USERNAME2,PASSWORD2) or die("数据库链接失败！请联系管理员");
-if (!mysql_select_db(DBNAME))
-{
-  exit;
-}
+include('../include/dbconnect.php');
 foreach($_POST as $k=>$v)
 {
 	$v=htmlspecialchars($v,ENT_QUOTES);

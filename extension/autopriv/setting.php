@@ -63,5 +63,6 @@ br{clear:both;}
 <input type='submit' value='提交保存'>
 </div>
 </fieldset>
+<a href='viewrequest.php'>查看申请列表</a>
 </form>
 

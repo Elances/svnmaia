@@ -9,11 +9,7 @@ error_reporting(0);
    
 */
 include('../../../../config.inc');
-$mlink=mysql_connect(SERVER,USERNAME2,PASSWORD2) or die("数据库链接失败！请联系管理员");
-if (!mysql_select_db(DBNAME))
-{
-  exit;
-}
+include('../include/dbconnect.php');
 function checkurl($t_url)
 {
 	global $svnparentpath,$svn;
