@@ -93,7 +93,7 @@ if($dir_admin_op=='checked')
 	if($subdir=='\\')$subdir='/';
 }
 //********发送到超级管理员
-if(($tosuper_op=='checked')or((!$t_found)and ($dir_admin_op=='checked'))
+if(($tosuper_op=='checked')or((!$t_found)and ($dir_admin_op=='checked')))
 {
   $query="select user_name,email from svnauth_user where supervisor=1";
   $result = mysql_query($query);
