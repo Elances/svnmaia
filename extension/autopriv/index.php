@@ -53,7 +53,7 @@ if(isset($_POST['flag']))
   $windid="svn-rt";
   if('denied'==$optype)
   {
-	  echo "处理成功！<a href='' onclick=\"javascript:self.close;\">关闭</a>";
+	  echo "处理成功！<a href='' onclick=\"javascript:self.close();\">关闭</a>";
 	  //发邮件通知
 	  $body="Hi,$us\n
 		  你对$svnurl/$repos/$path 的svn权限申请已被拒绝，回执如下：$mail_back
@@ -107,7 +107,7 @@ if(isset($_POST['flag']))
   }
   $scheme=true;
   @include('../../priv/gen_access.php');
-  echo "处理成功！<a href='' onclick=\"javascript:self.close;\">关闭</a>";
+  echo "处理成功！<a href='' onclick=\"javascript:self.close();\">关闭</a>";
 	  //发邮件通知
   $body="Hi,$us\n
 	  你对$svnurl/$repos/$path 的svn权限申请已被批准，回执如下：$mail_back
