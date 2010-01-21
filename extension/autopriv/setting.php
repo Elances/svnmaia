@@ -30,7 +30,7 @@ if(isset($_POST['flag']))
 	if (fwrite($handle, $str) === FALSE) {
 		$tmppath=realpath('./');
    		echo "<strong>Error:</strong>不能写入到文件 $tmppath/autopriv.conf ! 保存失败！";
- 	}
+ 	}else echo "<font color=red>保存成功！</font>";
 	fclose($handle);
 }
 if(file_exists('./autopriv.conf'))include('./autopriv.conf');
