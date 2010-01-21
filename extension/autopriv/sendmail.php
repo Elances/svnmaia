@@ -72,7 +72,7 @@ if(empty($repos) and ($dir=='/'))
 $subdir=$dir;
 $maillist=array();
 //*****目录管理员审批
-if($dir_admin_op=='checked')
+if(($dir_admin_op=='checked')or($thenlist_op=='checked'))
  for($ii=0;$ii<20;$ii++)
 {
 	$query="select user_name,email from svnauth_dir_admin,svnauth_user where svnauth_dir_admin.user_id=svnauth_user.user_id and repository='$repos' and path='$subdir' order by user_name";
@@ -113,7 +113,8 @@ if($tolist_op=='checked')
 	foreach($listArray as $v)
 		if(strpos($v,'@'))$maillist[]=$v;
 }
-if($thenlist_op=='checked')
+//******无目录管理员是发送到指定列表
+if((!$t_found)and ($thenlist_op=='checked'))
 {
 	$listArray=preg_split('/[;, ]/',$email_list2);
 	foreach($listArray as $v)
