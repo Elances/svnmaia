@@ -10,7 +10,6 @@ if (($_SESSION['role'] !='admin'))
 	echo "您无权进行此操作！";
 	exit;
 }
-if(file_exists('./autopriv.conf'))include('./autopriv.conf');
 if(isset($_POST['flag']))
 {
 	$str="<?php\n";
@@ -34,6 +33,7 @@ if(isset($_POST['flag']))
  	}
 	fclose($handle);
 }
+if(file_exists('./autopriv.conf'))include('./autopriv.conf');
 ?>
 <style type='text/css'>
 .ipt{position:absolute;left:220px;clear:both;float:left;background:#ece9d8;width:250px;}
