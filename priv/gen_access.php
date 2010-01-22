@@ -166,7 +166,7 @@ $wg=$repos.'_w';
       }
      $groups[$ng.$i]=$temp;
     }
-$access="\n[groups]\n".$access_g;
+$access="[groups]\n".$access_g;
 foreach($groups as $key => $value)
 {
   if( empty($value))continue;  
