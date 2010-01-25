@@ -4,7 +4,7 @@ session_start();
 header("content-type:text/html; charset=gb2312");
 if (!isset($_SESSION['username'])){	
 	echo "ÇëÏÈ<a href='../user/loginfrm.php'>µÇÂ¼</a> £¡";
-	echo" <script>setTimeout('document.location.href=\"../user/loginfrm.php\"',0)</script>"; 	
+	echo" <script>setTimeout('document.location.href=\"../../user/loginfrm.php\"',0)</script>"; 	
 	exit;
 }
 include('../../../../config.inc');
