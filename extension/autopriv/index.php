@@ -107,7 +107,7 @@ if(isset($_POST['flag']))
 	mysql_query($query);
   }
   $scheme=true;
-  $backpath=$svnurl/$repos/$path;
+  $backpath="$svnurl/$repos/$path";
   @include('../../priv/gen_access.php');
   echo "处理成功！<a href='' onclick=\"javascript:self.close();\">关闭</a>";
 	  //发邮件通知
