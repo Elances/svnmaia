@@ -107,11 +107,12 @@ if(isset($_POST['flag']))
 	mysql_query($query);
   }
   $scheme=true;
+  $backpath=$svnurl/$repos/$path;
   @include('../../priv/gen_access.php');
   echo "处理成功！<a href='' onclick=\"javascript:self.close();\">关闭</a>";
 	  //发邮件通知
   $body="Hi,$us\n
-	  你对$svnurl/$repos/$path 的svn权限申请已被 $ops 批准，回执如下：$mail_back
+	  你对 $backpath 的svn权限申请已被 $ops 批准，回执如下：$mail_back
 
  这只是一封系统自动发出的邮件，请勿回复。
 --------------------
