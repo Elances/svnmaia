@@ -37,7 +37,7 @@ if(isset($_POST['flag']))
   //*****记录过程
   $query="update rt_svnpriv set ops='$ops',optype='$optype' where id=$id";
   $result=mysql_query($query);
-  $query="select username,repository,path,permission,email from  rt_svnpriv where id=$id";
+  $query="select username,repository,path,permission,email,ops from  rt_svnpriv where id=$id";
   $result=mysql_query($query);
   include("../../include/email.php");
   if($result)
@@ -48,6 +48,7 @@ if(isset($_POST['flag']))
 	$repos=$row['repository'];
 	$path=$row['path'];
 	$wpriv=$row['permission'];
+	$ops=$row['ops'];
   }
   $subject="您的svn权限申请已处理";
   $windid="svn-rt";
@@ -56,7 +57,7 @@ if(isset($_POST['flag']))
 	  echo "处理成功！<a href='' onclick=\"javascript:self.close();\">关闭</a>";
 	  //发邮件通知
 	  $body="Hi,$us\n
-		  你对$svnurl/$repos/$path 的svn权限申请已被拒绝，回执如下：$mail_back
+		  你对$svnurl/$repos/$path 的svn权限申请已被 $ops 拒绝，回执如下：$mail_back
 
 这只是一封系统自动发出的邮件，请勿回复。
 --------------------
@@ -70,7 +71,7 @@ if(isset($_POST['flag']))
 	  echo "<script>alert('已给申请者发送回执，请登录权限系统进行处理！');</script>";
 	  echo "<script>setTimeout('document.location.href=\"../../default.htm\"',5)</script>";//跳转
 	  $body="Hi,$us\n
-		  你对$svnurl/$repos/$path 的svn权限申请已被手工处理，回执如下：$mail_back
+		  你对$svnurl/$repos/$path 的svn权限申请已被 $ops 手工处理，回执如下：$mail_back
 
  这只是一封系统自动发出的邮件，请勿回复。
 --------------------
@@ -110,7 +111,7 @@ if(isset($_POST['flag']))
   echo "处理成功！<a href='' onclick=\"javascript:self.close();\">关闭</a>";
 	  //发邮件通知
   $body="Hi,$us\n
-	  你对$svnurl/$repos/$path 的svn权限申请已被批准，回执如下：$mail_back
+	  你对$svnurl/$repos/$path 的svn权限申请已被 $ops 批准，回执如下：$mail_back
 
  这只是一封系统自动发出的邮件，请勿回复。
 --------------------
@@ -142,7 +143,13 @@ if (mysql_num_rows($result) == 0){
 //没有找到，这显示无效链接
 if (!$trueurl)
 {
-	echo "<font color=red><h2>此url已不存在，可能该请求已被处理！</h2></font>";
+	$query="select ops from  rt_svnpriv where id=$id";
+	$result=mysql_query($query);
+        if(($result)and($row= mysql_fetch_array($result, MYSQL_BOTH)))
+	{
+		$ops=$row['ops'];
+	}
+	echo "<font color=red><h2>此url已不存在，该请求已被 $ops 处理！</h2></font>";
 	echo "<p>点击<a href=/>返回主页</a>";
 	echo "<p><IMG  src='../../img/waiting.gif'>";
 	exit;
