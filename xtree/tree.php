@@ -25,17 +25,21 @@ if($d == '0')
 	}
     $sp = opendir( $svnparentpath );
     if( $sp ) {
-	    $id=1;
         while( $dir = readdir( $sp ) ) {
+	   if ($dir == "." || $dir == "..")continue; 
             $svndir = $svnparentpath . "/" . $dir;
 	    $svndbdir = $svndir . "/db";
 	    $svnhooksdir=$svndir ."/hooks";
 	    if( is_dir( $svndir ) && is_dir( $svndbdir ) && is_dir($svnhooksdir)) {
+		$files[] = $dir;
+	    }
+	}
+	foreach($files as $dir)
+	{
 		    $url2="../priv/dirpriv.php?d=$dir"; 
 		    $url="./tree.php?d=$dir";
 		    echo "<tree src=\"$url\" target=\"rt1\" action=\"$url2\" text=\"$dir\"/>\n";
-		    $id++;
-	    }
+
 	}
     }
 
