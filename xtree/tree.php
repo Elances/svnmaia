@@ -34,6 +34,7 @@ if($d == '0')
 		$files[] = $dir;
 	    }
 	}
+	sort($files);
 	foreach($files as $dir)
 	{
 		    $url2="../priv/dirpriv.php?d=$dir"; 
