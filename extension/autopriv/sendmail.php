@@ -193,7 +193,7 @@ $url
 --------------------
 配置管理组\n
 ";
- $subject="svn权限申请";
+ $subject="svn权限申请-$reg_usr";
  $windid="svn-rt";
  $sendinfo =send_mail($mail,$subject,$body);
  if ($sendinfo === true) {

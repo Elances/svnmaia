@@ -176,7 +176,7 @@ if(!is_numeric($page))
 	{
 	  $query = "select user_id,user_name,full_name,email,staff_no,department from svnauth_user ORDER BY user_name limit $begin,$perpage;";
 	}else{
-	  $query = "select user_id,user_name,full_name,email,staff_no,department from svnauth_user where user_name like \"{$pw}%\" ORDER BY user_name;";
+	  $query = "select user_id,user_name,full_name,email,staff_no,department from svnauth_user where user_name like '{$pw}%' ORDER BY user_name;";
 	}
 	if($_GET['p']=='a')
 	  $query = "select user_id,user_name,full_name,email,staff_no,department from svnauth_user ORDER BY user_name;";

@@ -7,24 +7,26 @@ error_reporting(0);
   <title>svn权限申请向导</title>
 </head>
 <style type='text/css'>
-div{margin:15px}
-fieldset{border:solid 1px gray;}
+div{margin:15px;}
+fieldset{border:2px solid #A4CDF2;padding:20px;background:#FFFFFF;}
+ legend{color:#AA0000;font-weight:bold;padding:3px 20px;border:2px solid #A4CDF2;}
 </style>
 <body>
-   <h2>svn权限申请</h2>
+
    <form action=./sendmail.php name=pwdform method=post onSubmit="return tCheck()">
    	<fieldset>
+	<legend>svn权限申请</legend>
    <div id='inputblock'>
    		
-   <table>
-   <tr><td colspan=3>你的svn用户名：<input type='text' name='username' size='14'  onBlur="loadTip();">* &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 邮箱：<input type=text name='email' id='email'></td></tr>
-   <tr><td colspan=3>申请说明:</td></tr>
-   <tr><td colspan=3> <textarea id="comment" name="comment" cols="65" rows="5"></textarea></td></tr>
-   <tr><td>申请的url:<input type=text name='wurl' size='55'  onBlur="checkurl();"></td>
+   <table valign=top>
+ <tr><td>申请的url:<input type=text name='wurl' size='55'  onBlur="checkurl();"></td>
        <td><select name="wpriv"><option value='r' label='只读'>只读</option>
 <option value='w' label='读写'>读写</option>
 </select></td></tr>
   <tr><td colspan=3><label id='urltip' style='color:red;font-size:12px;'></label></td></tr>
+   <tr><td colspan=3>申请理由:</td></tr>
+   <tr><td colspan=3> <textarea id="comment" name="comment" cols="65" rows="5"></textarea></td></tr>
+  <tr><td colspan=3>你的svn用户名：<input type='text' name='username' size='14'  onBlur="loadTip();">* &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 邮箱：<input type=text name='email' id='email'></td></tr>
    <tr align=center bgcolor='#B6C6D6'><td colspan='3'><input type=button value="提交" style='width:80px'  onclick="return tCheck()"></td></tr>
    </table>  
   </div>

@@ -86,6 +86,8 @@ if (mysql_num_rows($result) > 0){
 		}
 	$query="insert into svnauth_permission (user_id,repository,path,permission,expire) select user_id,'$repos','$path',permission,expire from svnauth_permission where  repository='$f_repos' and path = '$dir' ";
 	mysql_query($query);
+	$query="insert into svnauth_g_permission (group_id,repository,path,permission,expire) select group_id,'$repos','$path',permission,expire from svnauth_g_permission where  repository='$f_repos' and path = '$dir' ";
+	mysql_query($query);
 //	$err .= mysql_error();
 
 }else
@@ -129,6 +131,27 @@ if (mysql_num_rows($result) > 0){
 			$rights=safe($rights);
       	    		$expire=strftime("%Y-%m-%d",$expire);		
 			$query="insert into svnauth_permission(user_id,repository,path,permission,expire)values($uid,'$repos','$path',$rights,'$expire')";
+			mysql_query($query);
+			$err .= mysql_error();
+		}
+		$detail_array=array();
+	        $detail_array=$_POST['group_detail'];
+		$clear=false;
+		foreach($detail_array as $v)
+		{
+			list($rights,$group,$t_gid,$type)=explode(' ',$v);
+			if(! $clear)
+			{
+				$clear=true;
+				$query="delete from svnauth_g_permission where repository='$repos' and path='$path'";
+				mysql_query($query);
+				$err=mysql_error();
+			}
+			if(trim($type)=='c')continue;
+			if(empty($t_gid))continue;
+			$t_gid=safe($t_gid);
+			$rights=safe($rights);
+			$query="insert into svnauth_g_permission(group_id,repository,path,permission)values($t_gid,'$repos','$path',$rights)";
 			mysql_query($query);
 			$err .= mysql_error();
 		}
