@@ -16,7 +16,7 @@ echo <<<HTML
 </style>
 HTML;
 echo "<table><tr><th>申请者</th><th>申请路径</th><th>申请权限</th><th>申请日期</th><th>处理人</th><th>处理结果</th></tr>";
-$query="select `username`,`repository`,`path`,`permission`,`rtdate`,`ops`, `optype` from rt_svnpriv ORDER BY id DESC;";
+$query="select `username`,`repository`,`path`,`permission`,`rtdate`,`ops`, `optype` from rt_svnpriv ORDER BY id DESC limit 200;";
 $result=mysql_query($query);
 while (($result)and($row= mysql_fetch_array($result, MYSQL_BOTH))) {
 	$repos=$row['repository'];
