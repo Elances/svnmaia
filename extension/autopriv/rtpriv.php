@@ -20,7 +20,7 @@ fieldset{border:2px solid #A4CDF2;padding:20px;background:#FFFFFF;}
    		
    <table valign=top>
  <tr><td>申请的url:<input type=text name='wurl' size='45'  onBlur="checkurl();"></td>
-       <td>&nbsp;&nbsp;<select name="wpriv"><option value='r' label='只读'>只读</option>
+       <td>&nbsp;&nbsp;权限:<select name="wpriv"><option value='r' label='只读'>只读</option>
 <option value='w' label='读写'>读写</option>
 </select></td></tr>
   <tr><td colspan=3><label id='urltip' style='color:red;font-size:12px;'></label></td></tr>
