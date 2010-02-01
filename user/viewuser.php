@@ -152,7 +152,7 @@ if(!is_numeric($page))
 }
 	$query= "select user_id,user_name,full_name from svnauth_user where supervisor=1;";
 	$result = mysql_query($query); 
-	echo "<h3>超级用户</h3><p><table class='tb1' >";
+	echo "<h3><a class='es' href='./viewdiradmin.php?o=n'>【列出目录管理员】</a>超级用户</h3><p><table class='tb1' >";
 	while (($result)and($row= mysql_fetch_array($result, MYSQL_BOTH))) {
 		$user_id=$row['user_id'];
 		$user_name=$row['user_name'];
