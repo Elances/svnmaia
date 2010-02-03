@@ -80,7 +80,7 @@ function tCheck()
 }
 //将详细信息的具体内容写入tipDiv中
 function displayTip(content) {
-	if(content == '用户不存在！')document.getElementById('unametip').innerHTML = ''; 
+	document.getElementById('unametip').innerHTML = ''; 
 	document.getElementById('email').value = content;    
 	if(content == '用户不存在！')document.getElementById('unametip').innerHTML = content;    
 }
