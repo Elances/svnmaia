@@ -27,6 +27,7 @@ fieldset{border:2px solid #A4CDF2;padding:20px;background:#FFFFFF;}
    <tr><td colspan=3>申请理由:</td></tr>
    <tr><td colspan=3> <textarea id="comment" name="comment" cols="65" rows="5"></textarea></td></tr>
   <tr><td colspan=3>你的svn用户名：<input type='text' name='username' size='14'  onBlur="loadTip();">* &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 邮箱：<input type=text name='email' id='email'></td></tr>
+<tr><td colspan=3><label id='unametip' style='color:red;font-size:12px;'></label></td></tr>
    <tr align=center bgcolor='#B6C6D6'><td colspan='3'><input type=button value="提交" style='width:80px'  onclick="return tCheck()"></td></tr>
    </table>  
   </div>
@@ -58,6 +59,11 @@ function tCheck()
 		alert('该用户名不存在，请确认！');
 		return false;
 	}
+	if(document.getElementById('unametip').innerHTML == '用户不存在！')
+	{
+		alert('该用户名不存在，请确认！');
+		return false;
+	}
 	if(document.getElementById('urltip').innerHTML == 'URL不存在!')
 	{
 		alert('该url不正确，请确认！');
@@ -74,7 +80,8 @@ function tCheck()
 }
 //将详细信息的具体内容写入tipDiv中
 function displayTip(content) {
-    document.getElementById('email').value = content;    
+	document.getElementById('email').value = content;    
+	if(content == '用户不存在！')document.getElementById('unametip').innerHTML = content;    
 }
 function displayUrlTip(content) {
     document.getElementById('urltip').innerHTML = content;    
