@@ -243,8 +243,14 @@ foreach($candidate_array as $user => $v)
 	if(empty($uid))continue;
 	$candidate .="<option value='n $user $uid'>none &nbsp; &nbsp; $user{$fn}</option>";
 }
-
-
+//*********************
+//显示目录描述
+//*********************
+$query="select des from dir_des where repository='$repos' and path='$subdir'"
+$result = mysql_query($query);
+if($result and($row= mysql_fetch_array($result, MYSQL_BOTH))) {
+	$des=$row['des'];
+}
 //*********************
 //显示出内容
 //*********************
@@ -259,7 +265,7 @@ if(! $authz)
 	$candidate='';
 	$dexpire='';
 }
-$vars=array('dir' => $firstdir,'dirprive' => $userright,'candidate' => $candidate,'diradmin' => $diradmin,'repos' => $repos,'path' => $dir,'sig' => $sig,'authz' => $showbutton,'dexpire' => $dexpire);  
+$vars=array('dir' => $firstdir,'dirprive' => $userright,'candidate' => $candidate,'diradmin' => $diradmin,'repos' => $repos,'path' => $dir,'sig' => $sig,'authz' => $showbutton,'dexpire' => $dexpire,'description' => $des);  
 while (!feof($handle))
 {
       $line = fgets($handle);
