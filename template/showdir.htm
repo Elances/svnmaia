@@ -301,7 +301,52 @@ function cleartip()
 	document.getElementById('batchinput').style.background="yellow"
 
 }
+function editDescription()
+{
+	document.getElementById('new-ds').value=document.getElementById('descript').innerHTML;
+	document.getElementById('descript').style.display='none';
+	document.getElementById('editpan').style.display='none';
+	document.getElementById('ds-form').style.display='inline';	
+	document.getElementById('new-ds').focus();
+}
+function closedes()
+{
+	document.getElementById('descript').style.display='';
+	document.getElementById('editpan').style.display='';
+	document.getElementById('ds-form').style.display='none';	
+}
 
+//用于创建XMLHttpRequest对象
+function createXmlHttp() {
+    //根据window.XMLHttpRequest对象是否存在使用不同的创建方式
+    if (window.XMLHttpRequest) {
+       xmlHttp = new XMLHttpRequest();                  //FireFox、Opera等浏览器支持的创建方式
+    } else {
+       xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");//IE浏览器支持的创建方式
+    }
+}
+//从服务器加载关键词的详细信息
+function sendDes() {
+   var neirong="newdescript="+ds_form.newdescript.value
+      +"&repos="+ds_form.repos.value
+      +"&path="+ds_form.path.value
+      +"&sig="+ds_form.sig.value;
+    createXmlHttp();                                //创建XMLHttpRequest对象
+    xmlHttp.onreadystatechange = loadTipCallBack;   //设置回调函数
+    xmlHttp.open("POST", "./editDescription.php", true);
+    xmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    xmlHttp.send(neirong);
+}
+
+//获取查询选项的回调函数
+function loadTipCallBack() {
+    if (xmlHttp.readyState == 4) {
+	if(xmlHttp.responseText=="successful"){
+		document.getElementById('descript').innerHTML=document.getElementById('new-ds').value;
+		closedes();        
+	}
+    }
+}
 -->
 </script>
 <style type='text/css'>
@@ -310,6 +355,7 @@ function cleartip()
 .ct,.ct2{[Maiasvn:authz]}
 .tp{text-align:right;}
 .lf,.ct2,.rt2{float:left;margin:10px;}
+.ds1{font-weight:bold;font-size:14px}
 .subBtn{width:100px;height:47px; }
 .sbar{width:100px}
 .detsl{background:#fff4bc;}
@@ -320,11 +366,24 @@ function cleartip()
 </style>
 
 <body onbeforeunload="closeit(event)">
-	<div class='tp'>
-			<a class='abtn' href='../priv/gen_access.php' ><img src='../img/button.gif' border='0'></a>
+<div class='lf ds1'>
+  <label>说明:</label><label id="descript">[Maiasvn:description]</label><a href='#' onclick="editDescription(event)" id='editpan' role=button style="[Maiasvn:authz]"><img src='../img/edit.png' border=0></a>
+  <form id='ds-form' name='ds_form' style="display:none;">
+	<input type="text" name="newdescript" id='new-ds' style="min-width: 186px; width: 527px;"/>
+        <div class="buttons" style="display: inline;">
+		<input type="button" value="  OK  " onclick="sendDes();"/>
+		<input type="button" value="Cancel" onclick="closedes(event)"/>
+		<input type='hidden' name='repos' value='[Maiasvn:repos]'>
+		<input type='hidden' name='path' value='[Maiasvn:path]'>
+		<input type='hidden' name='sig' value='[Maiasvn:sig]'>
 	</div>
+  </form>
+</div>
+<div class='tp'>
+			<a class='abtn' href='../priv/gen_access.php' ><img src='../img/button.gif' border='0'></a>
+</div>
 
-<form method='get' action=''>
+<form method='get' action='' style="clear:both;">
 <fieldset>
 <legend>快速查看权限</legend>
 <input type=hidden name='from_d' value='true'>

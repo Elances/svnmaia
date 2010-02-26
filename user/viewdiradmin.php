@@ -16,7 +16,7 @@ echo <<<HTML
 </style>
 HTML;
 //--------
-('d'==$_GET['o'])?($od=" order by repository,path"):($od=" order by user_name");
+('d'==$_GET['o'])?($od=" order by repository,path"):($od=" order by user_name,repository");
 $query="select user_name,full_name,repository,path from svnauth_dir_admin,svnauth_user where svnauth_user.user_id=svnauth_dir_admin.user_id $od";
 $result =mysql_query($query);
 $adminpath='';

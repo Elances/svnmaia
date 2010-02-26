@@ -342,6 +342,15 @@ foreach($g_candidate_array as $group => $v)
 
 
 //*********************
+//显示目录描述
+//*********************
+$des='';
+$query="select des from dir_des where repository='$repos' and path='$dir'";
+$result = mysql_query($query);
+if($result and($row= mysql_fetch_array($result, MYSQL_BOTH))) {
+	$des=$row['des'];
+}
+//*********************
 //显示出内容
 //*********************
 $newtopf=array();
@@ -356,7 +365,7 @@ if(! $authz)
 	$candidate='';
 	$dexpire='';
 }
-$vars=array('dir' => $firstdir,'dirprive' => $userright,'g_dirprive' => $groupright,'g_candidate' => $g_candidate,'candidate' => $candidate,'diradmin' => $diradmin,'repos' => $repos,'path' => $dir,'sig' => $sig,'authz' => $showbutton,'dexpire' => $dexpire,'fromurl' => $fromurl);  
+$vars=array('dir' => $firstdir,'dirprive' => $userright,'g_dirprive' => $groupright,'g_candidate' => $g_candidate,'candidate' => $candidate,'diradmin' => $diradmin,'repos' => $repos,'path' => $dir,'sig' => $sig,'authz' => $showbutton,'dexpire' => $dexpire,'fromurl' => $fromurl,'description' => $des);  
 while (!feof($handle))
 {
       $line = fgets($handle);
