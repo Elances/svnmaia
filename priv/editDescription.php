@@ -41,6 +41,8 @@ if (mysql_select_db(DBNAME))
 		exit;
 	}
 	$des=safe($_POST['newdescript']);
+	$sql_enc = "set names 'utf8'";
+  	mysql_query($sql_enc);
 	$encode='';
 	if($out[1] > 4) //mysql version > 4
 	{
@@ -64,4 +66,3 @@ if (mysql_select_db(DBNAME))
 	}
 	if(empty($err))echo "successful";
 }
-?>
