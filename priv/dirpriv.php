@@ -246,6 +246,7 @@ foreach($candidate_array as $user => $v)
 //*********************
 //ÏÔÊ¾Ä¿Â¼ÃèÊö
 //*********************
+$des='';
 $query="select des from dir_des where repository='$repos' and path='$subdir'";
 $result = mysql_query($query);
 if($result and($row= mysql_fetch_array($result, MYSQL_BOTH))) {
