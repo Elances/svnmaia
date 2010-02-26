@@ -6,19 +6,19 @@ if(file_exists('../config/config.php'))
 	include('../config/config.php');
 }else
 {
-	echo "window.alert('è¯·å…ˆè¿›è¡Œç³»ç»Ÿè®¾ç½®!')";
+	echo "window.alert('ÇëÏÈ½øĞĞÏµÍ³ÉèÖÃ!')";
 	echo" <script>setTimeout('document.location.href=\"../config/index.php\"',0)</script>";  	
 	exit;
 }
  error_reporting(0);
 if (!isset($_SESSION['username'])){	
-	echo "è¯·å…ˆ<a href='../user/loginfrm.php'>ç™»å½•</a> ï¼";
+	echo "ÇëÏÈ<a href='../user/loginfrm.php'>µÇÂ¼</a> £¡";
 	echo" <script>setTimeout('document.location.href=\"../user/loginfrm.php\"',0)</script>";  	
 	exit;
 }
 if (($_SESSION['role'] !='admin')and($_SESSION['role'] !='diradmin'))
 {
-	echo "æ‚¨æ— æƒè¿›è¡Œæ­¤æ“ä½œï¼";
+	echo "ÄúÎŞÈ¨½øĞĞ´Ë²Ù×÷£¡";
 	exit;
 }
 include('../../../config.inc');
@@ -31,13 +31,13 @@ function safe($str)
 include('../include/dbconnect.php');
 if (mysql_select_db(DBNAME))
 {
-	//æ ¡éªŒå‚æ•°æ­£ç¡®æ€§
+	//Ğ£Ñé²ÎÊıÕıÈ·ĞÔ
 	$repos=mysql_real_escape_string($_POST['repos']);
 	$path=mysql_real_escape_string($_POST['path']);
 	$para=array($repos,$path);
 	if(keygen($para) != $_POST['sig'])
 	{
-		echo "å‚æ•°éæ³•ï¼è¯·å‹¿è¶Šæƒæ“ä½œï¼";
+		echo "²ÎÊı·Ç·¨£¡ÇëÎğÔ½È¨²Ù×÷£¡";
 		exit;
 	}
 	$des=safe($_POST['newdescript']);
