@@ -297,7 +297,6 @@ function sendDes() {
 //获取查询选项的回调函数
 function loadTipCallBack() {
     if (xmlHttp.readyState == 4) {
-        displayTip(xmlHttp.responseText);           //显示加载完毕的详细信息
 	if(xmlHttp.responseText=="successful"){
 		document.getElementById('descript').innerHTML=document.getElementById('new-ds').value;
 		closedes();        
