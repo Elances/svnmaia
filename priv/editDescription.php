@@ -41,12 +41,11 @@ if (mysql_select_db(DBNAME))
 		exit;
 	}
 	$des=safe($_POST['newdescript']);
-	$sql_enc = "set names 'utf8'";
-  	mysql_query($sql_enc);
+	$pattern='/(\d+)\.\d+\.\d+/i';
+	preg_match($pattern,mysql_get_server_info(),$out);
 	$encode='';
 	if($out[1] > 4) //mysql version > 4
 	{
-		echo "Mysql version:".mysql_get_server_info()."<br>";
 		$encode=" DEFAULT CHARSET=utf8 ";
 	}
 	$createtb = "create table IF NOT EXISTS dir_des(
