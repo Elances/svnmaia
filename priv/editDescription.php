@@ -51,7 +51,7 @@ if (mysql_select_db(DBNAME))
   `repository` varchar(20) NOT NULL,
   `path` varchar(255) NOT NULL,
   `des` text(500) default NULL,
-  PRIMARY KEY  (`path`,`repository`,`des`)
+  PRIMARY KEY  (`path`,`repository`)
 		)ENGINE=MyISAM  $encode;";
 	mysql_query($createtb);
 	$query="insert into dir_des (repository,path,des) values('$repos','$path',$des)";
