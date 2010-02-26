@@ -58,7 +58,7 @@ if (mysql_select_db(DBNAME))
 	mysql_query($query);
 	$err=mysql_error();
 	if(!empty($err)){
-		$query="update from dir_des set des=$des where repository='$repos' and path='$path'"; 
+		$query="update dir_des set des=$des where repository='$repos' and path='$path'"; 
 		mysql_query($query);
 		$err=mysql_error();
 	}
