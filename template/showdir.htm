@@ -283,7 +283,7 @@ function createXmlHttp() {
 }
 //从服务器加载关键词的详细信息
 function sendDes() {
-   var neirong="des="+ds_form.newdescript.value
+   var neirong="newdescript="+ds_form.newdescript.value
       +"&repos="+ds_form.repos.value
       +"&path="+ds_form.path.value
       +"&sig="+ds_form.sig.value;
@@ -298,7 +298,10 @@ function sendDes() {
 function loadTipCallBack() {
     if (xmlHttp.readyState == 4) {
         displayTip(xmlHttp.responseText);           //显示加载完毕的详细信息
-        if(xmlHttp.responseText=="successful")closedes();        
+	if(xmlHttp.responseText=="successful"){
+		document.getElementById('descript').innerHTML=document.getElementById('new-ds').value;
+		closedes();        
+	}
     }
 }
 -->
