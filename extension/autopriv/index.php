@@ -149,8 +149,9 @@ if (!$trueurl)
         if(($result)and($row= mysql_fetch_array($result, MYSQL_BOTH)))
 	{
 		$ops=$row['ops'];
+		$optype=$row['optype'];
 	}
-	echo "<font color=red><h2>此url已不存在，该请求已被 $ops 处理！</h2></font>";
+	echo "<font color=red><h2>此url已不存在，该请求已被 $ops 处理！处理结果: $optype.</h2></font>";
 	echo "<p>点击<a href=/>返回主页</a>";
 	echo "<p><IMG  src='../../img/waiting.gif'>";
 	exit;
