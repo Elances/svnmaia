@@ -144,7 +144,7 @@ if (mysql_num_rows($result) == 0){
 //没有找到，这显示无效链接
 if (!$trueurl)
 {
-	$query="select ops from  rt_svnpriv where id=$id";
+	$query="select ops,optype from  rt_svnpriv where id=$id";
 	$result=mysql_query($query);
         if(($result)and($row= mysql_fetch_array($result, MYSQL_BOTH)))
 	{
