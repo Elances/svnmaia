@@ -136,8 +136,13 @@ function search(textObj,seln)
 		//var ss=desObj[i].value.split(" ");
 		var ss=	desObj[i].innerHTML;
 		if(ss.search(str)>=0){
+			desObj[i].style.display='';
 			desObj[i].selected="selected";
-		}else desObj[i].selected="";
+		}else
+		{
+			desObj[i].style.display='none';
+			desObj[i].selected="";
+		}
 	}
 }
 function findout()
