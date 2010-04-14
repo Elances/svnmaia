@@ -45,6 +45,7 @@ $correct = false;
 $firstline = true;
 $groupstart = false;
 $dirstart = false;
+$notfounduser="";
 $groupinfo=array();
 $group_parent=array();
 $p_info=array();
@@ -233,7 +234,7 @@ if ($handle) {
 					{ 
 						if(empty($uid_array[$user]))
 						{
-							echo "$user not found in htpasswd!<br>";
+							$notfounduser .= "$user <br>";
 							continue;
 						}
 						$query="insert into svnauth_permission (repository,path,user_id,permission,expire) values (\"$repos\",\"$path\",$uid_array[$user],\"$pm\",\"$expire\")";
@@ -255,7 +256,7 @@ if ($handle) {
 				$user=trim($user);
 				if(empty($uid_array[$user]))
 				{
-					echo "$user not found in htpasswd!<br>";
+					$notfounduser .= "$user <br>";
 					continue;
 				}
 				$g1=str_replace('@','',$goru);
@@ -263,7 +264,7 @@ if ($handle) {
 				{ 
 					if(empty($uid_array[$user]))
 					{
-						echo "$user not found in htpasswd!<br>";
+						$notfounduser .= "$user <br>";
 						continue;
 					}
 					$query="insert into svnauth_permission (repository,path,user_id,permission,expire) values (\"$repos\",\"$path\",$uid_array[$user],\"$pm\",\"$expire\")";
@@ -284,7 +285,7 @@ if ($handle) {
 			$goru=trim($goru);
 			if(empty($uid_array[$goru]))
 			{
-				echo "$goru not found in htpasswd!<br>";
+				$notfounduser .= "$goru <br>";
 				continue;
 			}
       	    	      $query="insert into svnauth_permission (repository,path,user_id,permission,expire) values (\"$repos\",\"$path\",$uid_array[$goru],\"$pm\",\"$expire\")";
@@ -295,6 +296,7 @@ if ($handle) {
        }
     }
    echo "<script>document.getElementById('step').innerHTML='全部导入成功！'</script>";
+   if(!empty($notfounduser))echo"导入过程中，如下用户没有在 $passwdfile 找到，因此他们没被导入：<br>$notfounduser";
 }else{
   echo "Cann't read this access file, please check the private of the file";
   exit;
