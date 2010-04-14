@@ -34,7 +34,12 @@ if(! file_exists($accessfile))
 }
 include('../../../config.inc');
 include('../include/dbconnect.php'); 
-
+//import前备份
+$today = date("Ymd_His");
+$backupfile=$accessfile.$today;
+if (!copy($accessfile, $backupfile)) {
+    echo "failed to backup $accessfile...\n";
+}
 $handle = fopen($accessfile, "r");
 $correct = false;
 $firstline = true;
@@ -226,7 +231,11 @@ if ($handle) {
 				{
 					if(preg_match("/_(w|r|n)[0-9]+$/",$g1))
 					{ 
-						if(empty($uid_array[$user]))continue;
+						if(empty($uid_array[$user]))
+						{
+							echo "$user not found in htpasswd!<br>";
+							continue;
+						}
 						$query="insert into svnauth_permission (repository,path,user_id,permission,expire) values (\"$repos\",\"$path\",$uid_array[$user],\"$pm\",\"$expire\")";
 						mysql_query($query);
 					}else{
@@ -244,11 +253,19 @@ if ($handle) {
       	    	     	foreach($groupinfo[$goru] as $user){
       	    	     //找出组成员插入表中
 				$user=trim($user);
-				if(empty($uid_array[$user]))continue;
+				if(empty($uid_array[$user]))
+				{
+					echo "$user not found in htpasswd!<br>";
+					continue;
+				}
 				$g1=str_replace('@','',$goru);
 				if(preg_match("/_(w|r|n)[0-9]+$/",$g1))
 				{ 
-					if(empty($uid_array[$user]))continue;
+					if(empty($uid_array[$user]))
+					{
+						echo "$user not found in htpasswd!<br>";
+						continue;
+					}
 					$query="insert into svnauth_permission (repository,path,user_id,permission,expire) values (\"$repos\",\"$path\",$uid_array[$user],\"$pm\",\"$expire\")";
 					mysql_query($query);
 					continue;
@@ -265,7 +282,11 @@ if ($handle) {
       	    	   }else
       	    	   {
 			$goru=trim($goru);
-			if(empty($uid_array[$goru]))continue;
+			if(empty($uid_array[$goru]))
+			{
+				echo "$goru not found in htpasswd!<br>";
+				continue;
+			}
       	    	      $query="insert into svnauth_permission (repository,path,user_id,permission,expire) values (\"$repos\",\"$path\",$uid_array[$goru],\"$pm\",\"$expire\")";
       	    	     mysql_query($query);
       	    	   }
