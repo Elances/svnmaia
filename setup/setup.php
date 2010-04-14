@@ -85,7 +85,7 @@ CREATE TABLE IF NOT EXISTS `svnauth_groupuser` (
 		//create permission table
 		$query="CREATE TABLE IF NOT EXISTS `svnauth_permission` (
   `user_id` varchar(40) NOT NULL,
-  `repository` varchar(20) NOT NULL,
+  `repository` varchar(200) NOT NULL,
   `path` varchar(255) NOT NULL,
   `permission` varchar(1) NOT NULL,
   `expire` date,
@@ -96,7 +96,7 @@ CREATE TABLE IF NOT EXISTS `svnauth_groupuser` (
 		$query="CREATE TABLE IF NOT EXISTS `svnauth_g_permission` (
   `id` int(11) NOT NULL auto_increment,
  `group_id` varchar(40) NOT NULL, 
-  `repository` varchar(20) NOT NULL,
+  `repository` varchar(200) NOT NULL,
   `path` varchar(255) NOT NULL,
   `permission` varchar(1) NOT NULL,
   `expire` date,
@@ -108,7 +108,7 @@ CREATE TABLE IF NOT EXISTS `svnauth_groupuser` (
 		//create dir admin table
 		$query="CREATE TABLE IF NOT EXISTS `svnauth_dir_admin` (
   `user_id` int(11) NOT NULL,
-  `repository` varchar(20) NOT NULL,
+  `repository` varchar(200) NOT NULL,
   `path` varchar(255) NOT NULL,
   PRIMARY KEY  (`user_id`,`repository`,`path`)
 ) ENGINE=MyISAM $encode;";
