@@ -34,12 +34,18 @@ if(! file_exists($accessfile))
 }
 include('../../../config.inc');
 include('../include/dbconnect.php'); 
-
+//import前备份
+$today = date("Ymd_His");
+$backupfile=$accessfile.$today;
+if (!copy($accessfile, $backupfile)) {
+    echo "failed to backup $accessfile...\n";
+}
 $handle = fopen($accessfile, "r");
 $correct = false;
 $firstline = true;
 $groupstart = false;
 $dirstart = false;
+$notfounduser="";
 $groupinfo=array();
 $group_parent=array();
 $p_info=array();
@@ -141,6 +147,48 @@ if ($handle) {
     {
     	$query="delete from svnauth_permission";
     	mysql_query($query);
+	$query="delete from svnauth_g_permission";
+    	mysql_query($query);
+	$query="delete from svnauth_group";
+	mysql_query($query);
+	$query="delete from svnauth_groupuser";
+	mysql_query($query);
+	foreach($groupinfo as $group => $v)
+	{
+		$g1=str_replace('@','',$group);
+		if(function_exists('preg_match'))
+		{
+			if(preg_match("/_(w|r|n)[0-9]+$/",$g1))
+			{ echo "found $group is not a group <br>";
+			  continue;
+			}
+		}else 
+			echo "你的php不支持正则表达式<br>";
+		$query="insert into svnauth_group (group_name) values ('$g1')";
+		mysql_query($query);
+	}
+	foreach($group_parent as $group => $v)
+	{
+		$g1=str_replace('@','',$group);
+		if(function_exists('preg_match'))
+		{
+			if(preg_match("/_(w|r|n)[0-9]+$/",$g1))
+			{ echo "found $group is not a group <br>";
+			  continue;
+			}
+		}else 
+			echo "你的php不支持正则表达式<br>";
+		$query="insert into svnauth_group (group_name) values ('$g1')";
+		mysql_query($query);
+	}
+	$query="select group_id,group_name from svnauth_group";
+	$result = mysql_query($query);
+	$gid_array=array();
+	while (($result)and($row= mysql_fetch_row($result))) {
+		$gid=$row[0];
+		$group=$row[1];
+		$gid_array[$group]=$gid;
+	}
     }
     date_default_timezone_set('PRC');
   
@@ -178,27 +226,68 @@ if ($handle) {
       	    	     	  foreach($ii as $user){
       	    	     	  	$user=trim($user);
 				//找出组成员插入表中
-				if(empty($uid_array[$user]))continue;
-      	    	         $query="insert into svnauth_permission (repository,path,user_id,permission,expire) values (\"$repos\",\"$path\",$uid_array[$user],\"$pm\",\"$expire\")";
-    //  	    	         echo "<br>$query";
-      	    	         mysql_query($query);
-      	    		}
+				# $query="insert into svnauth_permission (repository,path,user_id,permission,expire) values (\"$repos\",\"$path\",$uid_array[$user],\"$pm\",\"$expire\")";
+				$g1=str_replace('@','',$goru);
+				if(function_exists('preg_match'))
+				{
+					if(preg_match("/_(w|r|n)[0-9]+$/",$g1))
+					{ 
+						if(empty($uid_array[$user]))
+						{
+							$notfounduser .= "$user <br>";
+							continue;
+						}
+						$query="insert into svnauth_permission (repository,path,user_id,permission,expire) values (\"$repos\",\"$path\",$uid_array[$user],\"$pm\",\"$expire\")";
+						mysql_query($query);
+					}else{
+						$query="insert into svnauth_groupuser(group_id,user_id) values ($gid_array[$g1],$uid_array[$user])";
+						mysql_query($query);
+					}
+				}else 
+					echo "error: preg_match function not found!";			
+			//	echo $query."$user<br>";	
+			  }
+		
       	    	     }
       	    	     //判断是否groupinfo的键名，如果是，则找出改组成员。
       	    	     if(array_key_exists($goru,$groupinfo)){
       	    	     	foreach($groupinfo[$goru] as $user){
       	    	     //找出组成员插入表中
 				$user=trim($user);
-				if(empty($uid_array[$user]))continue;
-      	    	         $query="insert into svnauth_permission (repository,path,user_id,permission,expire) values (\"$repos\",\"$path\",$uid_array[$user],\"$pm\",\"$expire\")";
-  //    	    		 echo "<br>$query<br>";
-      	    		 mysql_query($query);
+				if(empty($uid_array[$user]))
+				{
+					$notfounduser .= "$user <br>";
+					continue;
+				}
+				$g1=str_replace('@','',$goru);
+				if(preg_match("/_(w|r|n)[0-9]+$/",$g1))
+				{ 
+					if(empty($uid_array[$user]))
+					{
+						$notfounduser .= "$user <br>";
+						continue;
+					}
+					$query="insert into svnauth_permission (repository,path,user_id,permission,expire) values (\"$repos\",\"$path\",$uid_array[$user],\"$pm\",\"$expire\")";
+					mysql_query($query);
+					continue;
+				}
+				$query="insert into svnauth_groupuser(group_id,user_id) values ($gid_array[$g1],$uid_array[$user])";      	    	      
+				mysql_query($query);
+			//	echo $query."$user<br>";
       	    		}
-      	    	     }
+		     }
+	$g1=str_replace('@','',$goru);
+	$query="insert into svnauth_g_permission (repository,path,group_id,permission,expire) values (\"$repos\",\"$path\",$gid_array[$g1],\"$pm\",\"$expire\")";
+      	    	       //  echo "<br>$query";
+      	    	        mysql_query($query);
       	    	   }else
       	    	   {
 			$goru=trim($goru);
-			if(empty($uid_array[$goru]))continue;
+			if(empty($uid_array[$goru]))
+			{
+				$notfounduser .= "$goru <br>";
+				continue;
+			}
       	    	      $query="insert into svnauth_permission (repository,path,user_id,permission,expire) values (\"$repos\",\"$path\",$uid_array[$goru],\"$pm\",\"$expire\")";
       	    	     mysql_query($query);
       	    	   }
@@ -207,6 +296,7 @@ if ($handle) {
        }
     }
    echo "<script>document.getElementById('step').innerHTML='全部导入成功！'</script>";
+   if(!empty($notfounduser))echo"导入过程中，如下用户没有在 $passwdfile 找到，因此他们没被导入：<br>$notfounduser";
 }else{
   echo "Cann't read this access file, please check the private of the file";
   exit;
