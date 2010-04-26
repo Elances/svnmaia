@@ -379,11 +379,11 @@ SCMBBS;
 }
 if(isset($_GET['gid']) )exit;
 $query="select svnauth_group.group_id,svnauth_group.group_name from svnauth_group,svnauth_groupuser where svnauth_groupuser.group_id=svnauth_group.group_id and svnauth_groupuser.user_id=". $_SESSION['uid'] . " group by group_name";
-$groupview="<a href='?a=1'>-->查看所有组</a>";
+$groupview="<a href='?a=1'>--><u>查看所有组</u></a>";
 if(isset($_GET['a']) )
 {
 	$query="select group_id,group_name from svnauth_group group by group_name";
-	$groupview="<a href='?reflash'>-->查看我所在组</a>";
+	$groupview="<a href='?reflash'>--><u>查看我所在组</u></a>";
 }
 $result = mysql_query($query);
 	echo  <<<SCMBBS
