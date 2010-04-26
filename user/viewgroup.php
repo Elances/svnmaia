@@ -379,15 +379,15 @@ SCMBBS;
 }
 if(isset($_GET['gid']) )exit;
 $query="select svnauth_group.group_id,svnauth_group.group_name from svnauth_group,svnauth_groupuser where svnauth_groupuser.group_id=svnauth_group.group_id and svnauth_groupuser.user_id=". $_SESSION['uid'] . " group by group_name";
-$groupview="<a href='?a=1'>查看所有组</a>";
+$groupview="<a href='?a=1'>-->查看所有组</a>";
 if(isset($_GET['a']) )
 {
 	$query="select group_id,group_name from svnauth_group group by group_name";
-	$groupview="<a href='?reflash'>查看我所在组</a>";
+	$groupview="<a href='?reflash'>-->查看我所在组</a>";
 }
 $result = mysql_query($query);
 	echo  <<<SCMBBS
-<h3>权限组列表…… $groupview</h3>	
+<h3>权限组列表&nbsp; &nbsp; &nbsp;$groupview</h3>	
 	<form method="post" action="" name='groupform' onsubmit="return fCheck($ii)">	
 SCMBBS;
 if($_SESSION['role']=="admin")
