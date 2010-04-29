@@ -1,3 +1,6 @@
+Version 2.2.2
+1、改变组默认视图为我所在组。
+
 Version 2.2.1
 (2010-4-23,from /branches/2_0_0)
 http://svnmaia.googlecode.com/svn/tags/2.2.1
