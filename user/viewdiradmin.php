@@ -29,11 +29,11 @@ while (($result)and($row= mysql_fetch_array($result, MYSQL_BOTH))) {
 	$email=$row['email'];
 	if(!empty($fn))$un="$un($fn)";
 	if(empty($path))continue;
-	$ustr=$un;
+	$ustr=$un."($email)";
 	$pstr=$path;
 	if('n'==$_GET['o'])
 	{
-		$ustr=$un;
+		$ustr=$un."($email)";
 	        ($oun != $un)?($oun=$un):($ustr='');
 		(empty($ustr))?(true):(($ud_cls=="trc1")?($ud_cls="trc2"):($ud_cls="trc1"));
 		$cls=$ud_cls;
@@ -44,7 +44,7 @@ while (($result)and($row= mysql_fetch_array($result, MYSQL_BOTH))) {
 		(empty($pstr))?(true):(($pd_cls=="trc1")?($pd_cls="trc2"):($pd_cls="trc1"));
 		$cls=$pd_cls;
 	}
-        $adminpath .= "<tr class=$cls><td>$ustr($email)</td><td>&nbsp;$pstr</td></tr>";
+        $adminpath .= "<tr class=$cls><td>$ustr</td><td>&nbsp;$pstr</td></tr>";
 }
 echo "<h4>目录管理员: <a href='?o=n'>按姓名</a>   <a href='?o=d'>按目录</a></h4>";
 echo "<table border=0 cellspacing=0>";
