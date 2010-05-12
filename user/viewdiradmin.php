@@ -17,7 +17,7 @@ echo <<<HTML
 HTML;
 //--------
 ('d'==$_GET['o'])?($od=" order by repository,path"):($od=" order by user_name,repository");
-$query="select user_name,full_name,repository,path from svnauth_dir_admin,svnauth_user where svnauth_user.user_id=svnauth_dir_admin.user_id $od";
+$query="select user_name,full_name,repository,path,email from svnauth_dir_admin,svnauth_user where svnauth_user.user_id=svnauth_dir_admin.user_id $od";
 $result =mysql_query($query);
 $adminpath='';
 $oun='';
@@ -26,6 +26,7 @@ while (($result)and($row= mysql_fetch_array($result, MYSQL_BOTH))) {
 	$path=$row['repository'].$row['path'];
 	$un=$row['user_name'];
 	$fn=$row['full_name'];
+	$email=$row['email'];
 	if(!empty($fn))$un="$un($fn)";
 	if(empty($path))continue;
 	$ustr=$un;
@@ -43,7 +44,7 @@ while (($result)and($row= mysql_fetch_array($result, MYSQL_BOTH))) {
 		(empty($pstr))?(true):(($pd_cls=="trc1")?($pd_cls="trc2"):($pd_cls="trc1"));
 		$cls=$pd_cls;
 	}
-        $adminpath .= "<tr class=$cls><td>$ustr</td><td>&nbsp;$pstr</td></tr>";
+        $adminpath .= "<tr class=$cls><td>$ustr($email)</td><td>&nbsp;$pstr</td></tr>";
 }
 echo "<h4>目录管理员: <a href='?o=n'>按姓名</a>   <a href='?o=d'>按目录</a></h4>";
 echo "<table border=0 cellspacing=0>";
