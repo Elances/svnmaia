@@ -199,7 +199,7 @@ $url
  if ($sendinfo === true) {
     echo "<br>申请已发出至 $mail";
  }else {
-	echo(is_string($sendinfo) ? $sendinfo : 'reg_email_fail:'.$mail);
+	echo(is_string($sendinfo) ? $sendinfo : ' 发送失败:'.$mail);
  }
 }
 echo "<br>点击<a href='' onclick='javascript:self.close();'>关闭</a>";
