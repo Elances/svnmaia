@@ -163,12 +163,12 @@ $createtb = "create table IF NOT EXISTS svn_hex(
 		`hexkey` varchar(255)
 		)ENGINE=MyISAM;";
 	mysql_query($createtb);
-$query="insert IGNORE into svn_hex set id=$id,hexkey='$para_str';";
+$query="insert  into svn_hex set id=$id,hexkey='$para_str';";
 mysql_query($query);
 $rc_error=$rc_error.mysql_error();
 if(!empty($rc_error))
 {
-	echo "记录请求时发生错误，错误信息：".$rc_error;
+	echo "记录请求时发生错误，无法发送申请，请稍侯再试。错误信息：".$rc_error;
 	exit;
 }
 //将字符串发给对应邮箱
