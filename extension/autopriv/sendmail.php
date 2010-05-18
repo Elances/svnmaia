@@ -151,7 +151,7 @@ if($result)
 
 $query="insert into rt_svnpriv (`id`,`username`,`repository`,`path`,`permission`,`email`,`rtdate`) values($id,'$reg_usr','$repos','$dir','$wpriv','$b_email',NOW())";
 mysql_query($query);
-
+$rc_error=mysql_error();
 //******生成处理链接*******
 $salt=mt_rand();
 $para_str=urlencode(md5($salt.SECRET_KEY.$id));
@@ -165,7 +165,12 @@ $createtb = "create table IF NOT EXISTS svn_hex(
 	mysql_query($createtb);
 $query="insert IGNORE into svn_hex set id=$id,hexkey='$para_str';";
 mysql_query($query);
-
+$rc_error=$rc_error.mysql_error();
+if(!empty($rc_error))
+{
+	echo "记录请求时发生错误，错误信息：".$rc_error;
+	exit;
+}
 //将字符串发给对应邮箱
 include("../../include/email.php");
 $addr=$_SERVER['REMOTE_ADDR'];
