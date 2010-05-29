@@ -20,6 +20,7 @@ if(isset($_POST['flag']))
   $mail_back=$_POST['email_back'];
   if(empty($mail_back))$mail_back='无';
   $optype=mysql_real_escape_string(stripslashes(trim($_POST["optype"])));
+  $expire_t=stripslashes(trim($_POST["expire_t"]));
 //验证url是否被修改
   $sig=urldecode(md5($salt.SECRET_KEY.$id));
   if($sig != $para_str)
@@ -88,8 +89,10 @@ if(isset($_POST['flag']))
 	  $row= mysql_fetch_array($result, MYSQL_BOTH);
 	  $uid=$row['user_id'];
   }
-  switch($wpriv)
+  if('none'==$expire_t)
   {
+   switch($wpriv)
+   {
      case 'r':
       	 $expire=mktime(0, 0, 0, date("m")  , date("d")+$read_t, date("Y"));
       	 break;
@@ -98,7 +101,26 @@ if(isset($_POST['flag']))
        	break;
      default:
        	$expire=mktime(0, 0, 0, date("m")  , date("d"), date("Y")+2);
-  }
+   }
+  }else if('other'==$expire_t)
+  {
+	  $my_t=trim($_POST['expire_o']);
+	  if(! is_numeric($my_t))
+	  {
+		  echo "有效期输入错误，必须输入数字！";
+		  exit;
+	  }
+	  $expire=mktime(0, 0, 0, date("m")  , date("d")+$my_t, date("Y"));
+  }else
+	  {
+		  if(! is_numeric($expire_t))
+		  {
+			  echo "有效期不是数字，参数获取错误！请重试！";
+			  exit;
+		  }
+		$expire=mktime(0, 0, 0, date("m")  , date("d")+$expire_t, date("Y"));
+	  }
+
   $expire=strftime("%Y-%m-%d",$expire);	
   $query="update svnauth_permission set permission='$wpriv',expire='$expire' where  repository='$repos' and path = '$path' and user_id=$uid";
   mysql_query($query);
@@ -174,7 +196,23 @@ if($result)
  legend{color:#1E7ACE;padding:3px 20px;border:1px solid #A4CDF2;background:#FFFFFF;}
 .st{margin-left:10px;line-height:30px;}
 .ft{background:#B6C6D6;text-align:center;margin:20px 0 20px 0;}
+#myexpire{display:none;border:1px solid #A2cd22;}
 </style>
+<script language="javascript">
+<!--
+function showexpire(sw)
+{
+	if(sw==1)
+	{
+		document.getElementById('myexpire').style.display='block';
+	}else
+	{
+		document.getElementById('myexpire').style.display='none';
+	}
+}
+
+	-->
+</script>
 <h1>处理svn权限请求</h1>
 <form name=regform action="" method="post">
 <fieldset>
@@ -188,6 +226,7 @@ if($result)
 <input type='hidden' name='c' value="<?php echo $para_str ?>">
 <input type='hidden' name='flag' value='1'>
 <br><input type='radio' name='optype' value='agreed' id='diradmin'><label for='diradmin'>同意(完全同意所申请的url和权限，将自动处理)</label>
+<div id='myexpire'>&nbsp;有效期:<input type='radio' name='expire_t' value='none' checked>默认  <input type='radio' name='expire_t' value='7'>一周 <input type='radio' name='expire_t' value='30'>一个月 <input type='radio' name='expire_t' value='90'>三个月 <input type='radio' name='expire_t' value='other'>指定:<input type=text name='expire_o'  size='3'>天</div>
 <br><input type='radio' name='optype' value='denied'  id='superadmin'><label for='superadmin'>拒绝</label>
 <br><input type='radio' name='optype' value='other' id='tolist'><label for='tolist'>手动处理（进入权限管理系统处理）</label>
 <br>回执给申请人:<input type=text name='email_back'  size='40'>
