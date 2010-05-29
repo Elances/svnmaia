@@ -225,10 +225,10 @@ function showexpire(sw)
 <input type='hidden' name='id' value="<?php echo $id ?>">
 <input type='hidden' name='c' value="<?php echo $para_str ?>">
 <input type='hidden' name='flag' value='1'>
-<br><input type='radio' name='optype' value='agreed' id='diradmin'><label for='diradmin'>同意(完全同意所申请的url和权限，将自动处理)</label>
+<br><input type='radio' name='optype' value='agreed' id='diradmin'  onclick='showexpire(1)'><label for='diradmin'>同意(完全同意所申请的url和权限，将自动处理)</label>
 <div id='myexpire'>&nbsp;有效期:<input type='radio' name='expire_t' value='none' checked>默认  <input type='radio' name='expire_t' value='7'>一周 <input type='radio' name='expire_t' value='30'>一个月 <input type='radio' name='expire_t' value='90'>三个月 <input type='radio' name='expire_t' value='other'>指定:<input type=text name='expire_o'  size='3'>天</div>
-<br><input type='radio' name='optype' value='denied'  id='superadmin'><label for='superadmin'>拒绝</label>
-<br><input type='radio' name='optype' value='other' id='tolist'><label for='tolist'>手动处理（进入权限管理系统处理）</label>
+<br><input type='radio' name='optype' value='denied'  id='superadmin' onclick='showexpire(0)'><label for='superadmin'>拒绝</label>
+<br><input type='radio' name='optype' value='other' id='tolist' onclick='showexpire(0)'><label for='tolist'>手动处理（进入权限管理系统处理）</label>
 <br>回执给申请人:<input type=text name='email_back'  size='40'>
 </div>
 <div class='ft'>
