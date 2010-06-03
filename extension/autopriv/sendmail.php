@@ -131,7 +131,7 @@ if(count($maillist)==0)
 $createtb = "create table IF NOT EXISTS rt_svnpriv(
 		`id` INT NOT NULL AUTO_INCREMENT, PRIMARY KEY (`id`),		
 		`username` varchar(40) NOT NULL,
-  `repository` varchar(45) NOT NULL,
+  `repository` varchar(100) NOT NULL,
   `path` varchar(255) NOT NULL,
   `email` varchar(80) default NULL,
   `permission` varchar(1) NOT NULL,
@@ -148,7 +148,16 @@ if($result)
 	$id=$row[0];
 	if(empty($id))$id=1;
 }
-
+$query="select full_name from svnauth_user where user_name ='$reg_usr';";
+$result = mysql_query($query);
+if($result)$totalnum=mysql_num_rows($result); 
+if($totalnum>0){
+	$row = mysql_fetch_array($result, MYSQL_BOTH);
+	if(!empty($row['full_name']))
+	{
+		$full_name="(".$row['full_name'].")";
+	}
+}
 $query="insert into rt_svnpriv (`id`,`username`,`repository`,`path`,`permission`,`email`,`rtdate`) values($id,'$reg_usr','$repos','$dir','$wpriv','$b_email',NOW())";
 mysql_query($query);
 $rc_error=mysql_error();
@@ -181,7 +190,7 @@ foreach($maillist as $mail)
   $user=urlencode(base64_encode($user_raw));
   $url=$url_raw."&u=$user";
   $body="Hi,$user_raw\n
-   $reg_usr 申请svn访问权限，需要您的处理，详情如下：
+   $reg_usr $full_name 申请svn访问权限，需要您的处理，详情如下：
 	申请访问路径：$wurl
 	申请权限：$priv
 	申请说明：$comment
