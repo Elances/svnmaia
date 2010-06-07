@@ -158,7 +158,7 @@ if($totalnum>0){
 		$full_name="(".$row['full_name'].")";
 	}
 }
-$query="insert into rt_svnpriv (`id`,`username`,`repository`,`path`,`permission`,`email`,`rtdate`) values($id,'$reg_usr $full_name','$repos','$dir','$wpriv','$b_email',NOW())";
+$query="insert into rt_svnpriv (`id`,`username`,`repository`,`path`,`permission`,`email`,`rtdate`) values($id,'$reg_usr','$repos','$dir','$wpriv','$b_email',NOW())";
 mysql_query($query);
 $rc_error=mysql_error();
 //******生成处理链接*******
