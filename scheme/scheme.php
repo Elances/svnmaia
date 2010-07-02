@@ -68,7 +68,9 @@ if (mysql_select_db(DBNAME))
 		$url="http://".$_SERVER['HTTP_HOST'] . rtrim(dirname($_SERVER['PHP_SELF']))."/activeuser.php";
 	        $url=$url."?sig=$sig&u=$user&uid=$uid&email=$email";
 		$body="请注意：您的svn用户(http://".$_SERVER['HTTP_HOST']." )即将于 $expire 过期，用户名：$user\n
-过期后，您的svn账户将被自动删除。\n
+
+			过期后，您的svn账户将被自动删除。\n
+
 如果您需要继续访问本svn，请点击如下链接进行信息确认，并激活续订：\n
 			$url
 
