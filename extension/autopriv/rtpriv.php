@@ -8,7 +8,7 @@ error_reporting(0);
 </head>
 <style type='text/css'>
 div{margin:15px;}
-fieldset{border:2px solid #A4CDF2;padding:20px;background:#FFFFFF;}
+fieldset{border:2px solid #A4CDF2;padding:20px;background:#DFE8F6;width:70%}
  legend{color:#AA0000;font-weight:bold;padding:3px 20px;border:2px solid #A4CDF2;}
 </style>
 <body>
