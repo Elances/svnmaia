@@ -53,7 +53,8 @@ if (mysql_select_db(DBNAME))
 	fclose($handle);
 	while (($result)and($row= mysql_fetch_array($result, MYSQL_BOTH)))
 	{
-		$infotimes=(empty($row['infotimes']))?0:$row['infotimes'];
+		$infot=trim($row['infotimes']);
+		$infotimes=(empty($infot))?0:$infot;
 		if($infotimes>3)continue;
 		$infotimes++;
 		$expire=$row['expire'];
