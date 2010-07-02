@@ -131,7 +131,7 @@ if(count($maillist)==0)
 $createtb = "create table IF NOT EXISTS rt_svnpriv(
 		`id` INT NOT NULL AUTO_INCREMENT, PRIMARY KEY (`id`),		
 		`username` varchar(40) NOT NULL,
-  `repository` varchar(100) NOT NULL,
+  `repository` varchar(50) NOT NULL,
   `path` varchar(255) NOT NULL,
   `email` varchar(80) default NULL,
   `permission` varchar(1) NOT NULL,
