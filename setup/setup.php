@@ -59,7 +59,7 @@ CREATE TABLE IF NOT EXISTS `svnauth_user` (
   `supervisor` bit(1) NOT NULL,
   `fresh` bit(1) default 0,
   `expire` date NOT NULL,
-  `infotimes` bit(1) default 0,
+  `infotimes` int(1) default 0,
   PRIMARY KEY  (`user_id`),
   UNIQUE KEY `user_name` (`user_name`)
 ) ENGINE=MyISAM $encode ;";
