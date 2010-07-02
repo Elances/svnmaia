@@ -29,7 +29,13 @@ if ($_SESSION['role'] !='admin')
 <p class='tb1'>
 <?php echo '今天：'.date("Y-m-d");?>
 </p>
+<p>
+<form action="" method="get" name="searchform">
+用户过滤：<input type="text" size="20" name="username"><input type="submit" onclick="return searchform.username.value;" value="搜索">&nbsp;&nbsp;&nbsp;&nbsp;
+输入组名：<input type="text" size="20" name="groupname"><input type="submit" onclick="return searchform.groupname.value;" value="列出组用户">
+</form>
 
+</p>
 <script language="javascript">
 <!--
 var odd=true;
@@ -42,6 +48,7 @@ function fCheck(ii){
 		return false;
 	}
 }	
+
 function checkuser(ii)
 { 
 	var ii;
@@ -85,7 +92,19 @@ function selall(ii)
 <?php
 include('../../../config.inc');
 include('../include/dbconnect.php');
-$query='select user_id,user_name,full_name,expire,infotimes from svnauth_user order by expire ASC';
+$para='';
+$user=trim(mysql_real_escape_string($_GET['username']));
+$group=trim(mysql_real_escape_string($_GET['groupname']));
+if(!empty($user))
+{
+	$para=" where user_name like '%$user%' ";
+}
+$query="select user_id,user_name,full_name,expire,infotimes from svnauth_user  $para order by expire ASC";
+if(!empty($group))
+{
+	if(!empty($para))$para=" and user_name like '%$user%' ";
+	$query="select svnauth_user.user_id,user_name,full_name,expire,infotimes from svnauth_user,svnauth_group,svnauth_groupuser where svnauth_group.group_name = '$group'  and svnauth_group.group_id=svnauth_groupuser.group_id and svnauth_groupuser.user_id=svnauth_user.user_id $para order by expire ASC";
+}
 $result = mysql_query($query);
 	$ii=mysql_num_rows($result);
 	echo  <<<SCMBBS
