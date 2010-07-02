@@ -73,17 +73,17 @@ if (mysql_select_db(DBNAME))
 
 	如果您已不需要，请忽略本邮件！";
 		$subject="通知：您的svn账户即将过期！";
-		$mail_err=send_mail($email,$subject,$body);
+		$mail_info=send_mail($email,$subject,$body);
 		//记录本次发邮件事件
 		$query="update svnauth_user set infotimes=$infotimes where user_id=$uid";
 		mysql_query($query);
 		echo mysql_error();
-		if(empty($mail_err))
+		if($mail_info === true)
 		{
 			echo "<br>$user 用户即将过期，已发邮件通知其激活续订！";
 		}
 		else
-			echo "<br>$user 用户即将过期，但发通知邮件时遇到错误，可能该用户没有收到。<br>$mail_err";
+			echo "<br>$user 用户即将过期，但发通知邮件时遇到错误，可能该用户没有收到。<br>$mail_info";
 
 	}
 
