@@ -56,7 +56,6 @@ if (mysql_select_db(DBNAME))
 		$infot=trim($row['infotimes']);
 		$infotimes=(empty($infot))?0:$infot;
 		if($infotimes>3)continue;
-		$infotimes++;
 		$expire=$row['expire'];
 		//$expire=strtotime("+7 day",strtotime($expire)");//后推1week
 		$user=$row['user_name'];
@@ -81,15 +80,20 @@ if (mysql_select_db(DBNAME))
 		$subject="通知：您的svn账户即将过期！";
 		$mail_info=send_mail($email,$subject,$body);
 		//记录本次发邮件事件
-		$query="update svnauth_user set infotimes=$infotimes where user_id=$uid";
-		mysql_query($query);
-		echo mysql_error();
 		if($mail_info === true)
 		{
 			echo "<br>$user 用户即将过期，已发邮件通知其激活续订！";
+			$infotimes++;
 		}
-		else
+		else{
 			echo "<br>$user 用户即将过期，但发通知邮件时遇到错误，可能该用户没有收到。<br>$mail_info";
+			openlog("svnMaiaLog", LOG_PID | LOG_PERROR, LOG_LOCAL0);
+			$access = date("Y/m/d H:i:s");
+			syslog(LOG_ERR, "$user: this svn username is being expired. But we counld't not mail to him/her which Error: $mail_info. $access");
+		}
+		$query="update svnauth_user set infotimes=$infotimes where user_id=$uid";
+		mysql_query($query);
+		echo mysql_error();
 
 	}
 
