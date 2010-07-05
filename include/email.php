@@ -112,7 +112,7 @@ function send_mail($toemail,$subject,$message,$additional=null){
 		}
 		fwrite($fp, "DATA\r\n");
 		$result_fp=fgets($fp,512);
-		if(strncmp(fgets($fp,512),'250',3)==0){
+		if(strncmp($result_fp,'250',3)==0){
 			$result_fp=fgets($fp,512);
 		}
 		if(strncmp($result_fp,'354',3)!=0){
