@@ -111,7 +111,12 @@ function send_mail($toemail,$subject,$message,$additional=null){
 			return 'email_toemail_failed';
 		}
 		fwrite($fp, "DATA\r\n");
-		if(strncmp(fgets($fp,512),'354',3)!=0){
+		$result_fp=fgets($fp,512);
+		if(strncmp(fgets($fp,512),'250',3)==0){
+			$result_fp=fgets($fp,512);
+		}
+		if(strncmp($result_fp,'354',3)!=0){
+			echo $result_fp;
 			return 'email_data_failed';
 		}
 		$msg  = "Date: ".Date("r")."\r\n";
