@@ -4,7 +4,7 @@ $db_charset='gb2312';
 $M_db= new Mailconfig(
 	array(
 		'ifopen'=> 1,
-		'method'=> 1,
+		'method'=> $mail_method,
 		'host'	=> $smtp_server,
 		'port'	=> $smtp_port,
 		'auth'	=> $use_smtp_authz,
