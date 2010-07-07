@@ -128,7 +128,8 @@ function send_mail($toemail,$subject,$message,$additional=null){
 		if(substr($lastmessage, 0, 3) != 250)
 		{
 			//Showmsg('email_connect_failed');
-			echo "email connect failed";
+			echo $lastmessage;
+			return "email connect failed";
 		}
 		fwrite($fp, "QUIT\r\n");
 		fclose($fp);
