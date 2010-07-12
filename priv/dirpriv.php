@@ -126,7 +126,7 @@ for($ii=0;$ii<20;$ii++)
 		if($ii!=0)
 		{
 			$is_c=' c';
-			$c_flag='(inherit)';
+			$c_flag='(ผฬณะ)';
 		}
 		$diradmin .="<option value='$uname $uid$is_c'>$uname{$fn}{$c_flag}</option>";
 	}
