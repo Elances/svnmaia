@@ -48,7 +48,9 @@ if (mysql_select_db(DBNAME))
 		$clear=false;
 		foreach($admin_array as $v)
 		{
-			list($user,$uid)=explode(' ',$v);
+			list($user,$uid,$is_c)=explode(' ',$v);
+			$is_c=trim($is_c);
+			if($is_c == 'c')continue;
 			if(! $clear)
 			{
 				$clear=true;

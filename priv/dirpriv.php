@@ -109,6 +109,8 @@ while (($result)and($row= mysql_fetch_array($result, MYSQL_BOTH))) {
 $subdir=$dir;
 $admin_array=array();
 $diradmin='';
+$is_c='';
+$c_flag='';
 for($ii=0;$ii<20;$ii++)
 {
 	$query="select user_name,full_name,svnauth_user.user_id  from svnauth_dir_admin,svnauth_user where svnauth_dir_admin.user_id=svnauth_user.user_id and repository='$repos' and path='$subdir' order by user_name";
@@ -121,7 +123,8 @@ for($ii=0;$ii<20;$ii++)
 		$admin_array[$uid]=$uname;
 		$fn='';
 		if(!empty($fulln))$fn="($fulln)";
-		$diradmin .="<option value='$uname $uid'>$uname{$fn}</option>";
+		($ii!=0)?($is_c=' c';$c_flag='(¼¯³É)'):($is_c='');
+		$diradmin .="<option value='$uname $uid$is_c'>$uname{$fn}{$c_flag}</option>";
 	}
 	if(($subdir=='/') or (empty($subdir)))break;
 	if(strlen($subdir)>1)$subdir=dirname($subdir);
