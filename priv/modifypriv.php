@@ -29,6 +29,7 @@ function safe($str)
 	return "'".mysql_real_escape_string($str)."'";
 }
 include('../include/dbconnect.php');
+$is_effected=false;
 if (mysql_select_db(DBNAME))
 {
 	//校验参数正确性
@@ -62,6 +63,7 @@ if (mysql_select_db(DBNAME))
 			$query="insert into svnauth_dir_admin (repository,path,user_id) values('$repos','$path',$uid)";
 			mysql_query($query);
 			$err .= mysql_error();
+			$is_effected=true;
 		}
 
 
@@ -162,6 +164,18 @@ if (mysql_num_rows($result) > 0){
 	if(!empty($err))
 		echo "保存权限过程中发生错误，可能权限没有设置成功！出错信息：<br>$err";
 	else
+	{
+		if($is_effected)
+		{
+	echo <<<HTML
+<p style='text-align:center;line-height:2;border:solid 1px;background:#ecf0e1;margin-top:100px;'>
+<br>保存成功！
+<br>
+<a href="$url">返回继续操作</a> 
+</p>
+HTML;
+
+		}else
 	echo <<<HTML
 <p style='text-align:center;line-height:2;border:solid 1px;background:#ecf0e1;margin-top:100px;'>
 <br>保存成功，但尚未生效！
