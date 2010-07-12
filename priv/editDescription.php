@@ -50,7 +50,7 @@ if (mysql_select_db(DBNAME))
 		$encode=" DEFAULT CHARSET=utf8 ";
 	}
 	$createtb = "create table IF NOT EXISTS dir_des(
-  `repository` varchar(20) NOT NULL,
+  `repository` varchar(45) NOT NULL,
   `path` varchar(255) NOT NULL,
   `des` text(500) default NULL,
   PRIMARY KEY  (`path`,`repository`)

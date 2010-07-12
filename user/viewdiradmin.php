@@ -17,7 +17,7 @@ echo <<<HTML
 HTML;
 //--------
 ('d'==$_GET['o'])?($od=" order by repository,path"):($od=" order by user_name,repository");
-$query="select user_name,full_name,repository,path from svnauth_dir_admin,svnauth_user where svnauth_user.user_id=svnauth_dir_admin.user_id $od";
+$query="select user_name,full_name,repository,path,email from svnauth_dir_admin,svnauth_user where svnauth_user.user_id=svnauth_dir_admin.user_id $od";
 $result =mysql_query($query);
 $adminpath='';
 $oun='';
@@ -26,13 +26,14 @@ while (($result)and($row= mysql_fetch_array($result, MYSQL_BOTH))) {
 	$path=$row['repository'].$row['path'];
 	$un=$row['user_name'];
 	$fn=$row['full_name'];
+	$email=$row['email'];
 	if(!empty($fn))$un="$un($fn)";
 	if(empty($path))continue;
-	$ustr=$un;
+	$ustr=$un."($email)";
 	$pstr=$path;
 	if('n'==$_GET['o'])
 	{
-		$ustr=$un;
+		$ustr=$un."($email)";
 	        ($oun != $un)?($oun=$un):($ustr='');
 		(empty($ustr))?(true):(($ud_cls=="trc1")?($ud_cls="trc2"):($ud_cls="trc1"));
 		$cls=$ud_cls;

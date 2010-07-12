@@ -29,6 +29,7 @@ function safe($str)
 	return "'".mysql_real_escape_string($str)."'";
 }
 include('../include/dbconnect.php');
+$is_effected=false;
 if (mysql_select_db(DBNAME))
 {
 	//校验参数正确性
@@ -48,7 +49,9 @@ if (mysql_select_db(DBNAME))
 		$clear=false;
 		foreach($admin_array as $v)
 		{
-			list($user,$uid)=explode(' ',$v);
+			list($user,$uid,$is_c)=explode(' ',$v);
+			$is_c=trim($is_c);
+			if($is_c == 'c')continue;
 			if(! $clear)
 			{
 				$clear=true;
@@ -60,6 +63,7 @@ if (mysql_select_db(DBNAME))
 			$query="insert into svnauth_dir_admin (repository,path,user_id) values('$repos','$path',$uid)";
 			mysql_query($query);
 			$err .= mysql_error();
+			$is_effected=true;
 		}
 
 
@@ -85,6 +89,8 @@ if (mysql_num_rows($result) > 0){
 				$err=mysql_error();
 		}
 	$query="insert into svnauth_permission (user_id,repository,path,permission,expire) select user_id,'$repos','$path',permission,expire from svnauth_permission where  repository='$f_repos' and path = '$dir' ";
+	mysql_query($query);
+	$query="insert into svnauth_g_permission (group_id,repository,path,permission,expire) select group_id,'$repos','$path',permission,expire from svnauth_g_permission where  repository='$f_repos' and path = '$dir' ";
 	mysql_query($query);
 //	$err .= mysql_error();
 
@@ -132,11 +138,44 @@ if (mysql_num_rows($result) > 0){
 			mysql_query($query);
 			$err .= mysql_error();
 		}
+		$detail_array=array();
+	        $detail_array=$_POST['group_detail'];
+		$clear=false;
+		foreach($detail_array as $v)
+		{
+			list($rights,$group,$t_gid,$type)=explode(' ',$v);
+			if(! $clear)
+			{
+				$clear=true;
+				$query="delete from svnauth_g_permission where repository='$repos' and path='$path'";
+				mysql_query($query);
+				$err=mysql_error();
+			}
+			if(trim($type)=='c')continue;
+			if(empty($t_gid))continue;
+			$t_gid=safe($t_gid);
+			$rights=safe($rights);
+			$query="insert into svnauth_g_permission(group_id,repository,path,permission)values($t_gid,'$repos','$path',$rights)";
+			mysql_query($query);
+			$err .= mysql_error();
+		}
 
 	}
 	if(!empty($err))
 		echo "保存权限过程中发生错误，可能权限没有设置成功！出错信息：<br>$err";
 	else
+	{
+		if($is_effected)
+		{
+	echo <<<HTML
+<p style='text-align:center;line-height:2;border:solid 1px;background:#ecf0e1;margin-top:100px;'>
+<br>保存成功！
+<br>
+<a href="$url">返回继续操作</a> 
+</p>
+HTML;
+
+		}else
 	echo <<<HTML
 <p style='text-align:center;line-height:2;border:solid 1px;background:#ecf0e1;margin-top:100px;'>
 <br>保存成功，但尚未生效！
@@ -145,7 +184,7 @@ if (mysql_num_rows($result) > 0){
 <a href="./gen_access.php?fromurl=$url">立刻生效（生成access文件)</a>?
 </p>
 HTML;
-
+	}
 
 }
 ?>

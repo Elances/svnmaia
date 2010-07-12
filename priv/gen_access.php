@@ -3,6 +3,24 @@ header("content-type:text/html; charset=gb2312");
 include('../include/requireAuth.php');
 include('../../../config.inc');
 include('../include/dbconnect.php');
+$query="select group_name,group_id from svnauth_group order by group_name";
+$result = mysql_query($query);
+$access_g='';
+while (($result)and($row= mysql_fetch_array($result, MYSQL_BOTH))) {	
+	$gid=$row['group_id'];
+	$gname=$row['group_name'];
+	$sql="select user_name from svnauth_groupuser,svnauth_user where svnauth_user.user_id=svnauth_groupuser.user_id and group_id=$gid group by user_name";
+	$result_u=mysql_query($sql);
+	$user_array=array();
+	while(($result_u)and($row2=mysql_fetch_array($result_u,MYSQL_BOTH))) {	
+		$user=$row2['user_name'];
+		$user_array[]= "$user";
+	}
+	$usr_str=implode(',',$user_array);
+	$access_g .= "$gname=$usr_str\n";
+
+}
+
 $query="select svnauth_user.user_name,repository,path,permission from svnauth_permission,svnauth_user where svnauth_permission.user_id=svnauth_user.user_id order by repository,path";
 $result = mysql_query($query);
 $i=0;
@@ -148,7 +166,7 @@ $wg=$repos.'_w';
       }
      $groups[$ng.$i]=$temp;
     }
-$access="\n[groups]\n";
+$access="[groups]\n".$access_g;
 foreach($groups as $key => $value)
 {
   if( empty($value))continue;  
@@ -174,6 +192,36 @@ foreach($dirs as $key => $value)
     if(!empty($groups[$ng]))$access .= "@{$ng} =\n";
     if(!empty($groups[$rg]))$access .= "@{$rg} = r \n";
   }
+}
+$query="select svnauth_group.group_name,repository,path,permission from svnauth_g_permission,svnauth_group where svnauth_g_permission.group_id=svnauth_group.group_id order by repository,path";
+$result = mysql_query($query);
+while (($result)and($row= mysql_fetch_array($result, MYSQL_BOTH))) {	
+	$gname=$row['group_name'];
+	$priv=$row['permission'];
+	$repos=$row['repository'];
+	$path=$row['path'];
+	switch($priv) 
+	{
+		case 'w':
+			$priv='rw';
+			break;
+		case 'n';
+			$priv='';
+	}
+    if(empty($path))
+    {  
+    	$priv_dir ="\n[$repos]\n";
+    }else{
+       $priv_dir = "\n[$repos:$path]\n";
+    }
+    $mypriv="@{$gname} = $priv \n"; 
+    if(strpos($access,$priv_dir))
+    {
+	    $access=str_replace($priv_dir,$priv_dir.$mypriv,$access);
+    }else
+	    $access = $access.$priv_dir.$mypriv;
+
+	
 }
 //echo str_replace("\n","<br>",$access);
 

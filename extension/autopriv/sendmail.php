@@ -131,7 +131,7 @@ if(count($maillist)==0)
 $createtb = "create table IF NOT EXISTS rt_svnpriv(
 		`id` INT NOT NULL AUTO_INCREMENT, PRIMARY KEY (`id`),		
 		`username` varchar(40) NOT NULL,
-  `repository` varchar(20) NOT NULL,
+  `repository` varchar(50) NOT NULL,
   `path` varchar(255) NOT NULL,
   `email` varchar(80) default NULL,
   `permission` varchar(1) NOT NULL,
@@ -148,10 +148,19 @@ if($result)
 	$id=$row[0];
 	if(empty($id))$id=1;
 }
-
+$query="select full_name from svnauth_user where user_name ='$reg_usr';";
+$result = mysql_query($query);
+if($result)$totalnum=mysql_num_rows($result); 
+if($totalnum>0){
+	$row = mysql_fetch_array($result, MYSQL_BOTH);
+	if(!empty($row['full_name']))
+	{
+		$full_name="(".$row['full_name'].")";
+	}
+}
 $query="insert into rt_svnpriv (`id`,`username`,`repository`,`path`,`permission`,`email`,`rtdate`) values($id,'$reg_usr','$repos','$dir','$wpriv','$b_email',NOW())";
 mysql_query($query);
-
+$rc_error=mysql_error();
 //******生成处理链接*******
 $salt=mt_rand();
 $para_str=urlencode(md5($salt.SECRET_KEY.$id));
@@ -163,9 +172,14 @@ $createtb = "create table IF NOT EXISTS svn_hex(
 		`hexkey` varchar(255)
 		)ENGINE=MyISAM;";
 	mysql_query($createtb);
-$query="insert IGNORE into svn_hex set id=$id,hexkey='$para_str';";
+$query="insert  into svn_hex set id=$id,hexkey='$para_str';";
 mysql_query($query);
-
+$rc_error=$rc_error.mysql_error();
+if(!empty($rc_error))
+{
+	echo "记录请求时发生错误，无法发送申请，请稍侯再试。错误信息：".$rc_error;
+	exit;
+}
 //将字符串发给对应邮箱
 include("../../include/email.php");
 $addr=$_SERVER['REMOTE_ADDR'];
@@ -176,7 +190,7 @@ foreach($maillist as $mail)
   $user=urlencode(base64_encode($user_raw));
   $url=$url_raw."&u=$user";
   $body="Hi,$user_raw\n
-   $reg_usr 申请svn访问权限，需要您的处理，详情如下：
+   $reg_usr $full_name 申请svn访问权限，需要您的处理，详情如下：
 	申请访问路径：$wurl
 	申请权限：$priv
 	申请说明：$comment
@@ -199,7 +213,7 @@ $url
  if ($sendinfo === true) {
     echo "<br>申请已发出至 $mail";
  }else {
-	echo(is_string($sendinfo) ? $sendinfo : 'reg_email_fail:'.$mail);
+	echo(is_string($sendinfo) ? $sendinfo : ' 发送失败:'.$mail);
  }
 }
 echo "<br>点击<a href='' onclick='javascript:self.close();'>关闭</a>";

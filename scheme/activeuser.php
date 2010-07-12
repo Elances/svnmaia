@@ -61,7 +61,7 @@ if (mysql_select_db(DBNAME))
 				$expire=$row['expire'];
 				$tb_str="
 			<tr><td><input type=hidden name='uid' value=$user_id>	
-				 <input type=text readonly name='u' value=$user_name ></td>			 			 <td><input type=text name='fullname' value=$full_name></td>
+				 <input type=text readonly style='background:#ece9d8;' name='u' value=$user_name ></td>			 			 <td><input type=text name='fullname' value=$full_name></td>
 				 <td><input type=text name='staff_no' value=$staff_no></td>
 				  <td><input type=text name='department' value=$department></td>
 				 <td><input type=text  readonly name='email_n' value=$email_n></td></tr>
@@ -96,7 +96,7 @@ if($expire>$exp)
 
 		<table  cellspacing='1' cellpadding='0' width='70%' border='0' >
 
-		<tr><th>用户名</th><th>姓名</th><th>工号</th><th>部门</th><th>邮件</th></tr>
+		<tr><th>用户名</th><th>真实姓名</th><th>工号</th><th>部门</th><th>邮件</th></tr>
 
 <?php echo $tb_str.$hidden_str;?>
 	</table>

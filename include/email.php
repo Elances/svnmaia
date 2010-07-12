@@ -4,7 +4,7 @@ $db_charset='gb2312';
 $M_db= new Mailconfig(
 	array(
 		'ifopen'=> 1,
-		'method'=> 1,
+		'method'=> $mail_method,
 		'host'	=> $smtp_server,
 		'port'	=> $smtp_port,
 		'auth'	=> $use_smtp_authz,
@@ -111,7 +111,12 @@ function send_mail($toemail,$subject,$message,$additional=null){
 			return 'email_toemail_failed';
 		}
 		fwrite($fp, "DATA\r\n");
-		if(strncmp(fgets($fp,512),'354',3)!=0){
+		$result_fp=fgets($fp,512);
+		if(strncmp($result_fp,'250',3)==0){
+			$result_fp=fgets($fp,512);
+		}
+		if(strncmp($result_fp,'354',3)!=0){
+			echo $result_fp;
 			return 'email_data_failed';
 		}
 		$msg  = "Date: ".Date("r")."\r\n";
@@ -123,7 +128,8 @@ function send_mail($toemail,$subject,$message,$additional=null){
 		if(substr($lastmessage, 0, 3) != 250)
 		{
 			//Showmsg('email_connect_failed');
-			echo "email connect failed";
+			echo $lastmessage;
+			return "email connect failed";
 		}
 		fwrite($fp, "QUIT\r\n");
 		fclose($fp);
