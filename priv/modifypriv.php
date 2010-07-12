@@ -184,7 +184,7 @@ HTML;
 <a href="./gen_access.php?fromurl=$url">立刻生效（生成access文件)</a>?
 </p>
 HTML;
-
+	}
 
 }
 ?>
