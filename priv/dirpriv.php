@@ -123,7 +123,11 @@ for($ii=0;$ii<20;$ii++)
 		$admin_array[$uid]=$uname;
 		$fn='';
 		if(!empty($fulln))$fn="($fulln)";
-		($ii!=0)?($is_c=' c';$c_flag='(¼¯³É)'):($is_c='');
+		if($ii!=0)
+		{
+			$is_c=' c';
+			$c_flag='(inherit)';
+		}
 		$diradmin .="<option value='$uname $uid$is_c'>$uname{$fn}{$c_flag}</option>";
 	}
 	if(($subdir=='/') or (empty($subdir)))break;
