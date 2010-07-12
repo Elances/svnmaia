@@ -60,7 +60,7 @@ if (mysql_select_db(DBNAME))
 		//$expire=strtotime("+7 day",strtotime($expire)");//后推1week
 		$user=$row['user_name'];
 		$uid=$row['user_id'];
-		$email=(empty($row['email']))?$user:$row['email'];
+		$email=(empty($row['email']))?($user.$email_ext):$row['email'];
 		$para=array($user,$email,$uid);
 		$sig=keygen($para);
 		//发邮件通知激活
