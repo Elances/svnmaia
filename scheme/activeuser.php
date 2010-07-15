@@ -64,7 +64,7 @@ if (mysql_select_db(DBNAME))
 				 <input type=text readonly style='background:#ece9d8;' name='u' value=$user_name ></td>			 			 <td><input type=text name='fullname' value=$full_name></td>
 				 <td><input type=text name='staff_no' value=$staff_no></td>
 				  <td><input type=text name='department' value=$department></td>
-				 <td><input type=text  readonly name='email_n' value=$email_n></td></tr>
+				 <td><input type=text  name='email_n' value=$email_n></td></tr>
 
 ";
 	}
