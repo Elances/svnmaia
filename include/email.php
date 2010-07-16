@@ -52,9 +52,9 @@ Class Mailconfig {
 }
 
 function send_mail($toemail,$subject,$message,$additional=null){
-	global $M_db,$db_charset,$sendtoname,$windid;
+	global $M_db,$db_charset,$windid;
 	 if (!strstr($toemail,'@'))$toemail=$toemail.$email_ext;
-	!$sendtoname && $sendtoname = $toemail;	
+	$sendtoname = $toemail;	
 	!$windid && $windid = 'svn-info';
 	$send_subject = "=?$db_charset?B?".base64_encode(str_replace(array("\r","\n"), array('',' '),$subject)).'?=';
 	$send_message = chunk_split(base64_encode(str_replace("\r\n.", " \r\n..", str_replace("\n", "\r\n", str_replace("\r", "\n", str_replace("\r\n", "\n", str_replace("\n\r", "\r", $message)))))));
