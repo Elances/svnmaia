@@ -129,6 +129,12 @@ foreach($dir_array as $dir)
 }
 ?>
 </table>
+	<table class='subtitle'>
+	   <tr>
+	  <td><input type=button value='全选' onclick="selall()"/></td><td width=280>&nbsp;</td><td>操作:<input name="action" type='submit' value='删除' onclick="return confirm('将删除该目录所对应的所有权限信息，你确认吗？');"/></td>
+	   </tr>
+	</table>
+
 </form>
 <script language="javascript">
 <!--
