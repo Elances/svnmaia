@@ -56,14 +56,14 @@ $dir_array=array();
 while (($result)and($row= mysql_fetch_array($result, MYSQL_BOTH))) {	
 	$repos=$row['repository'];
 	$path=$row['path'];
-	$dir_array[]=$repos$path;
+	$dir_array[]=$repos.$path;
 }
 $query="select DISTINCT repository, path from svnauth_g_permision order by repository";
 $result = mysql_query($query);
 while (($result)and($row= mysql_fetch_array($result, MYSQL_BOTH))) {	
 	$repos=$row['repository'];
 	$path=$row['path'];
-	$dir_array[]=$repos$path;
+	$dir_array[]=$repos.$path;
 }
 $dir_array=array_unique($dir_array);
 
