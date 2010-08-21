@@ -161,9 +161,13 @@ function setexpire()
 	}
 }
 
-function search(textObj,seln)
+function search(textObj,seln,t)
 {
 	var str=document.getElementById(textObj).value;
+	if(t == 1)
+	{
+		if(str.length < 3)return;
+	}
 	var desObj=document.privform.elements[seln];	
 	for(var i=0;i<desObj.length;i++)
 	{
@@ -404,7 +408,7 @@ function loadTipCallBack() {
 		<br>
 		<table border=0 ><tr valign='top'><td>
 <div >
-	<input type='text' id='search1' class='sbar' onkeyup="search('search1','permission_detail[]')"/><input type='button' value='定位用户' onclick="search('search1','permission_detail[]')"><br>
+	<input type='text' id='search1' class='sbar' onkeyup="search('search1','permission_detail[]',1)"/><input type='button' value='定位用户' onclick="search('search1','permission_detail[]',2)"><br>
 <select name="permission_detail[]" MULTIPLE size=23 class='detsl' onchange="showpriv()"><option value='' >-权限----用户名-------</option>
 	[Maiasvn:dirprive]
 </select>
@@ -432,7 +436,7 @@ function loadTipCallBack() {
 <div class='rt' id='rtdiv'>
 	<img src='../img/close.bmp' ALT='close' style='float:right;' onclick="document.getElementById('rtdiv').style.display='none'">
 	<div style='float:left'>
-	<input type='text' id='search2' class='sbar' onkeyup="search('search2','candidate[]')"/><input type='button' value='定位用户' onclick="search('search2','candidate[]')"><br>
+	<input type='text' id='search2' class='sbar' onkeyup="search('search2','candidate[]',1)"/><input type='button' value='定位用户' onclick="search('search2','candidate[]',2)"><br>
 <select name="candidate[]" MULTIPLE size=23 class='cansl' onDblclick="adduser('rtdiv','candidate[]','permission_detail[]','')"><option value='' label='--请选择--'>-权限----候选用户列表--</option>
 [Maiasvn:candidate]
 </select>
@@ -483,7 +487,7 @@ function loadTipCallBack() {
 <div class='rt' id='g_rtdiv'>
 	<img src='../img/close.bmp' ALT='close' style='float:right;' onclick="document.getElementById('g_rtdiv').style.display='none'">
 	<div style='float:left'>
-	<input type='text' id='g_search2' class='sbar' onkeyup="search('g_search2','g_candidate[]')"/><input type='button' value='定位组' onclick="search('g_search2','g_candidate[]')"><br>
+	<input type='text' id='g_search2' class='sbar' onkeyup="search('g_search2','g_candidate[]',1)"/><input type='button' value='定位组' onclick="search('g_search2','g_candidate[]',2)"><br>
 <select name="g_candidate[]" MULTIPLE size=13 onDblclick="adduser('g_rtdiv','g_candidate[]','group_detail[]','')" class='cansl'><option value='' label='--请选择--'>-权限----候选组列表--</option>
 [Maiasvn:g_candidate]
  </select>
