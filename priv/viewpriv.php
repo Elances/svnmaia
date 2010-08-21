@@ -12,8 +12,8 @@ include('../include/dbconnect.php');
 $user_id=$_GET['u'];
 if(!is_numeric($user_id))
 {
-	echo "参数非法！";
-	exit;
+	echo "参数非法！转向显示你自己的权限。";
+	$user_id=$_SESSION['uid'];	
 }
 pri_modify();
 function pri_modify()
@@ -61,6 +61,7 @@ if($_SESSION['role']=='admin')
 	$str='操作';
 }
 echo <<<HTML
+
 <style type='text/css'>
 .trc2{background: #d7d7d7;font-size:10pt;}
 .trc1{font-size:10pt
