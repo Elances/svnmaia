@@ -3,20 +3,18 @@ session_start();
 include('../include/charset.php');
 if ($_SESSION['role'] !='admin')
 {
-	echo "æ‚¨æ— æƒè¿›è¡Œæ­¤æ“ä½œï¼";
+	echo "ÄúÎŞÈ¨½øĞĞ´Ë²Ù×÷£¡";
 	exit;
 }
 include('../../../config.inc');
 include('../include/dbconnect.php');
+include('../config/config.php');
+
 if(!empty($_POST['dirArray']))
 {
-	function safe($str)
-	{ 
-		return "'".mysql_real_escape_string($str)."'";
-	}
 	$action= trim($_POST["action"]);
 	$dirArray=$_POST["dirArray"];
-	//æ¸…ç†å‰å¤‡ä»½æ–‡ä»¶			
+	//ÇåÀíÇ°±¸·İÎÄ¼ş			
 	$today = date("Ymd");
 	$backupfile=$accessfile.$today;
 	if(!file_exists($backupfile))
@@ -27,7 +25,7 @@ if(!empty($_POST['dirArray']))
 	}
 	foreach($dirArray as $value)
 	{
-		$value= safe(trim($value));
+		$value= mysql_real_escape_string(trim($value));
 		if(!empty($value))
 		{
  			$dir=$value;
@@ -38,8 +36,7 @@ if(!empty($_POST['dirArray']))
 			$dir=($dir{strlen($dir)-1}=='/')?('/'.substr($dir,0,-1)):('/'.$dir);
 			if(empty($repos) and ($dir=='/'))
 			{
-				$repos='/';
-				$dir='';
+				continue;
 			}
 			$query="delete from svnauth_permission where repository='$repos' and path='$dir'";
 			mysql_query($query);
@@ -47,10 +44,11 @@ if(!empty($_POST['dirArray']))
 			mysql_query($query);
 		}
 	}
+	echo "<script>alert('²Ù×÷Íê³É')</script>";
 
 
 }
-$query="select DISTINCT repository, path from svnauth_permision order by repository";
+$query="select DISTINCT repository, path from svnauth_permission order by repository";
 $result = mysql_query($query);
 $dir_array=array();
 while (($result)and($row= mysql_fetch_array($result, MYSQL_BOTH))) {	
@@ -58,7 +56,7 @@ while (($result)and($row= mysql_fetch_array($result, MYSQL_BOTH))) {
 	$path=$row['path'];
 	$dir_array[]=$repos.$path;
 }
-$query="select DISTINCT repository, path from svnauth_g_permision order by repository";
+$query="select DISTINCT repository, path from svnauth_g_permission order by repository";
 $result = mysql_query($query);
 while (($result)and($row= mysql_fetch_array($result, MYSQL_BOTH))) {	
 	$repos=$row['repository'];
@@ -72,7 +70,7 @@ function checkurl($t_url)
 	global $svnparentpath,$svn;
 	if($t_url=='')return true;
 	if(strpos($t_url,':'))return false;
-//ä¸­æ–‡ç›®å½•åˆ¤æ–­æœ‰é—®é¢˜
+//ÖĞÎÄÄ¿Â¼ÅĞ¶ÏÓĞÎÊÌâ
 //	if(isset($_GET['from_d']))
 	{
 	  $t_url=escapeshellcmd($t_url);
@@ -95,22 +93,23 @@ function checkurl($t_url)
 .trc1{font-size:10pt}
 .detail{width:680px}
 </style>
-<strong>è¯´æ˜ï¼š</strong>åœ¨é…ç½®å˜æ›´è¿‡ç¨‹ä¸­ï¼Œå¯èƒ½ä¼šæœ‰çš„svnç›®å½•å·²è¢«åˆ é™¤æˆ–å·²æ”¹åæˆ–å·²ç§»åŠ¨ä½ç½®ï¼Œä½¿å¾—å…¶å¯¹åº”çš„æƒé™ä¿¡æ¯å˜æˆå†—ä½™ã€‚æœ¬å·¥å…·å°†è¿™äº›å¯èƒ½çš„å†—ä½™æƒé™ä¿¡æ¯åˆ—å‡ºï¼Œä¾›æ‚¨ç ”åˆ¤ï¼Œæ‚¨å¯åœ¨ç¡®è®¤å…¶ä¸ºå†—ä½™åå°†ä¹‹åˆ é™¤ã€‚
+<strong>ËµÃ÷£º</strong>ÔÚÅäÖÃ±ä¸ü¹ı³ÌÖĞ£¬¿ÉÄÜ»áÓĞµÄsvnÄ¿Â¼ÒÑ±»É¾³ı»òÒÑ¸ÄÃû»òÒÑÒÆ¶¯Î»ÖÃ£¬Ê¹µÃÆä¶ÔÓ¦µÄÈ¨ÏŞĞÅÏ¢±ä³ÉÈßÓà¡£±¾¹¤¾ß½«ÕâĞ©¿ÉÄÜµÄÈßÓàÈ¨ÏŞĞÅÏ¢ÁĞ³ö£¬¹©ÄúÑĞÅĞ£¬Äú¿ÉÔÚÈ·ÈÏÆäÎªÈßÓàºó½«Ö®É¾³ı¡£
 
 <form method="post" action="" name='dirform' onsubmit="return fCheck()">	
 	<table class='subtitle'>
 	   <tr>
-	  <td><input type=button value='å…¨é€‰' onclick="selall()"/></td><td width=180>&nbsp;</td><td>æ“ä½œ:<input name="action" type='submit' value='åˆ é™¤' onclick="return confirm('å°†åˆ é™¤è¯¥ç›®å½•æ‰€å¯¹åº”çš„æ‰€æœ‰æƒé™ä¿¡æ¯ï¼Œä½ ç¡®è®¤å—ï¼Ÿ');"/></td>
+	  <td><input type=button value='È«Ñ¡' onclick="selall()"/></td><td width=280>&nbsp;</td><td>²Ù×÷:<input name="action" type='submit' value='É¾³ı' onclick="return confirm('½«É¾³ı¸ÃÄ¿Â¼Ëù¶ÔÓ¦µÄËùÓĞÈ¨ÏŞĞÅÏ¢£¬ÄãÈ·ÈÏÂğ£¿');"/></td>
 	   </tr>
 	</table>
 	
 	<table class=detail cellpadding=5px>
 	  <tr class=title>
-	     <td></td><td>åº“/ç›®å½•</td>
+	     <td></td><td>¿â/Ä¿Â¼</td>
 	  </tr>
 
 <?php
 $ii=count($dir_array);
+$i=0;
 foreach($dir_array as $dir)
 {
 	if ($tr_class=="trc1"){
@@ -119,8 +118,10 @@ foreach($dir_array as $dir)
 	{			
 		$tr_class="trc1";
 	}
+	if($dir=='/')continue;
 	if(!checkurl($dir))
 	{
+		$i++;
 		echo"<tr class=$tr_class><td><input  name=\"dirArray[$i]\"  id=\"dirArray[$i]\"  value=\"$dir\" type=checkbox></td>
 			<td>$dir</td></tr>";
 	}
@@ -138,7 +139,7 @@ function fCheck(){
   	{ return true;
 	}else 
 	{
-		alert('è¯·å‹¾é€‰åº“/ç›®å½•');
+		alert('Çë¹´Ñ¡¿â/Ä¿Â¼');
 		return false;
 	}
 }	
