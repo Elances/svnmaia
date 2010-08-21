@@ -79,7 +79,7 @@ li:hover ul, li.over ul{display:block;}
   <ul>
      	<li><a href='http://www.scmbbs.com/cn/maia/2009/6/maia1.php' target='_blank'>关于</a></li>
 	<li><a href='' target='_blank'>查询授权号</a></li>
-	<li><a href='http://www.scmbbs.com/cn/maia/2009/6/maia2.php' target='_blank'>反馈</a></li>
+	<li><a href='http://code.google.com/p/svnmaia/issues/list' target='_blank'>反馈</a></li>
   </ul>
 </li>
 </ul>
