@@ -82,11 +82,11 @@ if($_SESSION['role'] != "admin")
 <br><a href='reg_user.php'>注册</a>
 <br><a href='../extension/topwd.php'>找回密码</a>
 <br><a href='../extension/pwdhelp.php'>修改密码</a>
-<br>
+<br>&nbsp;
 <h3>权限管理</h3>
 <br><a href='../extension/autopriv/rtpriv.php'>权限申请</a>
 <br><a href="../priv/viewpriv.php?u={$_SESSION['uid']}">权限查询</a>
-<br>
+<br>&nbsp;
 <h3>其他</h3>
 SCMBBS;
 }
