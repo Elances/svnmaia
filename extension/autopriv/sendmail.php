@@ -53,6 +53,10 @@ function checkurl($t_url)
 }
 $dir=trim($wurl);
 $dir=str_replace($svnurl,'',$dir);
+if(preg_match("/^http:/i",$dir)){
+	$dir=str_replace("http://",'',$dir);
+	list($tmp1,$tmp2,$dir)=explode('/',$dir,3);
+}
 $dir=($dir{0}=='/')?(substr($dir,1)):($dir);
 $dir=str_replace('//','/',$dir);
 if(!checkurl($dir))
