@@ -1,6 +1,6 @@
 <?php
 session_start();
-header("content-type:text/html; charset=gb2312");
+include("../include/charset.php");
   // error_reporting(0);
 ?>
 <!--
@@ -157,31 +157,7 @@ if(isset($_POST['groupname']))
 		echo "你无权创建权限组！";
 
 }
-//--------------删除组
-if(isset($_POST['del_g']))
-{
-	$groupArray=$_POST['groupArray'];
-	if ($_SESSION['role']!='admin')exit;
-	if(empty($groupArray))
-	{
-	  echo " <script>window.alert(\"选择为空！\")</script>";
-			echo " <script>setTimeout('document.location.href=\"javascript:history.back()\"',3)</script>";
-			exit;	
-	}
-	foreach($groupArray as $value)
-	{
-		$value= safe($value);
-		if(!empty($value))$paras_array[]= ' group_id='.$value;
-	}
-	$paras=implode(' or ',$paras_array);
-		$query="delete from svnauth_group where $paras";
-		//echo $query;exit;
-		$result=mysql_query($query);	
-		$query="delete from svnauth_g_permission where $paras";
-		$result=mysql_query($query);
-		@include('../priv/gen_access.php');
-}
-//---------------
+
 //edit group details
 if(isset($_POST['guact']))
 {
@@ -388,14 +364,14 @@ if(isset($_GET['a']) )
 $result = mysql_query($query);
 	echo  <<<SCMBBS
 <h3>权限组列表&nbsp; &nbsp; &nbsp;$groupview</h3>	
-	<form method="post" action="" name='groupform' onsubmit="return fCheck($ii)">	
+	<form method="post" action="group_modify.php" name='groupform' onsubmit="return fCheck($ii)">	
 SCMBBS;
 if($_SESSION['role']=="admin")
 	echo <<<SCMBBS
-		<table>
+		<table class='subtitle'>
 	   <tr>
 	  <td width="40"><input type=hidden name='del_g' value='del_g'></td>
-		<td><input name="action" type=submit value="删除" onclick="return confirm('确实要删除这些组吗?');"></td><td width=100>&nbsp;</td><td><a href="#addgroup" class='bt'>创建组</a></td>	
+		<td><input name="action" type=submit value="删除" onclick="return confirm('确实要删除这些组吗?');"></td><td width=100>&nbsp;</td><td><a href="#addgroup" class='bt'>创建组</a></td><td><input name="action" type=submit value="重命名"></td>	
 	   </tr>
 	</table>
 SCMBBS;
