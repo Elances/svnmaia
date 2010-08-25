@@ -5,7 +5,7 @@ include('../../../config.inc');
 include('../include/dbconnect.php');
 
 if (!isset($_SESSION['username'])){	
-	echo "è¯·å…ˆ<a href='./loginfrm.php'>ç™»å½•</a> ï¼";
+	echo "ÇëÏÈ<a href='./loginfrm.php'>µÇÂ¼</a> £¡";
 	echo" <script>setTimeout('document.location.href=\"./loginfrm.php\"',0)</script>";  	
 	exit;
 }
@@ -18,14 +18,14 @@ function safe($str)
 
 $action= trim($_POST["action"]);
 if ($_SESSION['role']!='admin')exit;
-//--------------åˆ é™¤ç»„
+//--------------É¾³ı×é
 if(isset($_POST['del_g']))
 {
 
 	$groupArray=$_POST['groupArray'];
 	if(empty($groupArray))
 	{
-	  echo " <script>window.alert(\"é€‰æ‹©ä¸ºç©ºï¼\")</script>";
+	  echo " <script>window.alert(\"Ñ¡ÔñÎª¿Õ£¡\")</script>";
 			echo " <script>setTimeout('document.location.href=\"javascript:history.back()\"',3)</script>";
 			exit;	
 	}
@@ -35,24 +35,24 @@ if(isset($_POST['del_g']))
 		if(!empty($value))$paras_array[]= ' group_id='.$value;
 	}
 	$paras=implode(' or ',$paras_array);
-	if($action == 'åˆ é™¤')
+	if($action == 'É¾³ı')
 	{
 		$query="delete from svnauth_group where $paras";
 		//echo $query;exit;
 		$result=mysql_query($query);	
 		$query="delete from svnauth_g_permission where $paras";
 		$result=mysql_query($query);
-		@include('../priv/gen_access.php');
+		@include('../priv/gen_access.php?fromurl=viewgroup.php');
 	}
-	if($action == 'é‡å‘½å')
+	if($action == 'ÖØÃüÃû')
 	{
 	echo <<<HTML
 		<form method="post" action="">
 		<fieldset>
-		<legend>ç¼–è¾‘ç»„å</legend>
+		<legend>±à¼­×éÃû</legend>
 		<input type=hidden name=action value='modify'>
 		<table  cellspacing='1' cellpadding='0' width='70%' border='0' >
-		<tr><th>æƒé™ç»„å</th></tr>
+		<tr><td><b>È¨ÏŞ×éÃû</b></td></tr>
 HTML;
 		$query="select group_id,group_name from svnauth_group where $paras";
 			$result = mysql_query($query); 			
@@ -65,16 +65,15 @@ HTML;
 	echo <<<HTML
 		</table>
 		<table style="position:relative;left:300px;top:20px" >
-		<tr><td><input style="width:80" type=submit value="ç¡®å®š" ></td><td><input style="width:80" type=reset value="å–æ¶ˆ" onclick="turnback()"></td></tr>
+		<tr><td><input style="width:80" type=submit value="È·¶¨" ></td><td><input style="width:80" type=reset value="È¡Ïû" onclick="turnback()"></td></tr>
 	</table>
 		</fieldset></form>
 HTML;
 	}
-	echo " <script>setTimeout('top.location.href=\"./viewgroup.php\"',0)</script>";
 	exit;
 }
 //---------------
-//ä¿®æ”¹ç»„å-------
+//ĞŞ¸Ä×éÃû-------
 
 if($action == 'modify')
 {
@@ -84,11 +83,21 @@ if($action == 'modify')
 	for($i=0;$i<count($userid);$i++)
 	{
 		$username[$i]=safe($username[$i]);
-		if(!is_numeric($userid))continue;
+		if(!is_numeric($userid[$i]))continue;
 		if(empty($userid[$i]))continue;
 		$query="update svnauth_group set group_name=$username[$i] where group_id=$userid[$i]";
 		  	  mysql_query($query);
 	}
 }
-echo " <script>setTimeout('top.location.href=\"./viewgroup.php\"',0)</script>";
+echo " <script>setTimeout('location.href=\"./viewgroup.php\"',0)</script>";
+?>
 
+<script language="javascript">
+<!--
+function turnback()
+{ 
+  // setTimeout('document.location.href="aa_fullview.php?y_site_domain='+site_domain+'&skey=6a817251398f92f265"',0)
+  setTimeout('document.location.href="javascript:history.back()"',0)
+}
+-->
+</script>
