@@ -9,6 +9,19 @@ if (!isset($_SESSION['username'])){
 	echo" <script>setTimeout('document.location.href=\"./loginfrm.php\"',0)</script>";  	
 	exit;
 }
+?>
+
+<script language="javascript">
+<!--
+function turnback()
+{ 
+  // setTimeout('document.location.href="aa_fullview.php?y_site_domain='+site_domain+'&skey=6a817251398f92f265"',0)
+  setTimeout('document.location.href="javascript:history.back()"',0)
+}
+-->
+</script>
+
+<?php
 
 function safe($str)
 { 
@@ -92,12 +105,3 @@ if($action == 'modify')
 echo " <script>setTimeout('location.href=\"./viewgroup.php\"',0)</script>";
 ?>
 
-<script language="javascript">
-<!--
-function turnback()
-{ 
-  // setTimeout('document.location.href="aa_fullview.php?y_site_domain='+site_domain+'&skey=6a817251398f92f265"',0)
-  setTimeout('document.location.href="javascript:history.back()"',0)
-}
--->
-</script>
