@@ -141,8 +141,7 @@ if($action == 'copygroup')
 {
 	$gid=safe($_POST['groupArray']);
 	$gname=safe($_POST['groupname']);
-	if(!is_numeric($gid))continue;
-	if(empty($gid))continue;
+	if(!is_numeric($gid))exit;
 	$query="select group_id from svnauth_group where group_name=$gname";
 	$result=mysql_query($query);
 	$newgroup=false;
