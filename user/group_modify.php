@@ -141,14 +141,13 @@ if($action == 'copygroup')
 {
 	$gid=safe($_POST['groupArray']);
 	$gname=safe($_POST['groupname']);
-	if(!is_numeric($gid))exit;
+	if(!is_numeric($_POST['groupArray']))exit;
 	$query="select group_id from svnauth_group where group_name=$gname";
 	$result=mysql_query($query);
 	$newgroup=false;
 	if(($result) and($row= mysql_fetch_array($result, MYSQL_BOTH))) {
 		$togroupid=$row['group_id'];
-		if(empty($togroupid))
-		{
+	}else{
 			$newgroup=true;
 			$query="insert into svnauth_group set group_name='$gname'";		
 	//	echo $query;
@@ -157,8 +156,7 @@ if($action == 'copygroup')
 			$result=mysql_query($query);
 			$row=mysql_fetch_row($result);
 			$togroupid=$row[0];
-		}
-	}	
+	}
 	if($_POST['copym'] == 'cpm')
 	{
 		if(!$newgroup)
