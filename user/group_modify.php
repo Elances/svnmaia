@@ -87,7 +87,7 @@ HTML;
 	}
 	if($action == '复制组')
 	{
-		if($c >1 ){
+		if($c >2 ){
 	  		echo " <script>window.alert(\"不能同时复制多个组！\")</script>";
 			echo " <script>setTimeout('document.location.href=\"javascript:history.back()\"',3)</script>";
 			exit;	
