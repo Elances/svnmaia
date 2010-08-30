@@ -57,7 +57,8 @@ if(isset($_POST['del_g']))
 		$result=mysql_query($query);	
 		$query="delete from svnauth_g_permission where $paras";
 		$result=mysql_query($query);
-		@include('../priv/gen_access.php?fromurl=viewgroup.php');
+		@include('../priv/gen_access.php');
+		echo " <script>setTimeout('location.href=\"./viewgroup.php\"',5)</script>";
 	}
 	if($action == 'ÖØÃüÃû')
 	{
