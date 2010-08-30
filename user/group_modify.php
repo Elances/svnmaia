@@ -99,18 +99,19 @@ HTML;
 		<input type=hidden name=action value='copygroup'>
 说明：复制组的成员或权限到目标组，如果目标组不存在则创建该组；如果目标已存在，则覆盖之。
 		<table  cellspacing='1' cellpadding='0' width='70%' border='0' >
-		<tr><td><b>从权限组</b></td><td><b>复制到</b></td></tr>
+		<tr><th>源</th><th>目标</th></tr>
 HTML;
 		$query="select group_id,group_name from svnauth_group where $paras";
 			$result = mysql_query($query); 			
 			while (($result)and($row= mysql_fetch_array($result, MYSQL_BOTH))) {
 				$group_id=$row['group_id'];
 				$group_name=$row['group_name'];
-				echo "<tr><td><input type=hidden name='groupArray' value='$group_id'>
-				 <input type=text readonly value='$group_name'></td><td><input type=text name='groupname'></td>";
+				echo "<tr><td>从权限组<input type=hidden name='groupArray' value='$group_id'>
+				 <input type=text readonly value='$group_name'></td><td>复制到<input type=text name='groupname'></td>";
 			}
 	echo <<<HTML
 		</table>
+<b>复制类别：</b>
 <input type=checkbox checked value='cpm' name='copym'>复制组成员 <input type=checkbox value='cpp' name='copypriv'>复制组权限
 		<table style="position:relative;left:300px;top:20px" >
 		<tr><td><input style="width:80" type=submit value="确定" ></td><td><input style="width:80" type=reset value="取消" onclick="turnback()"></td></tr>
