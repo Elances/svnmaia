@@ -15,6 +15,7 @@ if(!is_numeric($user_id))
 	echo "参数非法！转向显示你自己的权限。";
 	$user_id=$_SESSION['uid'];	
 }
+$querystr=$_SERVER['QUERY_STRING'];
 pri_modify();
 function pri_modify()
 {
@@ -47,6 +48,19 @@ function pri_modify()
 		$query="delete from svnauth_permission where user_id=$user_id and repository='$repos' and path='$path' ";
 		mysql_query($query);
 	}
+	$uinfo="变更尚未生效，请点击<a href='./gen_access.php?fromurl=./viewpriv.php?$querystr'>【立刻生效】</a>";
+}
+group_modify();
+function group_modify()
+{
+	if($_SESSION['role']!='admin')return 1;
+	$user_id=$_GET['u'];
+	$gid=$_GET['gid'];
+	if(!is_numeric($user_id))return 1;
+	if(!is_numeric($gid))return 1;
+	$query="delete from svnauth_groupuser where user_id=$user_id and group_id=$group_id";
+	mysql_query($query);
+	$ginfo="变更尚未生效，请点击<a href='./gen_access.php?fromurl=./viewpriv.php?$querystr'>【立刻生效】</a>";
 }
 $query="select repository,path,permission from svnauth_permission where user_id = $user_id";
 //echo $query;exit;
@@ -67,6 +81,7 @@ echo <<<HTML
 .trc1{font-size:10pt
 </style>
 HTML;
+echo $uinfo.$ginfo;
 echo "<table><tr><th>路径</th><th>权限</th><th>$str</th></tr>";
 while (($result)and($row= mysql_fetch_array($result, MYSQL_BOTH))) {
 	$repos=$row['repository'];
@@ -97,7 +112,6 @@ $query="select svnauth_group.group_name,svnauth_group.group_id from svnauth_grou
 $result = mysql_query($query);
 echo "<h4>所在权限组:</h4>";
 echo "<table>";
-$querystr=$_SERVER['QUERY_STRING'];
 while (($result)and($row= mysql_fetch_array($result, MYSQL_BOTH))) {
 	$groupname=$row['group_name'];
 	$gid=$row['group_id'];
@@ -107,7 +121,13 @@ while (($result)and($row= mysql_fetch_array($result, MYSQL_BOTH))) {
 	{			
 		$tr_class="trc1";
 	}
-	echo "<tr class=$tr_class><td><a href='../user/viewgroup.php?gid=$gid&grp=$groupname&fromurl=../priv/viewpriv.php?$querystr'>$groupname</a></td></tr>";
+	$act='';
+	if($_SESSION['role']=='admin')
+	{
+		$act="&nbsp;&nbsp;<a href='./viewpriv.php?action=del&u={$user_id}&gid={$gid}'>退除</a>";
+	}
+
+	echo "<tr class=$tr_class><td><a href='../user/viewgroup.php?gid=$gid&grp=$groupname&fromurl=../priv/viewpriv.php?$querystr'>$groupname</a></td><td>$act</td></tr>";
 }
 echo "</table>";
 //--------

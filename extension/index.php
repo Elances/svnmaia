@@ -50,7 +50,7 @@ br{clear:both;}
   <div class='st'>
 <a href='./autopriv/setting.php'>自动审批权限设置</a>/<a href='./autopriv/viewrequest.php'>查看申请列表</a>
 <br><a href='./autopriv/rtpriv.php' target='_blank'>权限申请</a>
-<br><a href='../priv/checkDirPriv.php'>冗余权限清理</a>
+<br><a href='../priv/checkDirPriv.php'>权限冗余校验与清理</a>
   </div>
 <h3>自定义工具集</h3>
 <div class='st'>

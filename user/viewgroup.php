@@ -55,6 +55,12 @@ function batchadd()
 {
 	guform.submit();
 }	
+function addowner()
+{
+	var gn=document.getElementById('groupowner').value;
+	if(gn == "")return false;	
+	setowner();
+}
 function setowner()
 {
 	document.getElementById("editowner").value=1
@@ -325,7 +331,7 @@ if($isadmin)
 	echo  <<<SCMBBS
   	<table><tr>
 		<td width=100><input name="act" type=submit value="删除" onclick="if(confirm('确实要删除吗?')){setowner();return true;}return false;"><input type=hidden name="editowner" id="editowner" /></td>
-		<td ><input type='text' name='groupowner' ><input type=submit value='添加负责人' onclick='setowner()'></td>
+		<td ><input type='text' name='groupowner' id='groupowner' ><input type=submit value='添加负责人' onclick='addowner()'></td>
 	</tr></table>
 SCMBBS;
 	echo "<table>$ownerArray</table>";
@@ -371,7 +377,7 @@ if($_SESSION['role']=="admin")
 		<table class='subtitle'>
 	   <tr>
 	  <td width="40"><input type=hidden name='del_g' value='del_g'></td>
-		<td><input name="action" type=submit value="删除" onclick="return confirm('确实要删除这些组吗?');"></td><td width=100>&nbsp;</td><td><a href="#addgroup" class='bt'>创建组</a></td><td><input name="action" type=submit value="重命名"></td>	
+		<td><input name="action" type=submit value="删除" onclick="return confirm('确实要删除这些组吗?');"></td><td width=80>&nbsp;</td><td><a href="#addgroup" class='bt'>创建组</a></td><td width=80>&nbsp;</td><td><input name="action" type=submit value="重命名"></td><td width=80>&nbsp;</td><td><input name="action" type=submit value="复制组"></td>	
 	   </tr>
 	</table>
 SCMBBS;
