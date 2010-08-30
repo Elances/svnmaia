@@ -149,10 +149,10 @@ if($action == 'copygroup')
 		$togroupid=$row['group_id'];
 	}else{
 			$newgroup=true;
-			$query="insert into svnauth_group set group_name='$gname'";		
+			$query="insert into svnauth_group set group_name=$gname";		
 	//	echo $query;
 			mysql_query($query);
-			$query="select group_id from svnauth_group where group_name='$gname'";
+			$query="select group_id from svnauth_group where group_name=$gname";
 			$result=mysql_query($query);
 			$row=mysql_fetch_row($result);
 			$togroupid=$row[0];
