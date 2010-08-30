@@ -19,7 +19,7 @@ $querystr=$_SERVER['QUERY_STRING'];
 pri_modify();
 function pri_modify()
 {
-	global $uinfo;
+	global $uinfo,$querystr;
 	if($_SESSION['role']!='admin')return 1;
 	$user_id=$_GET['u'];
 	$action=$_GET['action'];
@@ -49,12 +49,12 @@ function pri_modify()
 		$query="delete from svnauth_permission where user_id=$user_id and repository='$repos' and path='$path' ";
 		mysql_query($query);
 	}
-	$uinfo="变更尚未生效，请点击<a href='./gen_access.php?fromurl=./viewpriv.php?$querystr'>【立刻生效】</a>";
+	$uinfo="变更已保存，但尚未生效，请点击<a href='./gen_access.php?fromurl=./viewpriv.php?$querystr'>【立刻生效】</a>";
 }
 group_modify();
 function group_modify()
 {
-	global $uinfo;
+	global $uinfo,$querystr;
 	if($_SESSION['role']!='admin')return 1;
 	$user_id=$_GET['u'];
 	$gid=$_GET['gid'];
@@ -65,7 +65,7 @@ function group_modify()
 	{
 		$query="delete from svnauth_groupuser where user_id=$user_id and group_id=$gid";
 		mysql_query($query);
-		$uinfo="变更尚未生效，请点击<a href='./gen_access.php?fromurl=./viewpriv.php?$querystr'>【立刻生效】</a>";
+		$uinfo="变更已保存，但尚未生效，请点击<a href='./gen_access.php?fromurl=./viewpriv.php?$querystr'>【立刻生效】</a>";
 	}
 }
 $query="select repository,path,permission from svnauth_permission where user_id = $user_id";
