@@ -19,6 +19,7 @@ $querystr=$_SERVER['QUERY_STRING'];
 pri_modify();
 function pri_modify()
 {
+	global $uinfo;
 	if($_SESSION['role']!='admin')return 1;
 	$user_id=$_GET['u'];
 	$action=$_GET['action'];
@@ -53,6 +54,7 @@ function pri_modify()
 group_modify();
 function group_modify()
 {
+	global $uinfo;
 	if($_SESSION['role']!='admin')return 1;
 	$user_id=$_GET['u'];
 	$gid=$_GET['gid'];
@@ -61,9 +63,9 @@ function group_modify()
 	$action=$_GET['action'];
 	if($action=='out')
 	{
-		$query="delete from svnauth_groupuser where user_id=$user_id and group_id=$group_id";
+		$query="delete from svnauth_groupuser where user_id=$user_id and group_id=$gid";
 		mysql_query($query);
-		$ginfo="变更尚未生效，请点击<a href='./gen_access.php?fromurl=./viewpriv.php?$querystr'>【立刻生效】</a>";
+		$uinfo="变更尚未生效，请点击<a href='./gen_access.php?fromurl=./viewpriv.php?$querystr'>【立刻生效】</a>";
 	}
 }
 $query="select repository,path,permission from svnauth_permission where user_id = $user_id";
@@ -85,7 +87,7 @@ echo <<<HTML
 .trc1{font-size:10pt
 </style>
 HTML;
-echo $uinfo.$ginfo;
+echo $uinfo;
 echo "<table><tr><th>路径</th><th>权限</th><th>$str</th></tr>";
 while (($result)and($row= mysql_fetch_array($result, MYSQL_BOTH))) {
 	$repos=$row['repository'];
