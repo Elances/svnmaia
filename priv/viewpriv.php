@@ -21,7 +21,7 @@ function pri_modify()
 {
 	if($_SESSION['role']!='admin')return 1;
 	$user_id=$_GET['u'];
-	$action=mysql_real_escape_string($_GET['action']);
+	$action=$_GET['action'];
 	$repos=mysql_real_escape_string($_GET['repos']);
 	$path=mysql_real_escape_string($_GET['path']);
 	if(empty($user_id)or empty($repos) or empty($path))return 1;
@@ -58,9 +58,13 @@ function group_modify()
 	$gid=$_GET['gid'];
 	if(!is_numeric($user_id))return 1;
 	if(!is_numeric($gid))return 1;
-	$query="delete from svnauth_groupuser where user_id=$user_id and group_id=$group_id";
-	mysql_query($query);
-	$ginfo="变更尚未生效，请点击<a href='./gen_access.php?fromurl=./viewpriv.php?$querystr'>【立刻生效】</a>";
+	$action=$_GET['action'];
+	if($action=='out')
+	{
+		$query="delete from svnauth_groupuser where user_id=$user_id and group_id=$group_id";
+		mysql_query($query);
+		$ginfo="变更尚未生效，请点击<a href='./gen_access.php?fromurl=./viewpriv.php?$querystr'>【立刻生效】</a>";
+	}
 }
 $query="select repository,path,permission from svnauth_permission where user_id = $user_id";
 //echo $query;exit;
@@ -124,7 +128,7 @@ while (($result)and($row= mysql_fetch_array($result, MYSQL_BOTH))) {
 	$act='';
 	if($_SESSION['role']=='admin')
 	{
-		$act="&nbsp;&nbsp;<a href='./viewpriv.php?action=del&u={$user_id}&gid={$gid}'>退除</a>";
+		$act="&nbsp;&nbsp;<a href='./viewpriv.php?action=out&u={$user_id}&gid={$gid}'>退除</a>";
 	}
 
 	echo "<tr class=$tr_class><td><a href='../user/viewgroup.php?gid=$gid&grp=$groupname&fromurl=../priv/viewpriv.php?$querystr'>$groupname</a></td><td>$act</td></tr>";
