@@ -106,6 +106,7 @@ HTML;
 				$department=$row['department'];
 				$email=$row['email'];
 				echo "<tr><td><input type=hidden name='userArray[]' value='$user_id'>
+				 <input type=hidden name='oldname[]' value='$user_name'></td>
 				 <input type=text name='username[]' value='$user_name'></td>
 				 <td><input type=text name='fullname[]' value='$full_name'></td>
 				 <td><input type=text name='staff_no[]' value='$staff_no'></td>
@@ -177,14 +178,17 @@ HTML;
 	{
 		$userid=$_POST['userArray'];
 		$username=$_POST['username'];
+		$oldname=$_POST['oldname'];
 		$fullname=$_POST['fullname'];
 		$staff_no=$_POST['staff_no'];
 		$email=$_POST['email'];	
 		$department=$_POST['department'];
 		if ($_SESSION['role']=='admin')
 		{
+			$data_c=false;
 			for($i=0;$i<count($userid);$i++)
 			{
+			  if($oldname[$i] != $username[$i])$data_c=true;
 			  $username[$i]=safe($username[$i]);
 			  $fullname[$i]=safe($fullname[$i]);
 			  $userid[$i]=safe($userid[$i]);
@@ -194,6 +198,11 @@ HTML;
 			  if(empty($userid[$i]))continue;
 		  	  $query="update svnauth_user set user_name=$username[$i],full_name=$fullname[$i],staff_no=$staff_no[$i],email=$email[$i],department=$department[$i] where user_id=$userid[$i]";
 		  	  mysql_query($query);
+			}
+			if($data_c)
+			{
+				@include('./gen_passwd.php');
+				@include('../priv/gen_access.php');
 			}
 		}else if($_SESSION['username']==$username[0])
 		{
