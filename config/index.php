@@ -4,8 +4,8 @@ error_reporting(0);
 if (!isset($_SESSION['username'])){	
 //	exit;
 }
-header("content-type:text/html; charset=gb2312");
-if (($_SESSION['role'] !='admin')and($_SESSION['role'] !='diradmin'))
+include('../include/charset.php');
+if ($_SESSION['role'] !='admin')
 {
 	echo "您无权进行此操作！";
 	exit;
