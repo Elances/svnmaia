@@ -106,7 +106,7 @@ HTML;
 				$department=$row['department'];
 				$email=$row['email'];
 				echo "<tr><td><input type=hidden name='userArray[]' value='$user_id'>
-				 <input type=hidden name='oldname[]' value='$user_name'></td>
+				 <input type=hidden name='oldname[]' value='$user_name'>
 				 <input type=text name='username[]' value='$user_name'></td>
 				 <td><input type=text name='fullname[]' value='$full_name'></td>
 				 <td><input type=text name='staff_no[]' value='$staff_no'></td>
