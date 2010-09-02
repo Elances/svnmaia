@@ -331,7 +331,7 @@ if($isadmin)
 	echo  <<<SCMBBS
   	<table><tr>
 		<td width=100><input name="act" type=submit value="删除" onclick="if(confirm('确实要删除吗?')){setowner();return true;}return false;"><input type=hidden name="editowner" id="editowner" /></td>
-		<td ><input type='text' name='groupowner' id='groupowner' ><input type=submit value='添加负责人' onclick='addowner()'></td>
+		<td ><input type='text' name='groupowner' id='groupowner' ><input type=submit value='添加负责人' onclick='return addowner()'></td>
 	</tr></table>
 SCMBBS;
 	echo "<table>$ownerArray</table>";
