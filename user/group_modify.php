@@ -143,7 +143,7 @@ if($action == 'modify')
 	{
 		if(! checkinput($username[$i]))
 		{
-			echo "$username[$i] 命名非法，重命名请求被忽略！";
+			echo "<script>window.alert(\"$username[$i] 命名非法，其请求被忽略！\");</script>";
 			continue;
 		}
 		$username[$i]=safe($username[$i]);
