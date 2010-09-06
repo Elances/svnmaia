@@ -28,6 +28,15 @@ function safe($str)
 	$str=htmlspecialchars($str,ENT_QUOTES);
 	return "'".mysql_real_escape_string($str)."'";
 }
+function checkinput($str)
+{
+	$p="/^[\w._\-\/]{2,50}$/";
+	if(preg_match($p,$str))
+	{
+		return true;
+	}else
+		return false;
+}
 
 $action= trim($_POST["action"]);
 if ($_SESSION['role']!='admin')exit;
@@ -112,7 +121,7 @@ HTML;
 			}
 	echo <<<HTML
 		</table>
-<b>复制类别：</b>
+<br><b>复制类别：</b>
 <input type=checkbox checked value='cpm' name='copym'>复制组成员 <input type=checkbox value='cpp' name='copypriv'>复制组权限
 		<table style="position:relative;left:300px;top:20px" >
 		<tr><td><input style="width:80" type=submit value="确定" ></td><td><input style="width:80" type=reset value="取消" onclick="turnback()"></td></tr>
@@ -132,6 +141,11 @@ if($action == 'modify')
 	$username=$_POST['groupname'];
 	for($i=0;$i<count($userid);$i++)
 	{
+		if(! checkinput($username[$i]))
+		{
+			echo "$username[$i] 命名非法，重命名请求被忽略！";
+			continue;
+		}
 		$username[$i]=safe($username[$i]);
 		if(!is_numeric($userid[$i]))continue;
 		if(empty($userid[$i]))continue;
@@ -142,6 +156,16 @@ if($action == 'modify')
 if($action == 'copygroup')
 {
 	$gid=safe($_POST['groupArray']);
+	if(empty($_POST['groupname']))
+	{
+		echo "输入不能为空";
+		exit;
+	}
+	if(! checkinput($_POST['groupname']))
+	{
+		echo "组名非法！";
+		exit;
+	}
 	$gname=safe($_POST['groupname']);
 	if(!is_numeric($_POST['groupArray']))exit;
 	$query="select group_id from svnauth_group where group_name=$gname";
