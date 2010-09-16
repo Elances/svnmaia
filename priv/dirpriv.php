@@ -38,6 +38,10 @@ function checkurl($t_url)
 }
 $dir=trim(mysql_real_escape_string($_GET['d']));
 $dir=str_replace($svnurl,'',$dir);
+if(preg_match("/^http:/i",$dir)){
+	$dir=str_replace("http://",'',$dir);
+	list($tmp1,$tmp2,$dir)=explode('/',$dir,3);
+}
 $dir=($dir{0}=='/')?(substr($dir,1)):($dir);
 $dir=str_replace('//','/',$dir);
 if(!checkurl($dir))
@@ -86,9 +90,11 @@ function parseTags($line, $vars)
    return $line;
 }
 $cur_user=array();
+$cur_group=array();
 $d_user=array();
 $fullname=array();
 $allflag=false;
+$br_dir='';
 //所有用户
 $query="select user_id,user_name,full_name from svnauth_user";
 $result = mysql_query($query);
@@ -107,6 +113,8 @@ while (($result)and($row= mysql_fetch_array($result, MYSQL_BOTH))) {
 $subdir=$dir;
 $admin_array=array();
 $diradmin='';
+$is_c='';
+$c_flag='';
 for($ii=0;$ii<20;$ii++)
 {
 	$query="select user_name,full_name,svnauth_user.user_id  from svnauth_dir_admin,svnauth_user where svnauth_dir_admin.user_id=svnauth_user.user_id and repository='$repos' and path='$subdir' order by user_name";
@@ -119,7 +127,12 @@ for($ii=0;$ii<20;$ii++)
 		$admin_array[$uid]=$uname;
 		$fn='';
 		if(!empty($fulln))$fn="($fulln)";
-		$diradmin .="<option value='$uname $uid'>$uname{$fn}</option>";
+		if($ii!=0)
+		{
+			$is_c=' c';
+			$c_flag='(继承)';
+		}
+		$diradmin .="<option value='$uname $uid$is_c'>$uname{$fn}{$c_flag}</option>";
 	}
 	if(($subdir=='/') or (empty($subdir)))break;
 	if(strlen($subdir)>1)$subdir=dirname($subdir);
@@ -161,7 +174,7 @@ while($result and($row= mysql_fetch_array($result, MYSQL_BOTH))) {
 	if(array_key_exists($user,$cur_user))
 	   if($cur_user[$user]> $permission)continue;
 	$cur_user[$user]=$permission;
-	if($user=='*')$allflag=true;
+	if($user=='*'){$allflag=true;$br_dir=$dir;}
 }
 $userright='';
 $dexpire='';
@@ -203,7 +216,7 @@ while($result and (! $allflag))
 	        if(array_key_exists($user,$s_user))	
 	  		if($permission < $s_user[$user])continue;
 		$s_user[$user]=$permission;
-		if($user=='*')$allflag=true;
+		if($user=='*'){$allflag=true;$br_dir=$subdir;}
 	}
 	foreach($s_user as $user=>$permission )
 	{
@@ -243,6 +256,102 @@ foreach($candidate_array as $user => $v)
 	if(empty($uid))continue;
 	$candidate .="<option value='n $user $uid'>none &nbsp; &nbsp; $user{$fn}</option>";
 }
+
+//*********************
+//读取用户组权限
+//**********************
+$query="select group_name,permission from svnauth_g_permission,svnauth_group where svnauth_group.group_id=svnauth_g_permission.group_id and repository='$repos' and path='$dir' order by group_name";
+//echo $query;exit;
+$result = mysql_query($query);
+while($result and($row= mysql_fetch_array($result, MYSQL_BOTH))) {	
+	//消重问题解决，权限覆盖？
+	//-------
+	$group=$row['group_name'];
+	$permission=$row['permission'];
+	if(array_key_exists($group,$cur_group))
+	   if($cur_group[$group]> $permission)continue;
+	$cur_group[$group]=$permission;
+}
+//所有组
+$query="select group_id,group_name from svnauth_group";
+$result = mysql_query($query);
+$g_candidate_array=array();
+$g_candidate='';
+$gid_array=array();
+while (($result)and($row= mysql_fetch_array($result, MYSQL_BOTH))) {
+	$group=$row['group_name'];
+	$g_candidate_array[$group]='n';
+	$gid_array[$group]=$row['group_id'];
+}
+//打印组权限
+foreach($cur_group as $group => $permission){
+	$gid=$gid_array[$group];
+	if(empty($gid))continue;
+	switch(strtolower($permission)){
+    	case 'w':
+    	  $groupright.= "<option value='w $group $gid'>R W &nbsp;&nbsp; &nbsp; $group </option>";
+    	  break;
+    	case 'r':
+    	  $groupright.= "<option value='r $group $gid'>R&nbsp; &nbsp; &nbsp; &nbsp; $group</option>";
+    	  break;
+    	default:
+    	  $groupright.= "<option value='n $group $gid'>none &nbsp; &nbsp; $group</option>";
+    	  break;
+	}
+}
+//打印继承权限
+$subdir=$dir;
+$d_group=array();
+while($result and ($subdir != $br_dir))
+{
+	$subdir=dirname($subdir);
+	if($subdir=='\\')$subdir='/';
+	$query="select group_name,permission from svnauth_g_permission,svnauth_group where svnauth_group.group_id=svnauth_g_permission.group_id and   repository='$repos' and path='$subdir' order by group_name";
+	//echo $query;exit;
+	$s_group=array();
+	$result = mysql_query($query);
+	while (($result)and($row= mysql_fetch_array($result, MYSQL_BOTH))) {
+		$group=$row['group_name'];
+		if(array_key_exists($group,$cur_group))continue;		
+	        $permission=$row['permission'];
+	        if(array_key_exists($group,$s_group))	
+	  		if($permission < $s_group[$group])continue;
+		$s_group[$group]=$permission;
+	}
+	foreach($s_group as $group=>$permission )
+	{
+		if(array_key_exists($group,$d_group))continue;
+	        $d_group[$group]=$permission;
+	}
+	if(($subdir=='/') or (empty($subdir)))break;
+}
+ksort($d_group);
+foreach($d_group as $group=>$permission)
+{
+	$gid=$gid_array[$group];
+	if(empty($gid))continue;
+	        switch(strtolower($permission)){
+    		case 'w':
+    		  $groupright.= "<option value='w $group $gid c'>R W &nbsp;&nbsp; &nbsp; $group(继承) </option>";
+    		  break;
+    		case 'r':
+    		  $groupright.= "<option value='r $group $gid c'>R&nbsp; &nbsp; &nbsp; &nbsp; $group(继承)</option>";
+    		  break;
+    		default:
+    		  $groupright.= "<option value='n $group $gid c'>none &nbsp; &nbsp; $group(继承)</option>";
+    		  break;
+    		}
+	
+}
+$g_candidate_array=array_diff_key($g_candidate_array,$d_group,$cur_group);
+foreach($g_candidate_array as $group => $v)
+{
+	$gid=$gid_array[$group];
+	if(empty($gid))continue;
+	$g_candidate .="<option value='n $group $gid'>none &nbsp; &nbsp; $group</option>";
+}
+
+
 //*********************
 //显示目录描述
 //*********************
@@ -257,6 +366,7 @@ if($result and($row= mysql_fetch_array($result, MYSQL_BOTH))) {
 //*********************
 $newtopf=array();
 $handle = fopen("../template/showdir.htm", "r");
+$fromurl="../priv/dirpriv.php?d=$repos{$dir}";
 if(! $authz)
 {
 	$repos='scmbbs.com';
@@ -266,7 +376,7 @@ if(! $authz)
 	$candidate='';
 	$dexpire='';
 }
-$vars=array('dir' => $firstdir,'dirprive' => $userright,'candidate' => $candidate,'diradmin' => $diradmin,'repos' => $repos,'path' => $dir,'sig' => $sig,'authz' => $showbutton,'dexpire' => $dexpire,'description' => $des);  
+$vars=array('dir' => $firstdir,'dirprive' => $userright,'g_dirprive' => $groupright,'g_candidate' => $g_candidate,'candidate' => $candidate,'diradmin' => $diradmin,'repos' => $repos,'path' => $dir,'sig' => $sig,'authz' => $showbutton,'dexpire' => $dexpire,'fromurl' => $fromurl,'description' => $des);  
 while (!feof($handle))
 {
       $line = fgets($handle);

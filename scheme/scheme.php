@@ -53,37 +53,47 @@ if (mysql_select_db(DBNAME))
 	fclose($handle);
 	while (($result)and($row= mysql_fetch_array($result, MYSQL_BOTH)))
 	{
-		$infotimes=(empty($row['infotimes']))?0:$row['infotimes'];
+		$infot=trim($row['infotimes']);
+		$infotimes=(empty($infot))?0:$infot;
 		if($infotimes>3)continue;
-		$infotimes++;
 		$expire=$row['expire'];
 		//$expire=strtotime("+7 day",strtotime($expire)");//后推1week
 		$user=$row['user_name'];
 		$uid=$row['user_id'];
-		$email=(empty($row['email']))?$user:$row['email'];
+		$email=(empty($row['email']))?($user.$email_ext):$row['email'];
 		$para=array($user,$email,$uid);
 		$sig=keygen($para);
 		//发邮件通知激活
 		$url="http://".$_SERVER['HTTP_HOST'] . rtrim(dirname($_SERVER['PHP_SELF']))."/activeuser.php";
 	        $url=$url."?sig=$sig&u=$user&uid=$uid&email=$email";
-		$body="请注意：您的svn用户即将于 $expire 过期，用户名：$user\n
-	过期后，您的svn账户将被自动删除。\n
-	如果您需要继续访问svn，请点击如下链接进行信息确认，并激活续订：\n
+		$body="请注意：您的svn用户(http://".$_SERVER['HTTP_HOST']." )即将于 $expire 过期，用户名：$user\n
+
+			过期后，您的svn账户将被自动删除。\n
+
+如果您需要继续访问本svn，请点击如下链接进行信息确认，并激活续订：\n
 			$url
 
-	如果您已不需要，请忽略本邮件！";
+			如果您已不需要，请忽略本邮件！
+			
+本邮件系统自动发出，回复无效。有疑问请找配管组。
+---";
 		$subject="通知：您的svn账户即将过期！";
-		$mail_err=send_mail($email,$subject,$body);
+		$mail_info=send_mail($email,$subject,$body);
 		//记录本次发邮件事件
+		if($mail_info === true)
+		{
+			echo "<br>$user 用户即将过期，已发邮件通知其激活续订！";
+			$infotimes++;
+		}
+		else{
+			echo "<br>$user 用户即将过期，但发通知邮件时遇到错误，可能该用户没有收到。<br>$mail_info";
+			openlog("svnMaiaLog", LOG_PID | LOG_PERROR, LOG_LOCAL0);
+			$access = date("Y/m/d H:i:s");
+			syslog(LOG_ERR, "$user: this svn username is being expired. But we counld't not mail to him/her which Error: $mail_info. $access");
+		}
 		$query="update svnauth_user set infotimes=$infotimes where user_id=$uid";
 		mysql_query($query);
 		echo mysql_error();
-		if(empty($mail_err))
-		{
-			echo "<br>$user 用户即将过期，已发邮件通知其激活续订！";
-		}
-		else
-			echo "<br>$user 用户即将过期，但发通知邮件时遇到错误，可能该用户没有收到。<br>$mail_err";
 
 	}
 

@@ -8,7 +8,7 @@ error_reporting(0);
 </head>
 <style type='text/css'>
 div{margin:15px;}
-fieldset{border:2px solid #A4CDF2;padding:20px;background:#FFFFFF;}
+fieldset{border:2px solid #A4CDF2;padding:20px;background:#DFE8F6;width:70%}
  legend{color:#AA0000;font-weight:bold;padding:3px 20px;border:2px solid #A4CDF2;}
 </style>
 <body>
@@ -26,7 +26,7 @@ fieldset{border:2px solid #A4CDF2;padding:20px;background:#FFFFFF;}
   <tr><td colspan=3><label id='urltip' style='color:red;font-size:12px;'></label></td></tr>
    <tr><td colspan=3>申请理由:</td></tr>
    <tr><td colspan=3> <textarea id="comment" name="comment" cols="65" rows="5"></textarea></td></tr>
-  <tr><td colspan=3>你的svn用户名：<input type='text' name='username' size='14'  onBlur="loadTip();">* &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 邮箱：<input type=text name='email' id='email'></td></tr>
+  <tr><td colspan=3>你的svn用户名：<input type='text' name='username' size='14'  onBlur="loadTip();">* &nbsp;&nbsp;<a href='../../user/reg_user.php' target=_blank>注册</a>&nbsp;&nbsp;&nbsp; 邮箱：<input type=text name='email' id='email'></td></tr>
 <tr><td colspan=3><label id='unametip' style='color:red;font-size:12px;'></label></td></tr>
    <tr align=center bgcolor='#B6C6D6'><td colspan='3'><input type=button value="提交" style='width:80px'  onclick="return tCheck()"></td></tr>
    </table>  

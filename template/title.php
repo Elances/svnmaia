@@ -49,10 +49,11 @@ li:hover ul, li.over ul{display:block;}
 <td width="80%">
 <table align="center" width="90%" border="0"  cellspacing="0"  cellpadding="4" class='g2' >
 <tr>
-<td align="center" id='usrf'  width="16%" ><a href='../user/viewuser.php' target='main1' onclick="setfocus('usrf');">用户管理</a></td>
-<td align="center" id='privf' width="16%"><a href='../template/index.htm' target='main1' onclick="setfocus('privf');">权限管理</a></td>
-<td align="center" id='stf' width="16%" ><a href='../config/index.php' target='main1' onclick="setfocus('stf');">设置</a></td>
-<td align="center" id='toolf' width="16%" ><a href='../extension/index.php' target='main1' onclick="setfocus('toolf');">工具</a></td>
+<td align="center" id='usrf'  width="14%" ><a href='../user/viewuser.php' target='main1' onclick="setfocus('usrf');">用户管理</a></td>
+<td align="center" id='grpf'  width="14%" ><a href='../user/viewgroup.php' target='main1' onclick="setfocus('grpf');">组管理</a></td>
+<td align="center" id='privf' width="14%"><a href='../template/index.htm' target='main1' onclick="setfocus('privf');">权限管理</a></td>
+<td align="center" id='stf' width="12%" ><a href='../config/index.php' target='main1' onclick="setfocus('stf');">设置</a></td>
+<td align="center" id='toolf' width="12%" ><a href='../extension/index.php' target='main1' onclick="setfocus('toolf');">工具</a></td>
 
 <td>
 <div ALIGN="right" class='t1'>欢迎您，
@@ -78,7 +79,7 @@ li:hover ul, li.over ul{display:block;}
   <ul>
      	<li><a href='http://www.scmbbs.com/cn/maia/2009/6/maia1.php' target='_blank'>关于</a></li>
 	<li><a href='' target='_blank'>查询授权号</a></li>
-	<li><a href='http://www.scmbbs.com/cn/maia/2009/6/maia2.php' target='_blank'>反馈</a></li>
+	<li><a href='http://code.google.com/p/svnmaia/issues/list' target='_blank'>反馈</a></li>
   </ul>
 </li>
 </ul>
@@ -92,12 +93,14 @@ function setfocus(myid)
   //firefox
   document.getElementById(myid).setAttribute("class",'focus');
   if(myid != 'usrf')document.getElementById('usrf').setAttribute("class",'');
+  if(myid != 'grpf')document.getElementById('grpf').setAttribute("class",'')
   if(myid != 'privf')document.getElementById('privf').setAttribute("class",'');
   if(myid != 'stf')document.getElementById('stf').setAttribute("class",'');
   if(myid != 'toolf')document.getElementById('toolf').setAttribute("class",'');
   //ie
     document.getElementById(myid).setAttribute("className",'focus');
   if(myid != 'usrf')document.getElementById('usrf').setAttribute("className",'');
+  if(myid != 'grpf')document.getElementById('grpf').setAttribute("className",'');
   if(myid != 'privf')document.getElementById('privf').setAttribute("className",'');
   if(myid != 'stf')document.getElementById('stf').setAttribute("className",'');
   if(myid != 'toolf')document.getElementById('toolf').setAttribute("className",'');	
