@@ -1,6 +1,6 @@
 <?php
 session_start();
-header("content-type:text/html; charset=gb2312");
+include('../include/charset.php');
 ?>
 <?php
 include('../../../config.inc');
@@ -10,7 +10,7 @@ if(file_exists('../config/config.php'))
 	include('../config/config.php');
 }else
 {
-	echo "window.alert('ÇëÏÈ½øĞĞÏµÍ³ÉèÖÃ!')";
+	echo "window.alert('è¯·å…ˆè¿›è¡Œç³»ç»Ÿè®¾ç½®!')";
 	echo" <script>setTimeout('document.location.href=\"../setup/setup.php\"',0)</script>";  	
 	exit;
 }
@@ -19,18 +19,18 @@ $usr= mysql_real_escape_string($_POST['username'],$mlink);
 $passwd= $_POST['pswd'];
 if($usr =="")
 {
-	echo " <script>window.alert(\"ÓÃ»§Ãû²»ÄÜÎª¿Õ£¬ÇëÊäÈë!\")</script>";
-  echo " <a href='javascript:history.back()'>µã»÷ÕâÀï·µ»Ø</a>";
+	echo " <script>window.alert(\"ç”¨æˆ·åä¸èƒ½ä¸ºç©ºï¼Œè¯·è¾“å…¥!\")</script>";
+  echo " <a href='javascript:history.back()'>ç‚¹å‡»è¿™é‡Œè¿”å›</a>";
   echo "<script>history.go(-1);</script>";
   exit;
 }
 
 $user_id=0;
-//SQL²éÑ¯Óï¾ä;
+//SQLæŸ¥è¯¢è¯­å¥;
 mysql_query("SET NAMES utf8");
 $query = "SELECT supervisor,user_id,password FROM svnauth_user WHERE user_name ='$usr';"; 
 
-// Ö´ĞĞ²éÑ¯
+// æ‰§è¡ŒæŸ¥è¯¢
 $result =mysql_query($query);
 if($result)$totalnum=mysql_num_rows($result);
 if($totalnum>0){
@@ -43,22 +43,22 @@ if($totalnum>0){
 	  	$_SESSION['role']=(empty($token))?'user':'admin';
 	  	$user_id=$row['user_id'];
 	  	$_SESSION['uid']=$row['user_id'];
-	 	echo "»¶Ó­Äú»ØÀ´£¡µã»÷·µ»Ø<a href='../default.htm'>Maia SVNÓÃ»§¹ÜÀíÊ×Ò³</a>";
+	 	echo "æ¬¢è¿æ‚¨å›æ¥ï¼ç‚¹å‡»è¿”å›<a href='../default.htm'>Maia SVNç”¨æˆ·ç®¡ç†é¦–é¡µ</a>";
 	  }else
 	  {
-		echo "<script>window.alert(\"ÃÜÂë´íÎó£¡£¡\")</script>"; 
+		echo "<script>window.alert(\"å¯†ç é”™è¯¯ï¼ï¼\")</script>"; 
 		echo "<script>window.history.back();</script>";
 		exit;
 	  }
   }
 
 }else{
-//ÓÃ»§Ãû¡¢ÃÜÂë´íÎó
-  echo "<script>window.alert(\"ÓÃ»§²»´æÔÚ£¡£¡\")</script>"; 
+//ç”¨æˆ·åã€å¯†ç é”™è¯¯
+  echo "<script>window.alert(\"ç”¨æˆ·ä¸å­˜åœ¨ï¼ï¼\")</script>"; 
   echo "<script>window.history.back();</script>";
   exit;
 }		
-//ÓÃ»§ÊÇ·ñÄ¿Â¼¹ÜÀíÔ±
+//ç”¨æˆ·æ˜¯å¦ç›®å½•ç®¡ç†å‘˜
 $query="select repository,path from svnauth_dir_admin where svnauth_dir_admin.user_id='$user_id'";
 $result =mysql_query($query);
 $num=mysql_num_rows($result);

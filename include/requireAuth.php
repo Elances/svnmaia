@@ -5,13 +5,13 @@ if(file_exists('../config/config.php'))
 	include('../config/config.php');
 }else
 {
-	echo "<script>window.alert('ÇëÏÈ½øĞĞÏµÍ³ÉèÖÃ!')</script>";
+	echo "<script>window.alert('è¯·å…ˆè¿›è¡Œç³»ç»Ÿè®¾ç½®!')</script>";
 	echo" <script>setTimeout('document.location.href=\"../config/index.php\"',0)</script>";  	
 	exit;
 }
 
 if (($_SESSION['role']!='admin')and($_SESSION['role']!='diradmin')){	
-	if(!$scheme)echo "ÄúÎŞÈ¨ÏŞ½øĞĞ´Ë²Ù×÷£¬ÇëÓÃ¹ÜÀíÔ±Éí·İ<a href='../user/loginfrm.php'>µÇÂ¼</a> £¡";
+	if(!$scheme)echo "æ‚¨æ— æƒé™è¿›è¡Œæ­¤æ“ä½œï¼Œè¯·ç”¨ç®¡ç†å‘˜èº«ä»½<a href='../user/loginfrm.php'>ç™»å½•</a> ï¼";
 //	echo" <script>setTimeout('document.location.href=\"../user/loginfrm.php\"',0)</script>"; 	
 	if(!$scheme)exit;
 }

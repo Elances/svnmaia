@@ -1,7 +1,7 @@
 <?php
-//1¡¢½«CNSSOµÄcookieÊ§Ð§¡¢Çå¿Õ
-//2¡¢¸ù¾ÝÊ±¼ä´Á¡¢SECRETKEY¡¢cookie=noneÉú³Émd5Ç©Ãû
-//3¡¢headerµ½pwdhelp.phpÎÄ¼þ¡£
+//1ã€å°†CNSSOçš„cookieå¤±æ•ˆã€æ¸…ç©º
+//2ã€æ ¹æ®æ—¶é—´æˆ³ã€SECRETKEYã€cookie=noneç”Ÿæˆmd5ç­¾å
+//3ã€headeråˆ°pwdhelp.phpæ–‡ä»¶ã€‚
 setcookie("CNSSO","",time()-36000,"/",".yahoo.com",1);
 /*
 if (!empty($_COOKIE['CNSSO'])) 
@@ -21,7 +21,7 @@ echo "<script>setTimeout('document.location.href=\"../user/accounts/pwdhelp.php?
 ?>
 <script lang=javascript>
 	function DelCookie(name) {
-var Days = 5000; //´Ë cookie ½«±»¹ýÆÚ 30 Ìì
+var Days = 5000; //æ­¤ cookie å°†è¢«è¿‡æœŸ 30 å¤©
     var exp  = new Date();    //new Date("December 31, 9998");
     exp.setTime(exp.getTime() - Days*24*60*60*1000);
     document.cookie = name + "=' '; path=/; expires=" + exp.toGMTString();

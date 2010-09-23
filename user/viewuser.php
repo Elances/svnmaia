@@ -1,6 +1,6 @@
 <?php
    session_start();
-header("content-type:text/html; charset=gb2312");
+include('../include/charset.php');
    error_reporting(0);
 ?>
 <!--
@@ -10,7 +10,7 @@ Date:2009-02-19
 -->
 <html>
 <head>
-  <title>svnÓÃ»§¹ÜÀí</title>
+  <title>svnç”¨æˆ·ç®¡ç†</title>
 </head>
 <link rel="stylesheet" href="../css/base.css" type="text/css">
 <style type='text/css'>
@@ -39,9 +39,9 @@ ul, li{
 <script type="text/javascript" src="../js/pri.js"></script>
 <body>
 	
-	<h2><a href="./user_modify.php?userArray[]=<?php echo $_SESSION['uid'] ?>&action=±à¼­" class="es">¡¾±à¼­¸öÈËĞÅÏ¢¡¿</a>svnÓÃ»§¹ÜÀí</h2><p>&nbsp;</p><p>
+	<h2><a href="./user_modify.php?userArray[]=<?php echo $_SESSION['uid'] ?>&action=ç¼–è¾‘" class="es">ã€ç¼–è¾‘ä¸ªäººä¿¡æ¯ã€‘</a>svnç”¨æˆ·ç®¡ç†</h2><p>&nbsp;</p><p>
 	   <form name='searchform' method="get" action="">
-	   svnÓÃ»§Ãû²éÑ¯£º<input type="text" name="username" size="20" ><input type=submit value="ËÑË÷" onclick="return tCheck();">
+	   svnç”¨æˆ·åæŸ¥è¯¢ï¼š<input type="text" name="username" size="20" ><input type=submit value="æœç´¢" onclick="return tCheck();">
 	   </form>
 </p>
 <?php
@@ -66,28 +66,28 @@ if(! empty($_GET['username'])){
 		$str='';
 		$found=true;
 		if ($_SESSION['role']=="admin")
-		  $str="<td><a href='user_modify.php?userArray[]={$user_id}&action=É¾³ı' onclick=\"return confirm('È·ÊµÒªÉ¾³ıÓÃ»§Âğ?');\">É¾³ı</a></td>
-		  <td><a href='user_modify.php?userArray[]={$user_id}&action=±à¼­'>±à¼­</a></td><td><a href=\"../priv/viewpriv.php?u=$user_id\" onmouseover=\"showTip('$user_id',this);\" onmouseout=\"hideTip()\">È¨ÏŞÏêÇé</a></td>";
-		if($_SESSION['username']==$user_name)$str="<td><a href='user_modify.php?userArray[]=myself&action=±à¼­'>±à¼­</a></td><td><a href=\"../priv/viewpriv.php?u=$user_id\" onmouseover=\"showTip('$user_id',this);\" onmouseout=\"hideTip()\">È¨ÏŞÏêÇé</a></td>";
+		  $str="<td><a href='user_modify.php?userArray[]={$user_id}&action=åˆ é™¤' onclick=\"return confirm('ç¡®å®è¦åˆ é™¤ç”¨æˆ·å—?');\">åˆ é™¤</a></td>
+		  <td><a href='user_modify.php?userArray[]={$user_id}&action=ç¼–è¾‘'>ç¼–è¾‘</a></td><td><a href=\"../priv/viewpriv.php?u=$user_id\" onmouseover=\"showTip('$user_id',this);\" onmouseout=\"hideTip()\">æƒé™è¯¦æƒ…</a></td>";
+		if($_SESSION['username']==$user_name)$str="<td><a href='user_modify.php?userArray[]=myself&action=ç¼–è¾‘'>ç¼–è¾‘</a></td><td><a href=\"../priv/viewpriv.php?u=$user_id\" onmouseover=\"showTip('$user_id',this);\" onmouseout=\"hideTip()\">æƒé™è¯¦æƒ…</a></td>";
 		echo "<tr><td>$user_name</td><td>$full_name</td><td>$staff_no</td><td>$department</td><td>$email</td>$str</tr>";
   }
-  if(!$found)echo "<tr><td>&nbsp;&nbsp;&nbsp;<font color=red size=2>½á¹ûÎª¿Õ!</font></td></tr>";
+  if(!$found)echo "<tr><td>&nbsp;&nbsp;&nbsp;<font color=red size=2>ç»“æœä¸ºç©º!</font></td></tr>";
   echo "</table>";
 	
 }
 if($_SESSION['role'] != "admin")
 {
 	echo <<<SCMBBS
-<h3>ÓÃ»§¹ÜÀí</h3>
-<br><a href='reg_user.php'>×¢²á</a>
-<br><a href='../extension/topwd.php'>ÕÒ»ØÃÜÂë</a>
-<br><a href='../extension/pwdhelp.php'>ĞŞ¸ÄÃÜÂë</a>
+<h3>ç”¨æˆ·ç®¡ç†</h3>
+<br><a href='reg_user.php'>æ³¨å†Œ</a>
+<br><a href='../extension/topwd.php'>æ‰¾å›å¯†ç </a>
+<br><a href='../extension/pwdhelp.php'>ä¿®æ”¹å¯†ç </a>
 <br>&nbsp;
-<h3>È¨ÏŞ¹ÜÀí</h3>
-<br><a href='../extension/autopriv/rtpriv.php'>È¨ÏŞÉêÇë</a>
-<br><a href="../priv/viewpriv.php?u={$_SESSION['uid']}">È¨ÏŞ²éÑ¯</a>
+<h3>æƒé™ç®¡ç†</h3>
+<br><a href='../extension/autopriv/rtpriv.php'>æƒé™ç”³è¯·</a>
+<br><a href="../priv/viewpriv.php?u={$_SESSION['uid']}">æƒé™æŸ¥è¯¢</a>
 <br>&nbsp;
-<h3>ÆäËû</h3>
+<h3>å…¶ä»–</h3>
 SCMBBS;
 }
 if (!((isset($_SESSION['username']))and($_SESSION['role']=="admin"))){ 
@@ -103,7 +103,7 @@ function tCheck(){
   return true;
 }
 function fCheck(ii){
-  //if(userform.action.value=='É¾³ı')
+  //if(userform.action.value=='åˆ é™¤')
   {	
   	if(checkuser(ii))
   	{ return true;
@@ -131,11 +131,11 @@ function checkuser(ii)
 function nosuperv(myid)
 {
 	var myid;
-	if(!confirm('È·ÊµÒªÖ´ĞĞÕâĞ©²Ù×÷Âğ?'))return false;
-	userform.action.value='È¡Ïû³¬¼¶ÓÃ»§';
+	if(!confirm('ç¡®å®è¦æ‰§è¡Œè¿™äº›æ“ä½œå—?'))return false;
+	userform.action.value='å–æ¶ˆè¶…çº§ç”¨æˆ·';
 var s=document.createElement('INPUT');
 s.type='text';
-s.value='È¡Ïû³¬¼¶ÓÃ»§';
+s.value='å–æ¶ˆè¶…çº§ç”¨æˆ·';
 s.name='action';
 userform.appendChild(s);
 var uid='userArray[1]';
@@ -149,35 +149,35 @@ document.getElementById(uid).checked=true;
 </script>
  
 <?php
-//±äÁ¿
+//å˜é‡
 
 $page=empty($_GET['page'])?'1':($_GET['page']);
-$perpage=100;//Ã¿Ò³100ĞĞ 
+$perpage=100;//æ¯é¡µ100è¡Œ 
 $begin=($page-1)*$perpage;
 $end=$page*$perpage;
 if((!empty($_GET['w']))and(!preg_match("/^[A-Z]$/",$_GET['w'])))
 {
-	echo "²ÎÊı·Ç·¨£¡";
+	echo "å‚æ•°éæ³•ï¼";
 	exit;
 }
 if(!is_numeric($page))
 {
-	echo "²ÎÊı·Ç·¨£¡";
+	echo "å‚æ•°éæ³•ï¼";
 	exit;
 }
 	$query= "select user_id,user_name,full_name from svnauth_user where supervisor=1;";
 	$result = mysql_query($query); 
-	echo "<h3><a class='es' href='./viewdiradmin.php?o=n'>¡¾ÁĞ³öÄ¿Â¼¹ÜÀíÔ±¡¿</a>³¬¼¶ÓÃ»§</h3><p><table class='tb1' >";
+	echo "<h3><a class='es' href='./viewdiradmin.php?o=n'>ã€åˆ—å‡ºç›®å½•ç®¡ç†å‘˜ã€‘</a>è¶…çº§ç”¨æˆ·</h3><p><table class='tb1' >";
 	while (($result)and($row= mysql_fetch_array($result, MYSQL_BOTH))) {
 		$user_id=$row['user_id'];
 		$user_name=$row['user_name'];
 		$full_name=$row['full_name'];
-		$str="<a onclick=\"return nosuperv($user_id);\" href='#'>È¡Ïû³¬¼¶ÓÃ»§</a>";
+		$str="<a onclick=\"return nosuperv($user_id);\" href='#'>å–æ¶ˆè¶…çº§ç”¨æˆ·</a>";
 		if(($_SESSION['username']==$user_name)or($user_name =='root'))$str='';
-		echo "<tr><td>$user_name</td><td>$full_name</td><td><a href='user_modify.php?userArray[]={$user_id}&action=±à¼­'>±à¼­</a></td>
+		echo "<tr><td>$user_name</td><td>$full_name</td><td><a href='user_modify.php?userArray[]={$user_id}&action=ç¼–è¾‘'>ç¼–è¾‘</a></td>
 		  <td>$str</td></tr>";
 	}
-	echo "</table><p><h3><a class='es' href='./reg_user.php'>¡¾ĞÂ½¨ÓÃ»§¡¿</a>ÆÕÍ¨ÓÃ»§ </h3> <p>";
+	echo "</table><p><h3><a class='es' href='./reg_user.php'>ã€æ–°å»ºç”¨æˆ·ã€‘</a>æ™®é€šç”¨æˆ· </h3> <p>";
 	echo "<table class='tb2'><tr><td>Contents:</td><td><a href='?page=1'>Top-</a></td><td>";
 	$i='A';
 	for($n=0;$n<26;$n++)
@@ -197,31 +197,31 @@ if(!is_numeric($page))
 	  $query = "select user_id,user_name,full_name,email,staff_no,department from svnauth_user ORDER BY user_name;";
 	$result = mysql_query($query); 
 	if(!$result){
-		echo "ÔİÎŞÊı¾İ£¡";
+		echo "æš‚æ— æ•°æ®ï¼";
 		exit;
 	}
-	//¹ÜÀí°´Å¥
+	//ç®¡ç†æŒ‰é’®
 	$ii=mysql_num_rows($result);
 	echo  <<<SCMBBS
 	<form method="post" action="user_modify.php" name='userform' onsubmit="return fCheck($ii)">	
 		<table>
 	   <tr>
 	  <td width="40"></td>
-		<td><input name="action" type=submit value="É¾³ı" onclick="return confirm('È·ÊµÒªÉ¾³ıÕâĞ©ÓÃ»§Âğ?');"></td>
-		<td width=160><input name="action" type=submit value="±à¼­"></td>
-		<td width=160><input name="action" type=submit value="ÖØÖÃÃÜÂë"></td>		
-		<td width=160><input name="action" type=submit value="ÉèÎª³¬¼¶ÓÃ»§"></td>
+		<td><input name="action" type=submit value="åˆ é™¤" onclick="return confirm('ç¡®å®è¦åˆ é™¤è¿™äº›ç”¨æˆ·å—?');"></td>
+		<td width=160><input name="action" type=submit value="ç¼–è¾‘"></td>
+		<td width=160><input name="action" type=submit value="é‡ç½®å¯†ç "></td>		
+		<td width=160><input name="action" type=submit value="è®¾ä¸ºè¶…çº§ç”¨æˆ·"></td>
 	   </tr>
 	</table>
 	
 	<table class=detail cellpadding=5px>
 	  <tr class=title>
-	     <td></td><td>ÓÃ»§Ãû</td><td>¹¤ºÅ</td><td>²¿ÃÅ</td><td>ÓÊ¼ş</td><td></td>
+	     <td></td><td>ç”¨æˆ·å</td><td>å·¥å·</td><td>éƒ¨é—¨</td><td>é‚®ä»¶</td><td></td>
 	  </tr>
 SCMBBS;
 $i=0;
 	while (($result)and($row= mysql_fetch_array($result, MYSQL_BOTH))) {
-		//¶¨ÒåĞĞµÄÑÕÉ«Ïà¸ô
+		//å®šä¹‰è¡Œçš„é¢œè‰²ç›¸éš”
 				if ($tr_class=="trc1"){
 					$tr_class="trc2";
 				}else
@@ -238,35 +238,35 @@ $i=0;
 		$str="onmouseover=\"showTip('$user_id',this);\" onmouseout=\"hideTip()\"";
 		echo "<tr class=$tr_class><td><input  name=\"userArray[$i]\"  id=\"userArray[$i]\"  value=\"$user_id\" type=checkbox></td>
 		<td>$user_str</td><td>$staff_no</td><td>$department</td><td>$email</td>
-		<td><a href=\"../priv/viewpriv.php?u=$user_id\" $str>È¨ÏŞÏêÇé</a>$i</td></tr>";
+		<td><a href=\"../priv/viewpriv.php?u=$user_id\" $str>æƒé™è¯¦æƒ…</a>$i</td></tr>";
 		
 	}
 	echo <<<HTML
 	</table><table>	
 	   <tr class='subtitle'>
 	  <td width="40"></td>
-		<td><input name="action" type=submit value="É¾³ı" onclick="return confirm('È·ÊµÒªÉ¾³ıÕâĞ©ÓÃ»§Âğ?');"></td>
-		<td width=160><input name="action" type=submit value="±à¼­"></td>
-		<td width=160><input name="action" type=submit value="ÖØÖÃÃÜÂë"></td>		
-		<td width=160><input name="action" type=submit value="ÉèÎª³¬¼¶ÓÃ»§"></td>
+		<td><input name="action" type=submit value="åˆ é™¤" onclick="return confirm('ç¡®å®è¦åˆ é™¤è¿™äº›ç”¨æˆ·å—?');"></td>
+		<td width=160><input name="action" type=submit value="ç¼–è¾‘"></td>
+		<td width=160><input name="action" type=submit value="é‡ç½®å¯†ç "></td>		
+		<td width=160><input name="action" type=submit value="è®¾ä¸ºè¶…çº§ç”¨æˆ·"></td>
 	   </tr>
 	</table>
 	</form>
 HTML;
-	//ÏÔÊ¾·ÖÒ³ 
+	//æ˜¾ç¤ºåˆ†é¡µ 
 	if((!empty($_GET['w'])) or ($_GET['p']=='a'))exit;
 	$query="select distinct user_id from  svnauth_user ";
  
   $result = mysql_query($query);
-  if($result)$totalnum=mysql_num_rows($result); //È¡µÃ½á¹û¼¯º¯Êı
+  if($result)$totalnum=mysql_num_rows($result); //å–å¾—ç»“æœé›†å‡½æ•°
   $totalpage=ceil($totalnum / $perpage);
 echo "<div id='page'>";  
 
 if($page != $totalpage){
 	$p=$page+1;
-	$next ="<a href=\"?page=$p\" class='nxt'>ÏÂÒ»Ò³</a>";
+	$next ="<a href=\"?page=$p\" class='nxt'>ä¸‹ä¸€é¡µ</a>";
 }else {
-	$next ="<a class=nxt>ÏÂÒ»Ò³</a>";
+	$next ="<a class=nxt>ä¸‹ä¸€é¡µ</a>";
 }
 for($i=1;$i<=$totalpage;$i++){
 	if($page != $i){
@@ -277,11 +277,11 @@ for($i=1;$i<=$totalpage;$i++){
 }
 if($page != 1)
 {	$p=($page-1);
-	$pre ="<a href=\"?page=$p\" class='pre'>ÉÏÒ»Ò³</a>";
+	$pre ="<a href=\"?page=$p\" class='pre'>ä¸Šä¸€é¡µ</a>";
 }else{
-	$pre ="<a class='pre'>ÉÏÒ»Ò³</a>"; 
+	$pre ="<a class='pre'>ä¸Šä¸€é¡µ</a>"; 
 }
-$all="<a href='?p=a'>Õ¹¿ªËùÓĞ</a>";
+$all="<a href='?p=a'>å±•å¼€æ‰€æœ‰</a>";
 echo $pre.$cct.$next.$all;
 echo "</div>";
 ?>

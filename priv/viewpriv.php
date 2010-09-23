@@ -1,9 +1,9 @@
 <?php
 session_start();
  error_reporting(0);
-header("content-type:text/html; charset=gb2312");
+include('../include/charset.php');
 if (!isset($_SESSION['username'])){	
-	echo "ÇëÏÈ<a href='../user/loginfrm.php'>µÇÂ¼</a> £¡";
+	echo "è¯·å…ˆ<a href='../user/loginfrm.php'>ç™»å½•</a> ï¼";
 	echo" <script>setTimeout('document.location.href=\"../user/loginfrm.php\"',0)</script>"; 	
 	exit;
 }
@@ -12,7 +12,7 @@ include('../include/dbconnect.php');
 $user_id=$_GET['u'];
 if(!is_numeric($user_id))
 {
-	echo "²ÎÊı·Ç·¨£¡×ªÏòÏÔÊ¾Äã×Ô¼ºµÄÈ¨ÏŞ¡£";
+	echo "å‚æ•°éæ³•ï¼è½¬å‘æ˜¾ç¤ºä½ è‡ªå·±çš„æƒé™ã€‚";
 	$user_id=$_SESSION['uid'];	
 }
 $querystr=$_SERVER['QUERY_STRING'];
@@ -49,7 +49,7 @@ function pri_modify()
 		$query="delete from svnauth_permission where user_id=$user_id and repository='$repos' and path='$path' ";
 		mysql_query($query);
 	}
-	$uinfo="±ä¸üÒÑ±£´æ£¬µ«ÉĞÎ´ÉúĞ§£¬Çëµã»÷<a href='./gen_access.php?fromurl=./viewpriv.php?$querystr'>¡¾Á¢¿ÌÉúĞ§¡¿</a>";
+	$uinfo="å˜æ›´å·²ä¿å­˜ï¼Œä½†å°šæœªç”Ÿæ•ˆï¼Œè¯·ç‚¹å‡»<a href='./gen_access.php?fromurl=./viewpriv.php?$querystr'>ã€ç«‹åˆ»ç”Ÿæ•ˆã€‘</a>";
 }
 group_modify();
 function group_modify()
@@ -65,7 +65,7 @@ function group_modify()
 	{
 		$query="delete from svnauth_groupuser where user_id=$user_id and group_id=$gid";
 		mysql_query($query);
-		$uinfo="±ä¸üÒÑ±£´æ£¬µ«ÉĞÎ´ÉúĞ§£¬Çëµã»÷<a href='./gen_access.php?fromurl=./viewpriv.php?$querystr'>¡¾Á¢¿ÌÉúĞ§¡¿</a>";
+		$uinfo="å˜æ›´å·²ä¿å­˜ï¼Œä½†å°šæœªç”Ÿæ•ˆï¼Œè¯·ç‚¹å‡»<a href='./gen_access.php?fromurl=./viewpriv.php?$querystr'>ã€ç«‹åˆ»ç”Ÿæ•ˆã€‘</a>";
 	}
 }
 $query="select repository,path,permission from svnauth_permission where user_id = $user_id";
@@ -73,12 +73,12 @@ $query="select repository,path,permission from svnauth_permission where user_id 
 $result = mysql_query($query);
 if(! $result)
 {
-	echo "¸ÃÓÃ»§Ã»ÓĞÈ¨ÏŞ£¡";
+	echo "è¯¥ç”¨æˆ·æ²¡æœ‰æƒé™ï¼";
 	exit;
 }
 if($_SESSION['role']=='admin')
 {
-	$str='²Ù×÷';
+	$str='æ“ä½œ';
 }
 echo <<<HTML
 
@@ -88,7 +88,7 @@ echo <<<HTML
 </style>
 HTML;
 echo $uinfo;
-echo "<table><tr><th>Â·¾¶</th><th>È¨ÏŞ</th><th>$str</th></tr>";
+echo "<table><tr><th>è·¯å¾„</th><th>æƒé™</th><th>$str</th></tr>";
 while (($result)and($row= mysql_fetch_array($result, MYSQL_BOTH))) {
 	$repos=$row['repository'];
 	$path=$row['path'];
@@ -96,7 +96,7 @@ while (($result)and($row= mysql_fetch_array($result, MYSQL_BOTH))) {
 	$act='';
 	if($_SESSION['role']=='admin')
 	{
-		$act="<a href='./viewpriv.php?action=degrade&u={$user_id}&right={$permission}&path={$path}&repos=$repos'>½µÈ¨</a>&nbsp;&nbsp;<a href='./viewpriv.php?action=del&path={$path}&u={$user_id}&repos=$repos'>É¾³ı</a>";
+		$act="<a href='./viewpriv.php?action=degrade&u={$user_id}&right={$permission}&path={$path}&repos=$repos'>é™æƒ</a>&nbsp;&nbsp;<a href='./viewpriv.php?action=del&path={$path}&u={$user_id}&repos=$repos'>åˆ é™¤</a>";
 	}
 	$path=$repos.$path;
 	switch($permission){
@@ -116,7 +116,7 @@ while (($result)and($row= mysql_fetch_array($result, MYSQL_BOTH))) {
 echo "</table>";
 $query="select svnauth_group.group_name,svnauth_group.group_id from svnauth_groupuser,svnauth_group where svnauth_groupuser.group_id=svnauth_group.group_id and svnauth_groupuser.user_id = $user_id";
 $result = mysql_query($query);
-echo "<h4>ËùÔÚÈ¨ÏŞ×é:</h4>";
+echo "<h4>æ‰€åœ¨æƒé™ç»„:</h4>";
 echo "<table>";
 while (($result)and($row= mysql_fetch_array($result, MYSQL_BOTH))) {
 	$groupname=$row['group_name'];
@@ -130,7 +130,7 @@ while (($result)and($row= mysql_fetch_array($result, MYSQL_BOTH))) {
 	$act='';
 	if($_SESSION['role']=='admin')
 	{
-		$act="&nbsp;&nbsp;<a href='./viewpriv.php?action=out&u={$user_id}&gid={$gid}'>ÍË³ı</a>";
+		$act="&nbsp;&nbsp;<a href='./viewpriv.php?action=out&u={$user_id}&gid={$gid}'>é€€é™¤</a>";
 	}
 
 	echo "<tr class=$tr_class><td><a href='../user/viewgroup.php?gid=$gid&grp=$groupname&fromurl=../priv/viewpriv.php?$querystr'>$groupname</a></td><td>$act</td></tr>";
@@ -148,7 +148,7 @@ while (($result)and($row= mysql_fetch_array($result, MYSQL_BOTH))) {
 }
 if(!empty($adminpath))
 {
-	echo "<h4>Ëù¹ÜÀíµÄÄ¿Â¼:</h4>";
+	echo "<h4>æ‰€ç®¡ç†çš„ç›®å½•:</h4>";
 	echo "<table>";
 	echo $adminpath."</table>";
 }

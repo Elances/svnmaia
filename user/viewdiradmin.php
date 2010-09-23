@@ -1,9 +1,9 @@
 <?php
 session_start();
  error_reporting(0);
-header("content-type:text/html; charset=gb2312");
+include('../include/charset.php');
 if (!isset($_SESSION['username'])){	
-	echo "ÇëÏÈ<a href='../user/loginfrm.php'>µÇÂ¼</a> £¡";
+	echo "è¯·å…ˆ<a href='../user/loginfrm.php'>ç™»å½•</a> ï¼";
 	echo" <script>setTimeout('document.location.href=\"../user/loginfrm.php\"',0)</script>"; 	
 	exit;
 }
@@ -46,7 +46,7 @@ while (($result)and($row= mysql_fetch_array($result, MYSQL_BOTH))) {
 	}
         $adminpath .= "<tr class=$cls><td>$ustr</td><td>&nbsp;$pstr</td></tr>";
 }
-echo "<h4>Ä¿Â¼¹ÜÀíÔ±: <a href='?o=n'>°´ĞÕÃû</a>   <a href='?o=d'>°´Ä¿Â¼</a></h4>";
+echo "<h4>ç›®å½•ç®¡ç†å‘˜: <a href='?o=n'>æŒ‰å§“å</a>   <a href='?o=d'>æŒ‰ç›®å½•</a></h4>";
 echo "<table border=0 cellspacing=0>";
 echo $adminpath."</table>";
 

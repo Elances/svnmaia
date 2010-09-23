@@ -1,19 +1,19 @@
 <?php
 session_start();
 // error_reporting(0);
-header("content-type:text/html; charset=gb2312");
+include('../include/charset.php');
 if (!isset($_SESSION['username'])){	
-	echo "ÇëÏÈµÇÂ¼!";
+	echo "è¯·å…ˆç™»å½•!";
 	exit;
 }
 if ($_SESSION['role'] !='admin')
 {
-	echo "ÄúÎŞÈ¨½øĞĞ´Ë²Ù×÷£¡";
+	echo "æ‚¨æ— æƒè¿›è¡Œæ­¤æ“ä½œï¼";
 	exit;
 }
 ?>
 <div id='info'>
- ÕıÔÚµ¼Èë£¡
+ æ­£åœ¨å¯¼å…¥ï¼
 </div>
  <div id='step'>
  </div>
@@ -23,7 +23,7 @@ if(file_exists('../config/config.php'))
 	include('../config/config.php');
 }else
 {
-	echo "window.alert('ÇëÏÈ½øĞĞÏµÍ³ÉèÖÃ!')";
+	echo "window.alert('è¯·å…ˆè¿›è¡Œç³»ç»Ÿè®¾ç½®!')";
 	echo" <script>setTimeout('document.location.href=\"../config/index.php\"',0)</script>";  	
 	exit;
 }
@@ -34,7 +34,7 @@ if(! file_exists($accessfile))
 }
 include('../../../config.inc');
 include('../include/dbconnect.php'); 
-//importÇ°±¸·İ
+//importå‰å¤‡ä»½
 $today = date("Ymd_His");
 $backupfile=$accessfile.$today;
 if (!copy($accessfile, $backupfile)) {
@@ -49,7 +49,7 @@ $notfounduser="";
 $groupinfo=array();
 $group_parent=array();
 $p_info=array();
-//ËùÓĞÓÃ»§
+//æ‰€æœ‰ç”¨æˆ·
 $query="select user_id,user_name from svnauth_user order by user_name";
 $result = mysql_query($query);
 $uid_array=array();
@@ -65,7 +65,7 @@ function getmember($parent,$k,$detail,&$member,$c)
   	{
   		if(array_key_exists($value,$parent))
   		{
-  			 if($c>5)return;//Ö»µİ¹é5²ã
+  			 if($c>5)return;//åªé€’å½’5å±‚
   			  getmember($parent,$value,$detail,$member,$c);
   		}else
   		  $member[]=&$detail[$value];
@@ -75,11 +75,11 @@ function getmember($parent,$k,$detail,&$member,$c)
 }
 
 if ($handle) {
-	echo "<script>document.getElementById('info').innerHTML='ÕıÔÚÖ´ĞĞµ¼Èë£¡'</script>";
+	echo "<script>document.getElementById('info').innerHTML='æ­£åœ¨æ‰§è¡Œå¯¼å…¥ï¼'</script>";
 	$i=1;
     while (!feof($handle)) {
 	    $buffer = trim(fgets($handle));
-	    echo "<script>document.getElementById('step').innerHTML='µÚ $i ĞĞÊı¾İµ¼Èë³É¹¦£¡»¹ÔÚ¼ÌĞøÖĞ...'</script><br>";
+	    echo "<script>document.getElementById('step').innerHTML='ç¬¬ $i è¡Œæ•°æ®å¯¼å…¥æˆåŠŸï¼è¿˜åœ¨ç»§ç»­ä¸­...'</script><br>";
 	    $i++;
         if(($buffer[0] == '#')or empty($buffer))continue;
         if($firstline and ($buffer[0] != '['))
@@ -96,9 +96,9 @@ if ($handle) {
         if($groupstart and ($buffer[0] == '['))
         {
         	if($buffer != '[groups]')$groupstart=false;
-        	//»ñÈ¡½ÚµãµÄ¿âÃûºÍpathĞÅÏ¢
+        	//è·å–èŠ‚ç‚¹çš„åº“åå’Œpathä¿¡æ¯
         	if(ereg("^\[(.*)\]$",$buffer,$matches))$buffer=$matches[1];
-        	if(! $groupstart)list($repos,$path)=explode(':',$buffer,2);//Èç¹ûpathÊÇnullÄØ£¿[/]
+        	if(! $groupstart)list($repos,$path)=explode(':',$buffer,2);//å¦‚æœpathæ˜¯nullå‘¢ï¼Ÿ[/]
         	continue;
         }
         if($groupstart)
@@ -112,7 +112,7 @@ if ($handle) {
             if($value[0] == '@')
             {
             	$group_parent['@'.$group][]=trim($value);
-            	unset($member[$key]);//É¾³ıÊÇgroupµÄµ¥Ôª
+            	unset($member[$key]);//åˆ é™¤æ˜¯groupçš„å•å…ƒ
             }
           }
           if(!empty($member))$groupinfo['@'.$group]=$member;
@@ -120,15 +120,15 @@ if ($handle) {
           if($buffer[0] == '[')
           {
             if(ereg("^\[(.*)\]$",$buffer,$matches))$buffer=$matches[1];
-            list($repos,$path)=explode(':',$buffer,2);//Èç¹ûpathÊÇnullÄØ£¿[/]
+            list($repos,$path)=explode(':',$buffer,2);//å¦‚æœpathæ˜¯nullå‘¢ï¼Ÿ[/]
             continue;
           }
           list($group,$permission)=explode('=',$buffer,2); 
           $group=trim($group);         
-          switch(trim($permission))//´æÈëÖ»¶Á×é
+          switch(trim($permission))//å­˜å…¥åªè¯»ç»„
           {
           	case 'r':
-          		$p_info[$repos][$path]['r'][]=$group;//Èç¹ûpathÊÇnullÄØ£¿
+          		$p_info[$repos][$path]['r'][]=$group;//å¦‚æœpathæ˜¯nullå‘¢ï¼Ÿ
           		break;
           	case 'rw':
           		$p_info[$repos][$path]['w'][]=$group;
@@ -163,7 +163,7 @@ if ($handle) {
 			  continue;
 			}
 		}else 
-			echo "ÄãµÄphp²»Ö§³ÖÕıÔò±í´ïÊ½<br>";
+			echo "ä½ çš„phpä¸æ”¯æŒæ­£åˆ™è¡¨è¾¾å¼<br>";
 		$query="insert into svnauth_group (group_name) values ('$g1')";
 		mysql_query($query);
 	}
@@ -177,7 +177,7 @@ if ($handle) {
 			  continue;
 			}
 		}else 
-			echo "ÄãµÄphp²»Ö§³ÖÕıÔò±í´ïÊ½<br>";
+			echo "ä½ çš„phpä¸æ”¯æŒæ­£åˆ™è¡¨è¾¾å¼<br>";
 		$query="insert into svnauth_group (group_name) values ('$g1')";
 		mysql_query($query);
 	}
@@ -216,7 +216,7 @@ if ($handle) {
       	    	{
       	    	   if($goru[0]=='@')
       	    	   {
-      	    	     //ÅĞ¶ÏÊÇ·ñgroup_parent³ÉÔ±£¬Èç¹ûÊÇ£¬ÔòÕÒ³ö¸Ã×Ó×éµÄËùÓĞ³ÉÔ±,¶à¼¶×Ó×éÄØ£¿ĞèÒªµİ¹é¡£
+      	    	     //åˆ¤æ–­æ˜¯å¦group_parentæˆå‘˜ï¼Œå¦‚æœæ˜¯ï¼Œåˆ™æ‰¾å‡ºè¯¥å­ç»„çš„æ‰€æœ‰æˆå‘˜,å¤šçº§å­ç»„å‘¢ï¼Ÿéœ€è¦é€’å½’ã€‚
       	    	     if(array_key_exists($goru,$group_parent))
       	    	     {
       	    	     	$member=array();
@@ -225,7 +225,7 @@ if ($handle) {
       	    	     	foreach($member as $ii)
       	    	     	  foreach($ii as $user){
       	    	     	  	$user=trim($user);
-				//ÕÒ³ö×é³ÉÔ±²åÈë±íÖĞ
+				//æ‰¾å‡ºç»„æˆå‘˜æ’å…¥è¡¨ä¸­
 				# $query="insert into svnauth_permission (repository,path,user_id,permission,expire) values (\"$repos\",\"$path\",$uid_array[$user],\"$pm\",\"$expire\")";
 				$g1=str_replace('@','',$goru);
 				if(function_exists('preg_match'))
@@ -249,10 +249,10 @@ if ($handle) {
 			  }
 		
       	    	     }
-      	    	     //ÅĞ¶ÏÊÇ·ñgroupinfoµÄ¼üÃû£¬Èç¹ûÊÇ£¬ÔòÕÒ³ö¸Ä×é³ÉÔ±¡£
+      	    	     //åˆ¤æ–­æ˜¯å¦groupinfoçš„é”®åï¼Œå¦‚æœæ˜¯ï¼Œåˆ™æ‰¾å‡ºæ”¹ç»„æˆå‘˜ã€‚
       	    	     if(array_key_exists($goru,$groupinfo)){
       	    	     	foreach($groupinfo[$goru] as $user){
-      	    	     //ÕÒ³ö×é³ÉÔ±²åÈë±íÖĞ
+      	    	     //æ‰¾å‡ºç»„æˆå‘˜æ’å…¥è¡¨ä¸­
 				$user=trim($user);
 				if(empty($uid_array[$user]))
 				{
@@ -295,8 +295,8 @@ if ($handle) {
       	   }
        }
     }
-   echo "<script>document.getElementById('step').innerHTML='È«²¿µ¼Èë³É¹¦£¡'</script>";
-   if(!empty($notfounduser))echo"µ¼Èë¹ı³ÌÖĞ£¬ÈçÏÂÓÃ»§Ã»ÓĞÔÚ $passwdfile ÕÒµ½£¬Òò´ËËûÃÇÃ»±»µ¼Èë£º<br>$notfounduser";
+   echo "<script>document.getElementById('step').innerHTML='å…¨éƒ¨å¯¼å…¥æˆåŠŸï¼'</script>";
+   if(!empty($notfounduser))echo"å¯¼å…¥è¿‡ç¨‹ä¸­ï¼Œå¦‚ä¸‹ç”¨æˆ·æ²¡æœ‰åœ¨ $passwdfile æ‰¾åˆ°ï¼Œå› æ­¤ä»–ä»¬æ²¡è¢«å¯¼å…¥ï¼š<br>$notfounduser";
 }else{
   echo "Cann't read this access file, please check the private of the file";
   exit;

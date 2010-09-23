@@ -1,6 +1,6 @@
 <?php
 session_start();
- //error_reporting (E_ALL ^ E_WARNING);//ÆÁ±ÎËùÓÐ±¨´í
+ //error_reporting (E_ALL ^ E_WARNING);//å±è”½æ‰€æœ‰æŠ¥é”™
 
 // echo "dd".$_SERVER['HTTP_REFERER'];
 $_SESSION = array();

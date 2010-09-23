@@ -1,18 +1,18 @@
 <?php
-header("content-type:text/html; charset=gb2312");
+include('../../include/charset.php');
 ?>
 <html>
 <head>
-  <title>ÕÒ»ØsvnÃÜÂëÏòµ¼</title>
+  <title>æ‰¾å›svnå¯†ç å‘å¯¼</title>
 </head>
 <style type='text/css'>
 div{margin:15px}
 fieldset{border:solid 1px gray;}
 </style>
 <body>
-   <h2>ÕÒ»ØÃÜÂë°ïÖú</h2>
+   <h2>æ‰¾å›å¯†ç å¸®åŠ©</h2>
    <?php
-//Ğ£Ñéµ÷ÓÃºÏ·¨ĞÔ¡£±ØĞëÍ¨¹ıseraphÈÏÖ¤ÓÃ»§²Å¿ÉÒÔµ÷ÓÃ±¾ÎÄ¼ş¡£
+//æ ¡éªŒè°ƒç”¨åˆæ³•æ€§ã€‚å¿…é¡»é€šè¿‡seraphè®¤è¯ç”¨æˆ·æ‰å¯ä»¥è°ƒç”¨æœ¬æ–‡ä»¶ã€‚
 $nt=microtime();
 $nt=str_replace(" ","",$nt);
 $nt=str_replace("0.","",$nt);
@@ -21,7 +21,7 @@ $ss=$_GET['ss'];
 $nt=$nt-substr($ss,6);
 if($nt>3600*2)
 {
-	echo "Á´½ÓÒÑ¹ıÆÚ£¡";
+	echo "é“¾æ¥å·²è¿‡æœŸï¼";
 	exit;
 }
 $sig1=$_GET['sig'];
@@ -31,10 +31,10 @@ include('../../config/config.php');
 $sig=md5($ss.SECRET_KEY.$addr);
 if($sig1 != $sig)
 {
-	echo "·Ç·¨µ÷ÓÃ£¡";
+	echo "éæ³•è°ƒç”¨ï¼";
 	exit;
 }
-//»ñÈ¡cookie£¬ÌáÈ¡emailĞÅÏ¢¡£
+//è·å–cookieï¼Œæå–emailä¿¡æ¯ã€‚
 $cookie=explode('&',$_COOKIE['CNSSO']);
 foreach($cookie as $name)
 {
@@ -48,23 +48,23 @@ foreach($cookie as $name)
    <form action=./sendmail.php name=pwdform method=post onSubmit="return tCheck()">
    	<fieldset>
    <div id='inputblock'>
-   <h4>ÇëÔÚÏÂÁĞ±í¸ñÖĞÊäÈëÄúµÄsvnÓÃ»§Ãû£¬ÏµÍ³»á¸ù¾İÓÃ»§Ãû½«ÃÜÂëÖØÖÃÁ´½Ó·¢ËÍµ½ÄúµÄÓÊÏäÖĞ<br>Çë×¢Òâ²éÊÕÓÊ¼ş¡£</h4>
+   <h4>è¯·åœ¨ä¸‹åˆ—è¡¨æ ¼ä¸­è¾“å…¥æ‚¨çš„svnç”¨æˆ·åï¼Œç³»ç»Ÿä¼šæ ¹æ®ç”¨æˆ·åå°†å¯†ç é‡ç½®é“¾æ¥å‘é€åˆ°æ‚¨çš„é‚®ç®±ä¸­<br>è¯·æ³¨æ„æŸ¥æ”¶é‚®ä»¶ã€‚</h4>
    		
    <table>
-   <tr><td>ÇëÊäÈësvnÓÃ»§Ãû£º</td><td><input type=text name=username></td></tr>
+   <tr><td>è¯·è¾“å…¥svnç”¨æˆ·åï¼š</td><td><input type=text name=username></td></tr>
    <tr><td>&nbsp; </td></tr>
-   <tr><td><input type=reset value="È¡Ïû"></td><td><input type=button value="ÏÂÒ»²½" onclick="loadTip()"></td></tr>
+   <tr><td><input type=reset value="å–æ¶ˆ"></td><td><input type=button value="ä¸‹ä¸€æ­¥" onclick="loadTip()"></td></tr>
    </table>  
   </div>
   <div id='confirmblock' style="display:none;">
-  	<h4>ÇëÈ·ÈÏÈçÏÂĞÅÏ¢£º</h4>
+  	<h4>è¯·ç¡®è®¤å¦‚ä¸‹ä¿¡æ¯ï¼š</h4>
   	<table>
-  		<tr><td>ÄúµÄsvnÓÃ»§Ãû£º<input type=text readonly id='user'></td></tr>
-  		<tr><td>¹«Ë¾ÓÊÏä£º<input type=text readonly id='email' style="width:250px"></td></tr>
-  		<tr><td>ÄúµÄĞÂÃÜÂë½«±»·¢ËÍµ½¸ÃÓÊÏäÖĞ£¬²Ù×÷Ç°Çë×ĞÏ¸È·ÈÏ<font color=red>ÓÊÏäµØÖ·</font>£¡
-  			<br>Èç¹ûÓÊÏäµØÖ·²»¶Ô£¬Çëµ½<a href='../viewuser.php' target=_blank>svnÓÃ»§ÏµÍ³</a>µÇÂ½ĞŞ¸Ä£¬»òÕßÁªÏµÎÒÃÇĞŞ¸Ä¡£</td></tr>
+  		<tr><td>æ‚¨çš„svnç”¨æˆ·åï¼š<input type=text readonly id='user'></td></tr>
+  		<tr><td>å…¬å¸é‚®ç®±ï¼š<input type=text readonly id='email' style="width:250px"></td></tr>
+  		<tr><td>æ‚¨çš„æ–°å¯†ç å°†è¢«å‘é€åˆ°è¯¥é‚®ç®±ä¸­ï¼Œæ“ä½œå‰è¯·ä»”ç»†ç¡®è®¤<font color=red>é‚®ç®±åœ°å€</font>ï¼
+  			<br>å¦‚æœé‚®ç®±åœ°å€ä¸å¯¹ï¼Œè¯·åˆ°<a href='../viewuser.php' target=_blank>svnç”¨æˆ·ç³»ç»Ÿ</a>ç™»é™†ä¿®æ”¹ï¼Œæˆ–è€…è”ç³»æˆ‘ä»¬ä¿®æ”¹ã€‚</td></tr>
   		<tr><td>&nbsp; </td></tr>
-  		<tr><td><input type=button value="ÉÏÒ»²½" onclick='turnback()'>&nbsp;<input type=button style="width:80;margin-left:180px" value="È·ÈÏ" onclick="return tCheck()"></td></tr>  		
+  		<tr><td><input type=button value="ä¸Šä¸€æ­¥" onclick='turnback()'>&nbsp;<input type=button style="width:80;margin-left:180px" value="ç¡®è®¤" onclick="return tCheck()"></td></tr>  		
   	</table>
   </div>
   </fieldset>
@@ -80,7 +80,7 @@ function turnback(){
 function fCheck(){
 	
   if( pwdform.username.value =="" ) {
-      alert("\ÇëÊäÈëÓÃ»§Ãû !");
+      alert("\è¯·è¾“å…¥ç”¨æˆ·å !");
       pwdform.username.select();
       pwdform.username.focus();
       return false;
@@ -90,20 +90,20 @@ function fCheck(){
 function tCheck()
 {
 	if(!fCheck())return false;
-	if(document.getElementById('email').value == 'ÓÃ»§²»´æÔÚ£¡')
+	if(document.getElementById('email').value == 'ç”¨æˆ·ä¸å­˜åœ¨ï¼')
 	{
-		alert('¸ÃÓÃ»§Ãû²»´æÔÚ£¬ÇëÈ·ÈÏ£¡');
+		alert('è¯¥ç”¨æˆ·åä¸å­˜åœ¨ï¼Œè¯·ç¡®è®¤ï¼');
 		return false;
 	}
 	if(document.getElementById('email').value != "<?php echo $uEmail ?>")
 	{
-	//	alert('¸ÃÓÊÏäµØÖ·ÓëÄúÕæÊµÓÊÏäµØÖ·²»·û£¡');
+	//	alert('è¯¥é‚®ç®±åœ°å€ä¸æ‚¨çœŸå®é‚®ç®±åœ°å€ä¸ç¬¦ï¼');
 	//	return false;
 	}
 	pwdform.submit();
 	return true;
 }
-//½«ÏêÏ¸ĞÅÏ¢µÄ¾ßÌåÄÚÈİĞ´ÈëtipDivÖĞ
+//å°†è¯¦ç»†ä¿¡æ¯çš„å…·ä½“å†…å®¹å†™å…¥tipDivä¸­
 function displayTip(content) {
     document.getElementById('confirmblock').style.display='';
     document.getElementById('inputblock').style.display='none';
@@ -112,31 +112,31 @@ function displayTip(content) {
     
 }
 
-//ÓÃÓÚ´´½¨XMLHttpRequest¶ÔÏó
+//ç”¨äºåˆ›å»ºXMLHttpRequestå¯¹è±¡
 function createXmlHttp() {
-    //¸ù¾İwindow.XMLHttpRequest¶ÔÏóÊÇ·ñ´æÔÚÊ¹ÓÃ²»Í¬µÄ´´½¨·½Ê½
+    //æ ¹æ®window.XMLHttpRequestå¯¹è±¡æ˜¯å¦å­˜åœ¨ä½¿ç”¨ä¸åŒçš„åˆ›å»ºæ–¹å¼
     if (window.XMLHttpRequest) {
-       xmlHttp = new XMLHttpRequest();                  //FireFox¡¢OperaµÈä¯ÀÀÆ÷Ö§³ÖµÄ´´½¨·½Ê½
+       xmlHttp = new XMLHttpRequest();                  //FireFoxã€Operaç­‰æµè§ˆå™¨æ”¯æŒçš„åˆ›å»ºæ–¹å¼
     } else {
-       xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");//IEä¯ÀÀÆ÷Ö§³ÖµÄ´´½¨·½Ê½
+       xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");//IEæµè§ˆå™¨æ”¯æŒçš„åˆ›å»ºæ–¹å¼
     }
 }
 
-//´Ó·şÎñÆ÷¼ÓÔØ¹Ø¼ü´ÊµÄÏêÏ¸ĞÅÏ¢
+//ä»æœåŠ¡å™¨åŠ è½½å…³é”®è¯çš„è¯¦ç»†ä¿¡æ¯
 function loadTip() {
     if(!fCheck())return false;
-    displayTip("ÕıÔÚ¼ÓÔØ¡­¡­");                  //ÏÔÊ¾¡°ÕıÔÚ¼ÓÔØ¡­¡­¡±ÌáÊ¾ĞÅÏ¢
+    displayTip("æ­£åœ¨åŠ è½½â€¦â€¦");                  //æ˜¾ç¤ºâ€œæ­£åœ¨åŠ è½½â€¦â€¦â€æç¤ºä¿¡æ¯
 
-    createXmlHttp();                                //´´½¨XMLHttpRequest¶ÔÏó
-    xmlHttp.onreadystatechange = loadTipCallBack;   //ÉèÖÃ»Øµ÷º¯Êı
+    createXmlHttp();                                //åˆ›å»ºXMLHttpRequestå¯¹è±¡
+    xmlHttp.onreadystatechange = loadTipCallBack;   //è®¾ç½®å›è°ƒå‡½æ•°
     xmlHttp.open("GET", "./getusers.php?username=" + pwdform.username.value +"&"+Math.round(Math.random()*100), true);
     xmlHttp.send(null);
 }
 
-//»ñÈ¡²éÑ¯Ñ¡ÏîµÄ»Øµ÷º¯Êı
+//è·å–æŸ¥è¯¢é€‰é¡¹çš„å›è°ƒå‡½æ•°
 function loadTipCallBack() {
     if (xmlHttp.readyState == 4) {
-        displayTip(xmlHttp.responseText);           //ÏÔÊ¾¼ÓÔØÍê±ÏµÄÏêÏ¸ĞÅÏ¢
+        displayTip(xmlHttp.responseText);           //æ˜¾ç¤ºåŠ è½½å®Œæ¯•çš„è¯¦ç»†ä¿¡æ¯
     }
 }
 

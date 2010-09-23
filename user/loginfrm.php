@@ -1,9 +1,9 @@
 <?php
-header("content-type:text/html; charset=gb2312");
+include('../include/charset.php');
 ?>
 <html>
 <head>
-<title>svnÓÃ»§È¨ÏŞ¹ÜÀíÏµÍ³---ÓÃ»§µÇÂ½</title>
+<title>svnç”¨æˆ·æƒé™ç®¡ç†ç³»ç»Ÿ---ç”¨æˆ·ç™»é™†</title>
 <style type="text/css">
 form{margin:100px 170px;padding:20px;}
 .in{width:140px}
@@ -15,28 +15,28 @@ fieldset{border:2px solid #A4CDF2;padding:20px;background:#FFFFFF;width:400px;}
 <body>
 <form name="loginform" method="post" action="login.php?action=login">
 <fieldset>
-<legend>µÇÂ½svnÓÃ»§ÏµÍ³</legend>
+<legend>ç™»é™†svnç”¨æˆ·ç³»ç»Ÿ</legend>
 <div class='tp'>
 	<table border="0" width="100%" id="table1">
 		<!-- MSTableType="nolayout" -->
 		<tr>
-			<td width="68">ÓÃ»§Ãû£º</td>
-			<td ><input type="text" name="username" class='in' >¡¡</td>
+			<td width="68">ç”¨æˆ·åï¼š</td>
+			<td ><input type="text" name="username" class='in' >ã€€</td>
 		</tr>
 		<tr>
-			<td>ÃÜÂë£º</td>
+			<td>å¯†ç ï¼š</td>
 			<td ><input type=password name="pswd"  class='in' >&nbsp;
-			<a href="../extension/topwd.php">ÕÒ»ØÃÜÂë</a></td>
+			<a href="../extension/topwd.php">æ‰¾å›å¯†ç </a></td>
 		</tr>
 	</table>
 </div>
 <div class='tp' >
-¡¡<table border="0" width="100%" id="table2">
+ã€€<table border="0" width="100%" id="table2">
 		<!-- MSTableType="nolayout" -->
 		<tr>
-			<td width="105"><input type=submit value="È·¶¨" style="width:80"></td>
-			<td><input type=reset value="È¡Ïû" style="width:80"> </td>
-            <td><a href="reg_user.php">×¢²á</a></td>
+			<td width="105"><input type=submit value="ç¡®å®š" style="width:80"></td>
+			<td><input type=reset value="å–æ¶ˆ" style="width:80"> </td>
+            <td><a href="reg_user.php">æ³¨å†Œ</a></td>
 		</tr>
 	</table>
 </div>

@@ -5,7 +5,7 @@ include('../../../config.inc');
 include('../include/dbconnect.php');
 
 if (!isset($_SESSION['username'])){	
-	echo "ÇëÏÈ<a href='./loginfrm.php'>µÇÂ¼</a> £¡";
+	echo "è¯·å…ˆ<a href='./loginfrm.php'>ç™»å½•</a> ï¼";
 	echo" <script>setTimeout('document.location.href=\"./loginfrm.php\"',0)</script>";  	
 	exit;
 }
@@ -40,14 +40,14 @@ function checkinput($str)
 
 $action= trim($_POST["action"]);
 if ($_SESSION['role']!='admin')exit;
-//--------------É¾³ı×é
+//--------------åˆ é™¤ç»„
 if(isset($_POST['del_g']))
 {
 
 	$groupArray=$_POST['groupArray'];
 	if(empty($groupArray))
 	{
-	  echo " <script>window.alert(\"Ñ¡ÔñÎª¿Õ£¡\")</script>";
+	  echo " <script>window.alert(\"é€‰æ‹©ä¸ºç©ºï¼\")</script>";
 			echo " <script>setTimeout('document.location.href=\"javascript:history.back()\"',3)</script>";
 			exit;	
 	}
@@ -59,7 +59,7 @@ if(isset($_POST['del_g']))
 		$c++;
 	}
 	$paras=implode(' or ',$paras_array);
-	if($action == 'É¾³ı')
+	if($action == 'åˆ é™¤')
 	{
 		$query="delete from svnauth_group where $paras";
 		//echo $query;exit;
@@ -69,15 +69,15 @@ if(isset($_POST['del_g']))
 		@include('../priv/gen_access.php');
 		echo " <script>setTimeout('location.href=\"./viewgroup.php\"',5)</script>";
 	}
-	if($action == 'ÖØÃüÃû')
+	if($action == 'é‡å‘½å')
 	{
 	echo <<<HTML
 		<form method="post" action="">
 		<fieldset>
-		<legend>±à¼­×éÃû</legend>
+		<legend>ç¼–è¾‘ç»„å</legend>
 		<input type=hidden name=action value='modify'>
 		<table  cellspacing='1' cellpadding='0' width='70%' border='0' >
-		<tr><td><b>È¨ÏŞ×éÃû</b></td></tr>
+		<tr><td><b>æƒé™ç»„å</b></td></tr>
 HTML;
 		$query="select group_id,group_name from svnauth_group where $paras";
 			$result = mysql_query($query); 			
@@ -90,41 +90,41 @@ HTML;
 	echo <<<HTML
 		</table>
 		<table style="position:relative;left:300px;top:20px" >
-		<tr><td><input style="width:80" type=submit value="È·¶¨" ></td><td><input style="width:80" type=reset value="È¡Ïû" onclick="turnback()"></td></tr>
+		<tr><td><input style="width:80" type=submit value="ç¡®å®š" ></td><td><input style="width:80" type=reset value="å–æ¶ˆ" onclick="turnback()"></td></tr>
 	</table>
 		</fieldset></form>
 HTML;
 	}
-	if($action == '¸´ÖÆ×é')
+	if($action == 'å¤åˆ¶ç»„')
 	{
 		if($c >2 ){
-	  		echo " <script>window.alert(\"²»ÄÜÍ¬Ê±¸´ÖÆ¶à¸ö×é£¡\")</script>";
+	  		echo " <script>window.alert(\"ä¸èƒ½åŒæ—¶å¤åˆ¶å¤šä¸ªç»„ï¼\")</script>";
 			echo " <script>setTimeout('document.location.href=\"javascript:history.back()\"',3)</script>";
 			exit;	
 		}
 	echo <<<HTML
 		<form method="post" action="">
 		<fieldset>
-		<legend>¸´ÖÆ×é</legend>
+		<legend>å¤åˆ¶ç»„</legend>
 		<input type=hidden name=action value='copygroup'>
-ËµÃ÷£º¸´ÖÆ×éµÄ³ÉÔ±»òÈ¨ÏŞµ½Ä¿±ê×é£¬Èç¹ûÄ¿±ê×é²»´æÔÚÔò´´½¨¸Ã×é£»Èç¹ûÄ¿±êÒÑ´æÔÚ£¬Ôò¸²¸ÇÖ®¡£
+è¯´æ˜ï¼šå¤åˆ¶ç»„çš„æˆå‘˜æˆ–æƒé™åˆ°ç›®æ ‡ç»„ï¼Œå¦‚æœç›®æ ‡ç»„ä¸å­˜åœ¨åˆ™åˆ›å»ºè¯¥ç»„ï¼›å¦‚æœç›®æ ‡å·²å­˜åœ¨ï¼Œåˆ™è¦†ç›–ä¹‹ã€‚
 		<table  cellspacing='1' cellpadding='0' width='70%' border='0' >
-		<tr><th>Ô´</th><th>Ä¿±ê</th></tr>
+		<tr><th>æº</th><th>ç›®æ ‡</th></tr>
 HTML;
 		$query="select group_id,group_name from svnauth_group where $paras";
 			$result = mysql_query($query); 			
 			while (($result)and($row= mysql_fetch_array($result, MYSQL_BOTH))) {
 				$group_id=$row['group_id'];
 				$group_name=$row['group_name'];
-				echo "<tr><td>´ÓÈ¨ÏŞ×é<input type=hidden name='groupArray' value='$group_id'>
-				 <input type=text readonly value='$group_name'></td><td>¸´ÖÆµ½<input type=text name='groupname'></td>";
+				echo "<tr><td>ä»æƒé™ç»„<input type=hidden name='groupArray' value='$group_id'>
+				 <input type=text readonly value='$group_name'></td><td>å¤åˆ¶åˆ°<input type=text name='groupname'></td>";
 			}
 	echo <<<HTML
 		</table>
-<br><b>¸´ÖÆÀà±ğ£º</b>
-<input type=checkbox checked value='cpm' name='copym'>¸´ÖÆ×é³ÉÔ± <input type=checkbox value='cpp' name='copypriv'>¸´ÖÆ×éÈ¨ÏŞ
+<br><b>å¤åˆ¶ç±»åˆ«ï¼š</b>
+<input type=checkbox checked value='cpm' name='copym'>å¤åˆ¶ç»„æˆå‘˜ <input type=checkbox value='cpp' name='copypriv'>å¤åˆ¶ç»„æƒé™
 		<table style="position:relative;left:300px;top:20px" >
-		<tr><td><input style="width:80" type=submit value="È·¶¨" ></td><td><input style="width:80" type=reset value="È¡Ïû" onclick="turnback()"></td></tr>
+		<tr><td><input style="width:80" type=submit value="ç¡®å®š" ></td><td><input style="width:80" type=reset value="å–æ¶ˆ" onclick="turnback()"></td></tr>
 	</table>
 		</fieldset></form>
 HTML;
@@ -132,7 +132,7 @@ HTML;
 	exit;
 }
 //---------------
-//ĞŞ¸Ä×éÃû-------
+//ä¿®æ”¹ç»„å-------
 
 if($action == 'modify')
 {
@@ -143,7 +143,7 @@ if($action == 'modify')
 	{
 		if(! checkinput($username[$i]))
 		{
-			echo "<script>window.alert(\"$username[$i] ÃüÃû·Ç·¨£¬ÆäÇëÇó±»ºöÂÔ£¡\");</script>";
+			echo "<script>window.alert(\"$username[$i] å‘½åéæ³•ï¼Œå…¶è¯·æ±‚è¢«å¿½ç•¥ï¼\");</script>";
 			continue;
 		}
 		$username[$i]=safe($username[$i]);
@@ -158,12 +158,12 @@ if($action == 'copygroup')
 	$gid=safe($_POST['groupArray']);
 	if(empty($_POST['groupname']))
 	{
-		echo "ÊäÈë²»ÄÜÎª¿Õ";
+		echo "è¾“å…¥ä¸èƒ½ä¸ºç©º";
 		exit;
 	}
 	if(! checkinput($_POST['groupname']))
 	{
-		echo "×éÃû·Ç·¨£¡";
+		echo "ç»„åéæ³•ï¼";
 		exit;
 	}
 	$gname=safe($_POST['groupname']);

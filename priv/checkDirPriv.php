@@ -3,7 +3,7 @@ session_start();
 include('../include/charset.php');
 if ($_SESSION['role'] !='admin')
 {
-	echo "ÄúÎŞÈ¨½øĞĞ´Ë²Ù×÷£¡";
+	echo "æ‚¨æ— æƒè¿›è¡Œæ­¤æ“ä½œï¼";
 	exit;
 }
 include('../../../config.inc');
@@ -14,7 +14,7 @@ if(!empty($_POST['dirArray']))
 {
 	$action= trim($_POST["action"]);
 	$dirArray=$_POST["dirArray"];
-	//ÇåÀíÇ°±¸·İÎÄ¼ş			
+	//æ¸…ç†å‰å¤‡ä»½æ–‡ä»¶			
 	$today = date("Ymd");
 	$backupfile=$accessfile.$today;
 	if(!file_exists($backupfile))
@@ -44,7 +44,7 @@ if(!empty($_POST['dirArray']))
 			mysql_query($query);
 		}
 	}
-	echo "<script>alert('²Ù×÷Íê³É')</script>";
+	echo "<script>alert('æ“ä½œå®Œæˆ')</script>";
 
 
 }
@@ -70,7 +70,7 @@ function checkurl($t_url)
 	global $svnparentpath,$svn;
 	if($t_url=='')return true;
 	if(strpos($t_url,':'))return false;
-//ÖĞÎÄÄ¿Â¼ÅĞ¶ÏÓĞÎÊÌâ
+//ä¸­æ–‡ç›®å½•åˆ¤æ–­æœ‰é—®é¢˜
 //	if(isset($_GET['from_d']))
 	{
 	  $t_url=escapeshellcmd($t_url);
@@ -93,18 +93,18 @@ function checkurl($t_url)
 .trc1{font-size:10pt}
 .detail{width:680px}
 </style>
-<strong>ËµÃ÷£º</strong>ÔÚÅäÖÃ±ä¸ü¹ı³ÌÖĞ£¬¿ÉÄÜ»áÓĞµÄsvnÄ¿Â¼ÒÑ±»É¾³ı»òÒÑ¸ÄÃû»òÒÑÒÆ¶¯Î»ÖÃ£¬Ê¹µÃÆä¶ÔÓ¦µÄÈ¨ÏŞĞÅÏ¢±ä³ÉÈßÓà¡£±¾¹¤¾ß½«ÕâĞ©¿ÉÄÜµÄÈßÓàÈ¨ÏŞĞÅÏ¢ÁĞ³ö£¬¹©ÄúÑĞÅĞ£¬Äú¿ÉÔÚÈ·ÈÏÆäÎªÈßÓàºó½«Ö®É¾³ı¡£
+<strong>è¯´æ˜ï¼š</strong>åœ¨é…ç½®å˜æ›´è¿‡ç¨‹ä¸­ï¼Œå¯èƒ½ä¼šæœ‰çš„svnç›®å½•å·²è¢«åˆ é™¤æˆ–å·²æ”¹åæˆ–å·²ç§»åŠ¨ä½ç½®ï¼Œä½¿å¾—å…¶å¯¹åº”çš„æƒé™ä¿¡æ¯å˜æˆå†—ä½™ã€‚æœ¬å·¥å…·å°†è¿™äº›å¯èƒ½çš„å†—ä½™æƒé™ä¿¡æ¯åˆ—å‡ºï¼Œä¾›æ‚¨ç ”åˆ¤ï¼Œæ‚¨å¯åœ¨ç¡®è®¤å…¶ä¸ºå†—ä½™åå°†ä¹‹åˆ é™¤ã€‚
 
 <form method="post" action="" name='dirform' onsubmit="return fCheck()">	
 	<table class='subtitle'>
 	   <tr>
-	  <td><input type=button value='È«Ñ¡' onclick="selall()"/></td><td width=280>&nbsp;</td><td>²Ù×÷:<input name="action" type='submit' value='É¾³ı' onclick="return confirm('½«É¾³ı¸ÃÄ¿Â¼Ëù¶ÔÓ¦µÄËùÓĞÈ¨ÏŞĞÅÏ¢£¬ÄãÈ·ÈÏÂğ£¿');"/></td>
+	  <td><input type=button value='å…¨é€‰' onclick="selall()"/></td><td width=280>&nbsp;</td><td>æ“ä½œ:<input name="action" type='submit' value='åˆ é™¤' onclick="return confirm('å°†åˆ é™¤è¯¥ç›®å½•æ‰€å¯¹åº”çš„æ‰€æœ‰æƒé™ä¿¡æ¯ï¼Œä½ ç¡®è®¤å—ï¼Ÿ');"/></td>
 	   </tr>
 	</table>
 	
 	<table class=detail cellpadding=5px>
 	  <tr class=title>
-	     <td></td><td>¿â/Ä¿Â¼</td>
+	     <td></td><td>åº“/ç›®å½•</td>
 	  </tr>
 
 <?php
@@ -131,7 +131,7 @@ foreach($dir_array as $dir)
 </table>
 	<table class='subtitle'>
 	   <tr>
-	  <td><input type=button value='È«Ñ¡' onclick="selall()"/></td><td width=280>&nbsp;</td><td>²Ù×÷:<input name="action" type='submit' value='É¾³ı' onclick="return confirm('½«É¾³ı¸ÃÄ¿Â¼Ëù¶ÔÓ¦µÄËùÓĞÈ¨ÏŞĞÅÏ¢£¬ÄãÈ·ÈÏÂğ£¿');"/></td>
+	  <td><input type=button value='å…¨é€‰' onclick="selall()"/></td><td width=280>&nbsp;</td><td>æ“ä½œ:<input name="action" type='submit' value='åˆ é™¤' onclick="return confirm('å°†åˆ é™¤è¯¥ç›®å½•æ‰€å¯¹åº”çš„æ‰€æœ‰æƒé™ä¿¡æ¯ï¼Œä½ ç¡®è®¤å—ï¼Ÿ');"/></td>
 	   </tr>
 	</table>
 
@@ -145,7 +145,7 @@ function fCheck(){
   	{ return true;
 	}else 
 	{
-		alert('Çë¹´Ñ¡¿â/Ä¿Â¼');
+		alert('è¯·å‹¾é€‰åº“/ç›®å½•');
 		return false;
 	}
 }	

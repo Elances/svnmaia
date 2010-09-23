@@ -4,12 +4,12 @@ error_reporting(0);
 $d=$_GET['parentId'];
 if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
 	$path=escapeshellcmd($_GET['d']);
-	header("Content-Type: text/xml;  charset=gb2312");
+	header("Content-Type: text/xml;  charset='gb2312'");
 }else
 {
 	$_GET['d']=iconv("GB2312","UTF-8",$_GET['d']);
 	$path=urlencode(escapeshellcmd($_GET['d']));
-	header("Content-Type: text/xml;  charset=utf-8");
+	header("Content-Type: text/xml;  charset='utf-8'");
 }
 $path=str_replace('%2F','/',$path);
 $path=str_replace('%5C%23','%23',$path);//解决#字符目录无法列出问题

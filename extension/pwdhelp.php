@@ -1,9 +1,9 @@
 <?php
-header("content-type:text/html; charset=gb2312");
+include('../include/charset.php');
 ?>
 <html>
 <head>
-<title>svnÓÃ»§È¨ÏŞ¹ÜÀíÏµÍ³---ÃÜÂëĞŞ¸Ä</title>
+<title>svnç”¨æˆ·æƒé™ç®¡ç†ç³»ç»Ÿ---å¯†ç ä¿®æ”¹</title>
 <style type="text/css">
 form{margin:100px 170px;padding:20px;}
 .in{width:140px}
@@ -16,23 +16,23 @@ fieldset{border:2px solid #A4CDF2;padding:20px;background:#FFFFFF;width:400px;}
 </p>
   <form id="chpasswd" method="post" action="pwdch.php" onSubmit="return pcheck()">
 <fieldset>
-	<legend>ĞŞ¸ÄsvnÃÜÂë</legend>
+	<legend>ä¿®æ”¹svnå¯†ç </legend>
 	<table>
 		<tr>
-			<td width="122" height="19">ÓÃ»§Ãû£º</td>
+			<td width="122" height="19">ç”¨æˆ·åï¼š</td>
 			<td height="19"><input type="text" name="username" size="20" > *</td>
   	</tr>
 
 		<tr>
-			<td width="122" height="19">Ô­ÃÜÂë£º</td>
+			<td width="122" height="19">åŸå¯†ç ï¼š</td>
 			<td height="19"><input type="password" name="oldpasswd" size="20"> * </td>
 	</tr>
 	<tr>
-		<td width="122">ĞÂÃÜÂë£º</td>
+		<td width="122">æ–°å¯†ç ï¼š</td>
 		<td><input type=password name="newpasswd" size="20"> *		</td>
 	</tr>
 	<tr>
-		<td width="122">È·ÈÏĞÂÃÜÂë£º</td>
+		<td width="122">ç¡®è®¤æ–°å¯†ç ï¼š</td>
 		<td><input type=password name="newpaswd0" size="20"> *</td>
 	</tr>
 	</table>
@@ -40,9 +40,9 @@ fieldset{border:2px solid #A4CDF2;padding:20px;background:#FFFFFF;width:400px;}
 	
 	<table border="0" width="84%" id="table2">
 	<tr>
-		<td width="104"><input type=submit value="È·¶¨" ></td>
-		<td><input type=reset value="È¡Ïû"></td>
-		<td><a href='topwd.php'>ÕÒ»ØÃÜÂë</a></td>
+		<td width="104"><input type=submit value="ç¡®å®š" ></td>
+		<td><input type=reset value="å–æ¶ˆ"></td>
+		<td><a href='topwd.php'>æ‰¾å›å¯†ç </a></td>
 	</tr>
 </table>
 </fieldset>
@@ -53,27 +53,27 @@ function pcheck(){
 
    if( chpasswd.oldpasswd.value =="") 
  {
-       alert("\ÇëÊäÈëÔ­ÃÜÂë !");
+       alert("\è¯·è¾“å…¥åŸå¯†ç  !");
        chpasswd.oldpasswd.focus();
        return false;
   }
 
    if( ! isPassword( chpasswd.newpasswd.value ) )
    {
-        alert("\ÇëÖØĞÂÊäÈëÃÜÂë,ÃÜÂëÓÉÖÁÉÙ6¸öÓ¢ÎÄ×ÖÄ¸»òÊı×Ö×é³É !"); 
+        alert("\è¯·é‡æ–°è¾“å…¥å¯†ç ,å¯†ç ç”±è‡³å°‘6ä¸ªè‹±æ–‡å­—æ¯æˆ–æ•°å­—ç»„æˆ !"); 
         chpasswd.newpasswd.select();
         chpasswd.newpasswd.focus();
         return false;
    }
   if( chpasswd.newpaswd0.value =="" )
   {
-      alert("\ÇëÊäÈëÃÜÂëÈ·ÈÏ !");
+      alert("\è¯·è¾“å…¥å¯†ç ç¡®è®¤ !");
       chpasswd.newpaswd0.select();
       chpasswd.newpaswd0.focus();
       return false;
   }
   if(  chpasswd.newpaswd0.value != chpasswd.newpasswd.value ) {
-     alert("\Á½´ÎÃÜÂëÊäÈë²»Ò»ÖÂ !");
+     alert("\ä¸¤æ¬¡å¯†ç è¾“å…¥ä¸ä¸€è‡´ !");
      chpasswd.newpasswd.focus();
      return false;
   }

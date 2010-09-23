@@ -1,14 +1,14 @@
 <?php
 session_start();
-header("content-type:text/html; charset=gb2312");
+include('../include/charset.php');
 if(!isset($_SESSION['username']))
 {
-	echo "���ȵ�¼��";
+	echo "请先登录！";
 	exit;
 }
 if ($_SESSION['role'] !='admin')
 {
-	echo "����Ȩ���д˲�����";
+	echo "您无权进行此操作！";
 	exit;
 }
 
@@ -22,18 +22,18 @@ if ($_SESSION['role'] !='admin')
 .trc1{font-size:10pt}
 .tb1{width:70%; border:1;text-align:center; background:#ecf0e1;}
 </style>
-<strong>˵����</strong>
-�ڴ�ҳ���У�������Ϊ�����û��趨һ����Ч��(�ӽ��쿪ʼ�������Ч����������Ч����Ϊ1�죬�����쵽�ڣ������û���Ч�ڵ�ʱ��ϵͳ����ǰ2������Ϊÿ���û��������ʼ����û�����ͨ���ʼ������Ӷ���Ч�ڽ�����������������û�������������Ч�ڹ���ϵͳ���Զ�ɾ���û������ӦȨ����Ϣ���Դﵽ������Ч�û���Ŀ�ġ�
-<br><strong>������Ч�ڣ�</strong>�˹��ܽ�Ϊѡ���û�ָ�����û���Ч���ޡ��������û�����ɾ������Ĭ���£��û���ɾ��ǰ2���ڻ��յ��������ڵ��ʼ�֪ͨ������ͨ���ʼ����м����
-<br><strong>���ڲ�֪ͨ��</strong>�˹��ܽ�ʹ����ѡ�����û��ڵ���ʱ���ᱻĬĬɾ������������û����κ����Ѽ����ʼ�(״ֵ̬>3���û��������ͼ����ʼ�)��
-<br><strong>״̬��</strong>�����ʼ��ķ��ʹ�������״ֵ̬>3ʱ�����ٷ��ͼ����ʼ���
+<strong>说明：</strong>
+在此页面中，您可以为所有用户设定一个有效期(从今天开始算起的有效天数，如有效期设为1天，则明天到期）。当用户有效期到时，系统会提前2个星期为每个用户发激活邮件。用户可以通过邮件的链接对有效期进行重新续订。如果用户不续订，则有效期过后，系统会自动删除用户及其对应权限信息，以达到清理无效用户的目的。
+<br><strong>重设有效期：</strong>此功能将为选定用户指定“用户有效期限”，过期用户将被删除。（默认下，用户被删除前2周内会收到即将过期的邮件通知，并可通过邮件进行激活。）
+<br><strong>到期不通知：</strong>此功能将使得所选定的用户在到期时，会被默默删除，而不会给用户发任何提醒激活邮件(状态值>3的用户将不发送激活邮件)。
+<br><strong>状态：</strong>激活邮件的发送次数，当状态值>3时将不再发送激活邮件。
 <p class='tb1'>
-<?php echo '���죺'.date("Y-m-d");?>
+<?php echo '今天：'.date("Y-m-d");?>
 </p>
 <p>
 <form action="" method="get" name="searchform">
-�û����ˣ�<input type="text" size="20" name="username"><input type="submit" onclick="return searchform.username.value;" value="����">&nbsp;&nbsp;&nbsp;&nbsp;
-����������<input type="text" size="20" name="groupname"><input type="submit" onclick="return searchform.groupname.value;" value="�г����û�">
+用户过滤：<input type="text" size="20" name="username"><input type="submit" onclick="return searchform.username.value;" value="搜索">&nbsp;&nbsp;&nbsp;&nbsp;
+输入组名：<input type="text" size="20" name="groupname"><input type="submit" onclick="return searchform.groupname.value;" value="列出组用户">
 </form>
 
 </p>
@@ -45,7 +45,7 @@ function fCheck(ii){
   	{ return true;
 	}else 
 	{
-		alert('�빴ѡ�û�');
+		alert('请勾选用户');
 		return false;
 	}
 }	
@@ -112,18 +112,18 @@ $result = mysql_query($query);
 	<form method="post" action="user_expire.php" name='userform' onsubmit="return fCheck($ii)">	
 		<table class='subtitle'>
 	   <tr>
-	 <td><input type=button value='ȫѡ' onclick="selall($ii)"/></td><td width=180>&nbsp;</td><td>�û���Ч��:<input type=text name='expire' value='14'/>��</td><td><input name="action" type=submit value='������Ч��' onclick="return confirm('ȷʵҪ������Ч����ע�⣺��Ч�ڹ������û�����Ȩ����Ϣ�ᱻɾ������ʼǰ��ȷ���ʼ����͹��������������û����ò�������֪ͨ��');"/></td><td><input name="action" type='submit' value='���ڲ�֪ͨ' onclick="return confirm('�û����ں󽫱���ͨ���ɾ������ȷ����');"/></td>
+	 <td><input type=button value='全选' onclick="selall($ii)"/></td><td width=180>&nbsp;</td><td>用户有效期:<input type=text name='expire' value='14'/>天</td><td><input name="action" type=submit value='重设有效期' onclick="return confirm('确实要重设有效期吗？注意：有效期过后其用户名及权限信息会被删除。开始前请确保邮件发送功能正常，否则用户将得不到激活通知。');"/></td><td><input name="action" type='submit' value='到期不通知' onclick="return confirm('用户到期后将被无通告地删除，你确认吗？');"/></td>
 	   </tr>
 	</table>
 	
 	<table class=detail cellpadding=5px>
 	  <tr class=title>
-	     <td></td><td>�û���</td><td>��Ч��</td><td>״̬</td>
+	     <td></td><td>用户名</td><td>有效期</td><td>状态</td>
 	  </tr>
 SCMBBS;
 $i=0;
 	while (($result)and($row= mysql_fetch_array($result, MYSQL_BOTH))) {
-		//�����е���ɫ���
+		//定义行的颜色相隔
 				if ($tr_class=="trc1"){
 					$tr_class="trc2";
 				}else

@@ -1,5 +1,5 @@
 <?php
-header("content-type:text/html; charset=gb2312");
+include('../include/charset.php');
 include('../include/requireAuth.php');
 include('../../../config.inc');
 include('../include/dbconnect.php');
@@ -227,13 +227,13 @@ while (($result)and($row= mysql_fetch_array($result, MYSQL_BOTH))) {
 
 		$handle=fopen($accessfile,'w+');
 		if (fwrite($handle, $access) === FALSE) {
-       			 echo "<strong>Error:</strong>²»ÄÜĞ´Èëµ½ÎÄ¼ş $accessfile ! ±£´æÊ§°Ü£¡";
+       			 echo "<strong>Error:</strong>ä¸èƒ½å†™å…¥åˆ°æ–‡ä»¶ $accessfile ! ä¿å­˜å¤±è´¥ï¼";
 		}else
-			echo "È¨ÏŞÉúĞ§³É¹¦£¡";
+			echo "æƒé™ç”Ÿæ•ˆæˆåŠŸï¼";
 		fclose($handle);
 		$fromurl=$_GET['fromurl'];
 		if(empty($fromurl))$fromurl='dirpriv.php';	
-		echo "&nbsp;&nbsp;&nbsp;&nbsp;<a href=$fromurl>·µ»Ø</a>";		
+		echo "&nbsp;&nbsp;&nbsp;&nbsp;<a href=$fromurl>è¿”å›</a>";		
 		
 
 

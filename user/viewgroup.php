@@ -10,7 +10,7 @@ Date:2009-02-19
 -->
 <html>
 <head>
-  <title>svnÓÃ»§×é¹ÜÀí</title>
+  <title>svnç”¨æˆ·ç»„ç®¡ç†</title>
 </head>
 <link rel="stylesheet" href="../css/base.css" type="text/css">
 <style type='text/css'>
@@ -72,7 +72,7 @@ function checkg()
 	var rs=/^[\w._\-\/]{2,50}$/.test( gn );
 	if(! rs)
 	{
-		alert('×éÃû·Ç·¨£¡½öÔÊĞí×ÖÄ¸¡¢Êı×ÖºÍÌØÊâ·ûºÅ._-/ËÄÖÖ');
+		alert('ç»„åéæ³•ï¼ä»…å…è®¸å­—æ¯ã€æ•°å­—å’Œç‰¹æ®Šç¬¦å·._-/å››ç§');
 		return false;
 	}
 }
@@ -138,7 +138,7 @@ if (!isset($_SESSION['username'])){
 	include('../template/footer.tmpl');
 	exit;
 }
-//----´´½¨×é
+//----åˆ›å»ºç»„
 if(isset($_POST['groupname']))
 {
 	if(( $_SESSION['role'] =="admin")or($_SESSION['role']=="diradmin"))
@@ -160,7 +160,7 @@ if(isset($_POST['groupname']))
 		echo "<script>window.location =\"viewgroup.php?gid=$gid&grp=$gname\";</script>";
 		exit;
 	}else
-		echo "ÄãÎŞÈ¨´´½¨È¨ÏŞ×é£¡";
+		echo "ä½ æ— æƒåˆ›å»ºæƒé™ç»„ï¼";
 
 }
 
@@ -170,7 +170,7 @@ if(isset($_POST['guact']))
 	$gid=$_POST['guact'];
 	if(! isadmin($gid))
 	{
-		echo "¸Ã×éÄ¿Â¼³¬³öÄãÈ¨ÏŞ·¶Î§£¬ÄãÎŞÈ¨½øĞĞ´Ë²Ù×÷";
+		echo "è¯¥ç»„ç›®å½•è¶…å‡ºä½ æƒé™èŒƒå›´ï¼Œä½ æ— æƒè¿›è¡Œæ­¤æ“ä½œ";
 		exit;
 	}
 	$data_c=false;
@@ -218,7 +218,7 @@ if(isset($_POST['guact']))
 				$unknow_usr=trim($unknow_usr);
 				if(!empty($unknow_usr))
 				{
-					echo " <script>window.alert(\"ÕâĞ©ÓÃ»§²»´æÔÚ»òÕßÒÑ¾­ÔÚ×éÔ±ÖĞ: $unknow_usr £¡\")</script>";
+					echo " <script>window.alert(\"è¿™äº›ç”¨æˆ·ä¸å­˜åœ¨æˆ–è€…å·²ç»åœ¨ç»„å‘˜ä¸­: $unknow_usr ï¼\")</script>";
 				}else unset($unknow_usr);
 			}
 			$_GET['gid']=$gid;
@@ -250,7 +250,7 @@ if(isset($_GET['rowid']))
 	$gid=$_GET['d_gid'];
 	if(! isadmin($gid))
 	{
-		echo "¸Ã×éÄ¿Â¼³¬³öÄãÈ¨ÏŞ·¶Î§£¬ÄãÎŞÈ¨½øĞĞ´Ë²Ù×÷";
+		echo "è¯¥ç»„ç›®å½•è¶…å‡ºä½ æƒé™èŒƒå›´ï¼Œä½ æ— æƒè¿›è¡Œæ­¤æ“ä½œ";
 		exit;
 	}
 	$rowid=$_GET['rowid'];
@@ -280,18 +280,18 @@ if(isset($_GET['gid']) )
 		mysql_query($sql);
 	}
 	//------	
-	echo "µ¼º½£º<a href='$fromurl'>·µ»Ø</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#grouppriv'>×éÈ¨ÏŞ</a>";
+	echo "å¯¼èˆªï¼š<a href='$fromurl'>è¿”å›</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href='#grouppriv'>ç»„æƒé™</a>";
 	$query="select user_name,full_name,svnauth_groupuser.user_id,isowner from svnauth_groupuser,svnauth_user where svnauth_groupuser.user_id=svnauth_user.user_id and svnauth_groupuser.group_id=$gid";
 	$result=mysql_query($query);
-	//´òÓ¡³ö×éÓÃ»§ÁĞ±í¡¢È¨ÏŞÄ¿Â¼
-	echo "<h3>$grp ×éÏêÇé£º</h3><h4>×é³ÉÔ±</h4>";
+	//æ‰“å°å‡ºç»„ç”¨æˆ·åˆ—è¡¨ã€æƒé™ç›®å½•
+	echo "<h3>$grp ç»„è¯¦æƒ…ï¼š</h3><h4>ç»„æˆå‘˜</h4>";
 	if($isadmin)
 	echo  <<<SCMBBS
 	<form method="post" action="" name='guform' onsubmit="return fCheck($ii)">
   	<table><tr>
-		<td width=100><input name="act" type=submit value="É¾³ı" onclick="return confirm('È·ÊµÒª´Ó×éÖĞÉ¾³ıÕâĞ©ÓÃ»§Âğ?');"></td>
-		<td width=160><a  onclick='showadd(0)'>Ìí¼ÓÓÃ»§</a></td>
-		<td width=160><a onclick='showadd()'>ÅúÁ¿Ìí¼ÓÓÃ»§</a><input type=hidden name='guact' value='$gid'></td>
+		<td width=100><input name="act" type=submit value="åˆ é™¤" onclick="return confirm('ç¡®å®è¦ä»ç»„ä¸­åˆ é™¤è¿™äº›ç”¨æˆ·å—?');"></td>
+		<td width=160><a  onclick='showadd(0)'>æ·»åŠ ç”¨æˆ·</a></td>
+		<td width=160><a onclick='showadd()'>æ‰¹é‡æ·»åŠ ç”¨æˆ·</a><input type=hidden name='guact' value='$gid'></td>
 	</tr></table>
 SCMBBS;
 	echo "<table><tr><td><table>";
@@ -314,31 +314,31 @@ SCMBBS;
 	}
 	echo "</table></td><td valign=top>";
 	if(isset($unknow_usr)){
-		$tip=$unknow_usr."ÓÃ»§²»´æÔÚ";
+		$tip=$unknow_usr."ç”¨æˆ·ä¸å­˜åœ¨";
 	}
-	else $tip="ÌáÊ¾£º¶àÓÃ»§ÃûÖ®¼äÇëÓÃ·ÖºÅ';'»ò','»ò¿Õ¸ñ' '½øĞĞ·Ö¸î»òÕßÃ¿ĞĞÒ»¸öÓÃ»§¡£";
+	else $tip="æç¤ºï¼šå¤šç”¨æˆ·åä¹‹é—´è¯·ç”¨åˆ†å·';'æˆ–','æˆ–ç©ºæ ¼' 'è¿›è¡Œåˆ†å‰²æˆ–è€…æ¯è¡Œä¸€ä¸ªç”¨æˆ·ã€‚";
 	echo <<<HTML
 <div class='rt' id='batchdiv'>
 	<img src='../img/close.bmp' ALT='close' style='float:right;' onclick="showadd('1')">
 	<textarea id='batchinput' name='batchinput' rows=13 cols=24 onfocus="cleartip()">$tip</textarea>
-	<button type=button onclick='batchadd()'>Ìí¼Ó</button>
+	<button type=button onclick='batchadd()'>æ·»åŠ </button>
 </div>
 HTML;
 	echo "</td></tr></table>";
 	//*****************
-	echo "<h4>×é¸ºÔğÈË</h4>";
+	echo "<h4>ç»„è´Ÿè´£äºº</h4>";
 if($isadmin)
 	echo  <<<SCMBBS
   	<table><tr>
-		<td width=100><input name="act" type=submit value="É¾³ı" onclick="if(confirm('È·ÊµÒªÉ¾³ıÂğ?')){setowner();return true;}return false;"><input type=hidden name="editowner" id="editowner" /></td>
-		<td ><input type='text' name='groupowner' id='groupowner' ><input type=submit value='Ìí¼Ó¸ºÔğÈË' onclick='return addowner()'></td>
+		<td width=100><input name="act" type=submit value="åˆ é™¤" onclick="if(confirm('ç¡®å®è¦åˆ é™¤å—?')){setowner();return true;}return false;"><input type=hidden name="editowner" id="editowner" /></td>
+		<td ><input type='text' name='groupowner' id='groupowner' ><input type=submit value='æ·»åŠ è´Ÿè´£äºº' onclick='return addowner()'></td>
 	</tr></table>
 SCMBBS;
 	echo "<table>$ownerArray</table>";
 	//&******************	
-	echo "<a id='grouppriv'></a><h4>×éÈ¨ÏŞ</h4><table>";
-	if($isadmin)$st='²Ù×÷';
-	echo "<tr><td>Ä¿Â¼</td><td></td><td>È¨ÏŞ</td><td>$st</td></tr>";
+	echo "<a id='grouppriv'></a><h4>ç»„æƒé™</h4><table>";
+	if($isadmin)$st='æ“ä½œ';
+	echo "<tr><td>ç›®å½•</td><td></td><td>æƒé™</td><td>$st</td></tr>";
 	$query="select id,repository,path,permission from svnauth_g_permission where group_id=$gid";
 	$result=mysql_query($query);
 	while (($result)and($row= mysql_fetch_array($result, MYSQL_BOTH))) {
@@ -352,24 +352,24 @@ SCMBBS;
 	$repos=$row['repository'];
 	$path=$row['path'];
 	$permission=$row['permission'];
-	if($isadmin)$st="<a href='?d_gid=$gid&rowid=$id'   onclick=\"return confirm('È·ÊµÒªÉ¾³ıÂğ?')\">É¾³ı</a>";
+	if($isadmin)$st="<a href='?d_gid=$gid&rowid=$id'   onclick=\"return confirm('ç¡®å®è¦åˆ é™¤å—?')\">åˆ é™¤</a>";
 	echo "<tr class=$tr_class><td>$repos{$path}</td><td width=100>&nbsp;</td><td>$permission</td><td>$st</td></tr>";
 	}
 	echo "</table>";
-	echo "<hr>µ¼º½£º<a href='$fromurl'>·µ»Ø</a>";
+	echo "<hr>å¯¼èˆªï¼š<a href='$fromurl'>è¿”å›</a>";
 	if($isadmin)echo "</form>";
 }
 if(isset($_GET['gid']) )exit;
 $query="select svnauth_group.group_id,svnauth_group.group_name from svnauth_group,svnauth_groupuser where svnauth_groupuser.group_id=svnauth_group.group_id and svnauth_groupuser.user_id=". $_SESSION['uid'] . " group by group_name";
-$groupview="<a href='?a=1'>--><u>²é¿´ËùÓĞ×é</u></a>";
+$groupview="<a href='?a=1'>--><u>æŸ¥çœ‹æ‰€æœ‰ç»„</u></a>";
 if(isset($_GET['a']) )
 {
 	$query="select group_id,group_name from svnauth_group group by group_name";
-	$groupview="<a href='?reflash'>--><u>²é¿´ÎÒËùÔÚ×é</u></a>";
+	$groupview="<a href='?reflash'>--><u>æŸ¥çœ‹æˆ‘æ‰€åœ¨ç»„</u></a>";
 }
 $result = mysql_query($query);
 	echo  <<<SCMBBS
-<h3>È¨ÏŞ×éÁĞ±í&nbsp; &nbsp; &nbsp;$groupview</h3>	
+<h3>æƒé™ç»„åˆ—è¡¨&nbsp; &nbsp; &nbsp;$groupview</h3>	
 	<form method="post" action="group_modify.php" name='groupform' onsubmit="return fCheck($ii)">	
 SCMBBS;
 if($_SESSION['role']=="admin")
@@ -377,19 +377,19 @@ if($_SESSION['role']=="admin")
 		<table class='subtitle'>
 	   <tr>
 	  <td width="40"><input type=hidden name='del_g' value='del_g'></td>
-		<td><input name="action" type=submit value="É¾³ı" onclick="return confirm('È·ÊµÒªÉ¾³ıÕâĞ©×éÂğ?');"></td><td width=80>&nbsp;</td><td><a href="#addgroup" class='bt'><font color=white>´´½¨×é</font></a></td><td width=80>&nbsp;</td><td><input name="action" type=submit value="ÖØÃüÃû"></td><td width=80>&nbsp;</td><td><input name="action" type=submit value="¸´ÖÆ×é"></td>	
+		<td><input name="action" type=submit value="åˆ é™¤" onclick="return confirm('ç¡®å®è¦åˆ é™¤è¿™äº›ç»„å—?');"></td><td width=80>&nbsp;</td><td><a href="#addgroup" class='bt'><font color=white>åˆ›å»ºç»„</font></a></td><td width=80>&nbsp;</td><td><input name="action" type=submit value="é‡å‘½å"></td><td width=80>&nbsp;</td><td><input name="action" type=submit value="å¤åˆ¶ç»„"></td>	
 	   </tr>
 	</table>
 SCMBBS;
 	echo <<<SCMBBS
 	<table class=detail cellpadding=5px>
 	  <tr class=title>
-	     <td></td><td>×éÃû</td><td></td>
+	     <td></td><td>ç»„å</td><td></td>
 	  </tr>
 SCMBBS;
 $i=0;
 while (($result)and($row= mysql_fetch_array($result, MYSQL_BOTH))) {
-		//¶¨ÒåĞĞµÄÑÕÉ«Ïà¸ô
+		//å®šä¹‰è¡Œçš„é¢œè‰²ç›¸éš”
 	if ($tr_class=="trc1"){
 		$tr_class="trc2";
 	}else
@@ -399,15 +399,15 @@ while (($result)and($row= mysql_fetch_array($result, MYSQL_BOTH))) {
 	$i++;
 	$group_id=$row['group_id'];
 	$group_name=$row['group_name'];
-	echo "<tr class=$tr_class><td><input  name=\"groupArray[$i]\"  id=\"groupArray[$i]\"  value=\"$group_id\" type=checkbox></td><td>$group_name</td><td><a href='viewgroup.php?gid={$group_id}&grp=$group_name'>×éÏêÇé$i</a></td></tr>";
+	echo "<tr class=$tr_class><td><input  name=\"groupArray[$i]\"  id=\"groupArray[$i]\"  value=\"$group_id\" type=checkbox></td><td>$group_name</td><td><a href='viewgroup.php?gid={$group_id}&grp=$group_name'>ç»„è¯¦æƒ…$i</a></td></tr>";
 }
 echo "</table></form>";
 ?>
 <a id='addgroup'></a>
 <form method="post" action="#" name='newgroupform' onsubmit='return checkg();'>
  <fieldset class='fset'>
- <legend>´´½¨ĞÂ×é</legend>
- ×éÃû£º<input name='groupname' id='groupname' type=text><input type=submit value='±£´æ²¢Ìí¼Ó×éÔ±'/>
+ <legend>åˆ›å»ºæ–°ç»„</legend>
+ ç»„åï¼š<input name='groupname' id='groupname' type=text><input type=submit value='ä¿å­˜å¹¶æ·»åŠ ç»„å‘˜'/>
  </fieldset>
 </form>
 <?php 	include('../template/footer.tmpl'); ?>

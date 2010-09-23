@@ -1,6 +1,6 @@
 <?php
    session_start();
-header("content-type:text/html; charset=gb2312");
+include('../include/charset.php');
    error_reporting(0);
 ?>
 <style type="text/css">
@@ -49,24 +49,24 @@ li:hover ul, li.over ul{display:block;}
 <td width="80%">
 <table align="center" width="90%" border="0"  cellspacing="0"  cellpadding="4" class='g2' >
 <tr>
-<td align="center" id='usrf'  width="14%" ><a href='../user/viewuser.php' target='main1' onclick="setfocus('usrf');">ÓÃ»§¹ÜÀí</a></td>
-<td align="center" id='grpf'  width="14%" ><a href='../user/viewgroup.php' target='main1' onclick="setfocus('grpf');">×é¹ÜÀí</a></td>
-<td align="center" id='privf' width="14%"><a href='../template/index.htm' target='main1' onclick="setfocus('privf');">È¨ÏŞ¹ÜÀí</a></td>
-<td align="center" id='stf' width="12%" ><a href='../config/index.php' target='main1' onclick="setfocus('stf');">ÉèÖÃ</a></td>
-<td align="center" id='toolf' width="12%" ><a href='../extension/index.php' target='main1' onclick="setfocus('toolf');">¹¤¾ß</a></td>
+<td align="center" id='usrf'  width="14%" ><a href='../user/viewuser.php' target='main1' onclick="setfocus('usrf');">ç”¨æˆ·ç®¡ç†</a></td>
+<td align="center" id='grpf'  width="14%" ><a href='../user/viewgroup.php' target='main1' onclick="setfocus('grpf');">ç»„ç®¡ç†</a></td>
+<td align="center" id='privf' width="14%"><a href='../template/index.htm' target='main1' onclick="setfocus('privf');">æƒé™ç®¡ç†</a></td>
+<td align="center" id='stf' width="12%" ><a href='../config/index.php' target='main1' onclick="setfocus('stf');">è®¾ç½®</a></td>
+<td align="center" id='toolf' width="12%" ><a href='../extension/index.php' target='main1' onclick="setfocus('toolf');">å·¥å…·</a></td>
 
 <td>
-<div ALIGN="right" class='t1'>»¶Ó­Äú£¬
+<div ALIGN="right" class='t1'>æ¬¢è¿æ‚¨ï¼Œ
   <?php 
      
       if (isset($_SESSION['username'])) 
-      {echo $_SESSION['username']."£¡";
-              echo "&nbsp;&nbsp;<a href=\"../user/logout.php\" target='_parent'>ÍË³ö</a>" ;
+      {echo $_SESSION['username']."ï¼";
+              echo "&nbsp;&nbsp;<a href=\"../user/logout.php\" target='_parent'>é€€å‡º</a>" ;
       } else{ 
-        echo "ÓÎÏÀ£¡";echo "£¡&nbsp;&nbsp;<a href=\"../user/loginfrm.php\" target='_parent'>µÇÂ¼</a>" ;
+        echo "æ¸¸ä¾ ï¼";echo "ï¼&nbsp;&nbsp;<a href=\"../user/loginfrm.php\" target='_parent'>ç™»å½•</a>" ;
       }
  ?>
-&nbsp;&nbsp;<a href="/" target='_parent'>·µ»ØÊ×Ò³</a>
+&nbsp;&nbsp;<a href="/" target='_parent'>è¿”å›é¦–é¡µ</a>
 </div>
 </td>
 </tr>
@@ -75,11 +75,11 @@ li:hover ul, li.over ul{display:block;}
 </td>
 </tr></table>
 <ul id='menu'>
-<li><a href='http://www.scmbbs.com/cn/maia.php' target='_blank' style="width:40;">°ïÖú</a>
+<li><a href='http://www.scmbbs.com/cn/maia.php' target='_blank' style="width:40;">å¸®åŠ©</a>
   <ul>
-     	<li><a href='http://www.scmbbs.com/cn/maia/2009/6/maia1.php' target='_blank'>¹ØÓÚ</a></li>
-	<li><a href='' target='_blank'>²éÑ¯ÊÚÈ¨ºÅ</a></li>
-	<li><a href='http://code.google.com/p/svnmaia/issues/list' target='_blank'>·´À¡</a></li>
+     	<li><a href='http://www.scmbbs.com/cn/maia/2009/6/maia1.php' target='_blank'>å…³äº</a></li>
+	<li><a href='' target='_blank'>æŸ¥è¯¢æˆæƒå·</a></li>
+	<li><a href='http://code.google.com/p/svnmaia/issues/list' target='_blank'>åé¦ˆ</a></li>
   </ul>
 </li>
 </ul>

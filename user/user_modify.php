@@ -1,10 +1,10 @@
 <?php
    session_start();
-header("content-type:text/html; charset=gb2312");
+include('../include/charset.php');
 ?>
 <?php
 if (!isset($_SESSION['username'])){	
-	echo "ÇëÏÈ<a href='./loginfrm.php'>µÇÂ¼</a> £¡";
+	echo "è¯·å…ˆ<a href='./loginfrm.php'>ç™»å½•</a> ï¼";
 	echo" <script>setTimeout('document.location.href=\"./loginfrm.php\"',0)</script>";  	
 	exit;
 }
@@ -24,7 +24,7 @@ if (mysql_select_db(DBNAME))
 	$paras_array='';
 	if(empty($userArray))
 	{
-	  echo " <script>window.alert(\"Ñ¡ÔñÎª¿Õ£¡\")</script>";
+	  echo " <script>window.alert(\"é€‰æ‹©ä¸ºç©ºï¼\")</script>";
 			echo " <script>setTimeout('document.location.href=\"javascript:history.back()\"',3)</script>";
 			exit;	
 	}			
@@ -35,7 +35,7 @@ if (mysql_select_db(DBNAME))
 	}
  
 	$paras=implode(' or ',$paras_array);
-	if($action == 'É¾³ı')
+	if($action == 'åˆ é™¤')
 	{
 		if ($_SESSION['role']!='admin'){
 			echo "You are not allowed to access this file!";
@@ -54,7 +54,7 @@ if (mysql_select_db(DBNAME))
 		//header("Cache-Control: no-cache");
 		//echo "<script>window.history.back();</script>";
 	}
-	if($action == 'ÉèÎª³¬¼¶ÓÃ»§')
+	if($action == 'è®¾ä¸ºè¶…çº§ç”¨æˆ·')
 	{
 		if ($_SESSION['role']!='admin'){
 			echo "You are not allowed to access this file!";
@@ -66,7 +66,7 @@ if (mysql_select_db(DBNAME))
 		$result=mysql_query($query);
 		echo " <script>setTimeout('top.location.href=\"../default.htm\"',0)</script>";
 	}
-	if($action == 'È¡Ïû³¬¼¶ÓÃ»§')
+	if($action == 'å–æ¶ˆè¶…çº§ç”¨æˆ·')
 	{
 		if ($_SESSION['role']!='admin'){
 			echo "You are not allowed to access this file!";
@@ -82,18 +82,18 @@ if (mysql_select_db(DBNAME))
 
 	if($action=='chpasswd')
 	{
-		echo "Ôİ²»Ìá¹©³¬¼¶ÓÃ»§ÖØÖÃÃÜÂë¹¦ÄÜ(ºÃÏñÃ»±ØÒªÄØ)¡£<br>ÈçÒªĞŞ¸ÄÃÜÂë£¬ÇëÊ¹ÓÃ<a href='../extension/pwdhelp.php'>ĞŞ¸ÄÃÜÂë¹¤¾ß</a>¡£<br>ÈçÄúÈÏÎª´Ë¹¦ÄÜÊÇ±ØÒªµÄ£¬Çëµ½ÂÛÌ³<a href='http://www.scmbbs.com/cn/maia.php'>·´À¡</a>¡£";
+		echo "æš‚ä¸æä¾›è¶…çº§ç”¨æˆ·é‡ç½®å¯†ç åŠŸèƒ½(å¥½åƒæ²¡å¿…è¦å‘¢)ã€‚<br>å¦‚è¦ä¿®æ”¹å¯†ç ï¼Œè¯·ä½¿ç”¨<a href='../extension/pwdhelp.php'>ä¿®æ”¹å¯†ç å·¥å…·</a>ã€‚<br>å¦‚æ‚¨è®¤ä¸ºæ­¤åŠŸèƒ½æ˜¯å¿…è¦çš„ï¼Œè¯·åˆ°è®ºå›<a href='http://www.scmbbs.com/cn/maia.php'>åé¦ˆ</a>ã€‚";
 		
 	}
-	if( $action == '±à¼­')
+	if( $action == 'ç¼–è¾‘')
 	{
 		echo <<<HTML
 		<form method="post" action="">
 		<fieldset>
-		<legend>±à¼­ÓÃ»§ĞÅÏ¢</legend>
+		<legend>ç¼–è¾‘ç”¨æˆ·ä¿¡æ¯</legend>
 		<input type=hidden name=action value='modify'>
 		<table  cellspacing='1' cellpadding='0' width='70%' border='0' >
-		<tr><th>ÓÃ»§Ãû</th><th>ĞÕÃû</th><th>¹¤ºÅ</th><th>²¿ÃÅ</th><th>ÓÊ¼ş</th></tr>
+		<tr><th>ç”¨æˆ·å</th><th>å§“å</th><th>å·¥å·</th><th>éƒ¨é—¨</th><th>é‚®ä»¶</th></tr>
 HTML;
 		if ($_SESSION['role']=='admin'){
 			$query="select user_id,user_name,full_name,email,department,staff_no from svnauth_user where $paras";
@@ -135,21 +135,21 @@ HTML;
 		echo <<<HTML
 		</table>
 		<table style="position:relative;left:300px;top:20px" >
-		<tr><td><input style="width:80" type=submit value="È·¶¨" ></td><td><input style="width:80" type=reset value="È¡Ïû" onclick="turnback()"></td></tr>
+		<tr><td><input style="width:80" type=submit value="ç¡®å®š" ></td><td><input style="width:80" type=reset value="å–æ¶ˆ" onclick="turnback()"></td></tr>
 	</table>
 		</fieldset></form>
-<br><a href="../priv/viewpriv.php?u=$user_id">²é¿´ÎÒµÄÈ¨ÏŞÏêÇé</a>
+<br><a href="../priv/viewpriv.php?u=$user_id">æŸ¥çœ‹æˆ‘çš„æƒé™è¯¦æƒ…</a>
 HTML;
 	}
-	if( $action == 'ÖØÖÃÃÜÂë')
+	if( $action == 'é‡ç½®å¯†ç ')
 	{
 		echo <<<HTML
 		<form method="post" action="">
 		<fieldset>
-		<legend>ÖØÖÃÓÃ»§ÃÜÂë</legend>
+		<legend>é‡ç½®ç”¨æˆ·å¯†ç </legend>
 		<input type=hidden name=action value='chpasswd'>
 		<table  cellspacing='1' cellpadding='0' width='70%' border='0' >
-		<tr><th>ÓÃ»§Ãû</th><th>ĞÂÃÜÂë</th><th>ĞÂÃÜÂëÈ·ÈÏ</th></tr>
+		<tr><th>ç”¨æˆ·å</th><th>æ–°å¯†ç </th><th>æ–°å¯†ç ç¡®è®¤</th></tr>
 HTML;
 		if ($_SESSION['role']=='admin'){
 			$query="select user_id,user_name,full_name from svnauth_user where $paras";
@@ -167,7 +167,7 @@ HTML;
 		echo <<<HTML
 		</table>
 		<table style="position:relative;left:300px;top:20px" >
-		<tr><td><input style="width:80" type=submit value="È·¶¨" ></td><td><input style="width:80" type=reset value="È¡Ïû" onclick="turnback()"></td></tr>
+		<tr><td><input style="width:80" type=submit value="ç¡®å®š" ></td><td><input style="width:80" type=reset value="å–æ¶ˆ" onclick="turnback()"></td></tr>
 	</table>
 		</fieldset></form>
 HTML;

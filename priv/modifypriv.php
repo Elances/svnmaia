@@ -1,24 +1,24 @@
 <?php
 session_start();
-header("content-type:text/html; charset=gb2312");
+include('../include/charset.php');
 if(file_exists('../config/config.php'))
 {
 	include('../config/config.php');
 }else
 {
-	echo "window.alert('ÇëÏÈ½øÐÐÏµÍ³ÉèÖÃ!')";
+	echo "window.alert('è¯·å…ˆè¿›è¡Œç³»ç»Ÿè®¾ç½®!')";
 	echo" <script>setTimeout('document.location.href=\"../config/index.php\"',0)</script>";  	
 	exit;
 }
  error_reporting(0);
 if (!isset($_SESSION['username'])){	
-	echo "ÇëÏÈ<a href='../user/loginfrm.php'>µÇÂ¼</a> £¡";
+	echo "è¯·å…ˆ<a href='../user/loginfrm.php'>ç™»å½•</a> ï¼";
 	echo" <script>setTimeout('document.location.href=\"../user/loginfrm.php\"',0)</script>";  	
 	exit;
 }
 if (($_SESSION['role'] !='admin')and($_SESSION['role'] !='diradmin'))
 {
-	echo "ÄúÎÞÈ¨½øÐÐ´Ë²Ù×÷£¡";
+	echo "æ‚¨æ— æƒè¿›è¡Œæ­¤æ“ä½œï¼";
 	exit;
 }
 include('../../../config.inc');
@@ -32,14 +32,14 @@ include('../include/dbconnect.php');
 $is_effected=false;
 if (mysql_select_db(DBNAME))
 {
-	//Ð£Ñé²ÎÊýÕýÈ·ÐÔ
+	//æ ¡éªŒå‚æ•°æ­£ç¡®æ€§
 	$repos=mysql_real_escape_string($_POST['repos']);
 	$path=mysql_real_escape_string($_POST['path']);
 	$url="./dirpriv.php?d=$repos{$path}";
 	$para=array($repos,$path);
 	if(keygen($para) != $_POST['sig'])
 	{
-		echo "²ÎÊý·Ç·¨£¡ÇëÎðÔ½È¨²Ù×÷£¡";
+		echo "å‚æ•°éžæ³•ï¼è¯·å‹¿è¶Šæƒæ“ä½œï¼";
 		exit;
 	}
 	$adminonly=$_POST['adminonly'];
@@ -70,7 +70,7 @@ if (mysql_select_db(DBNAME))
 	}else
 		if(!empty($_POST['fromdir']))
 		{
-			//´¦ÀíÄ¿Â¼
+			//å¤„ç†ç›®å½•
 $dir=trim(mysql_real_escape_string($_POST['fromdir']));
 $dir=str_replace($svnurl,'',$dir);
 $dir=($dir{0}=='/')?(substr($dir,1)):($dir);
@@ -96,7 +96,7 @@ if (mysql_num_rows($result) > 0){
 
 }else
 {
-	$err .= "<strong>Error£º</strong>$f_repos{$dir} ¸ÃÄ¿Â¼»¹Ã»ÓÐÉèÖÃÈ¨ÏÞ,ÎÞ·¨´Ó¸ÃÄ¿Â¼¸´ÖÆÈ¨ÏÞ¡£";
+	$err .= "<strong>Errorï¼š</strong>$f_repos{$dir} è¯¥ç›®å½•è¿˜æ²¡æœ‰è®¾ç½®æƒé™,æ— æ³•ä»Žè¯¥ç›®å½•å¤åˆ¶æƒé™ã€‚";
 }
 
 	}else{
@@ -162,26 +162,26 @@ if (mysql_num_rows($result) > 0){
 
 	}
 	if(!empty($err))
-		echo "±£´æÈ¨ÏÞ¹ý³ÌÖÐ·¢Éú´íÎó£¬¿ÉÄÜÈ¨ÏÞÃ»ÓÐÉèÖÃ³É¹¦£¡³ö´íÐÅÏ¢£º<br>$err";
+		echo "ä¿å­˜æƒé™è¿‡ç¨‹ä¸­å‘ç”Ÿé”™è¯¯ï¼Œå¯èƒ½æƒé™æ²¡æœ‰è®¾ç½®æˆåŠŸï¼å‡ºé”™ä¿¡æ¯ï¼š<br>$err";
 	else
 	{
 		if($is_effected)
 		{
 	echo <<<HTML
 <p style='text-align:center;line-height:2;border:solid 1px;background:#ecf0e1;margin-top:100px;'>
-<br>±£´æ³É¹¦£¡
+<br>ä¿å­˜æˆåŠŸï¼
 <br>
-<a href="$url">·µ»Ø¼ÌÐø²Ù×÷</a> 
+<a href="$url">è¿”å›žç»§ç»­æ“ä½œ</a> 
 </p>
 HTML;
 
 		}else
 	echo <<<HTML
 <p style='text-align:center;line-height:2;border:solid 1px;background:#ecf0e1;margin-top:100px;'>
-<br>±£´æ³É¹¦£¬µ«ÉÐÎ´ÉúÐ§£¡
-<br>ÄúÒª£º
-<a href="$url">·µ»Ø¼ÌÐø²Ù×÷</a> <br>»¹ÊÇ£º
-<a href="./gen_access.php?fromurl=$url">Á¢¿ÌÉúÐ§£¨Éú³ÉaccessÎÄ¼þ)</a>?
+<br>ä¿å­˜æˆåŠŸï¼Œä½†å°šæœªç”Ÿæ•ˆï¼
+<br>æ‚¨è¦ï¼š
+<a href="$url">è¿”å›žç»§ç»­æ“ä½œ</a> <br>è¿˜æ˜¯ï¼š
+<a href="./gen_access.php?fromurl=$url">ç«‹åˆ»ç”Ÿæ•ˆï¼ˆç”Ÿæˆaccessæ–‡ä»¶)</a>?
 </p>
 HTML;
 	}
