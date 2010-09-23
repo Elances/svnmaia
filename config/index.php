@@ -4,8 +4,8 @@ error_reporting(0);
 if (!isset($_SESSION['username'])){	
 //	exit;
 }
-header("content-type:text/html; charset=gb2312");
-if (($_SESSION['role'] !='admin')and($_SESSION['role'] !='diradmin'))
+include('../include/charset.php');
+if ($_SESSION['role'] !='admin')
 {
 	echo "您无权进行此操作！";
 	exit;
@@ -51,6 +51,13 @@ if (mysql_select_db(DBNAME))
 			}
 			if($para=='svnparentpath')$v=str_replace('\\','/',$v);
 			if($para=='use_smtp_authz')$flag=true;
+			if($para=='mail_method')
+			{
+				if((trim($_POST['smtp_server'])=='localhost')||($_POST['smtp_server']=='127.0.0.1'))
+				{
+					$v='1';
+				}else  $v='2';
+			}
 			$para=mysql_real_escape_string($para);	
 			$v="'".mysql_real_escape_string($v)."'";
 			$query="update svnauth_para set value=$v where para='$para'";
@@ -86,6 +93,7 @@ if (mysql_select_db(DBNAME))
 	$para_array['htpasswd']='htpasswd';
 	$para_array['smtp_server']='localhost';
 	$para_array['write_t']='180';
+	$para_array['mail_method']='1';
 	$para_array['read_t']='365';
 	$para_array['user_t']='1095';
 	$para_array['email_ext']='@yahoo.com.cn';
@@ -165,7 +173,7 @@ function showadvance(myid)
  </span>
 
 <br>7、邮件设置: 
-<br>&nbsp;&nbsp;&nbsp;&nbsp;smtp_server:<input type='text' class='ipt'  readonly name='smtp_server' id='smtp_server'  value="<?php echo $para_array['smtp_server'];?>"> <span class='rt'> <a href="#" onclick="modify('smtp_server')">修改</a></span>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;smtp_server:<input type='text' class='ipt'  readonly name='smtp_server' id='smtp_server'  value="<?php echo $para_array['smtp_server'];?>"><input type=hidden name='mail_method' id='mail_method'  value="<?php echo $para_array['mail_method'];?>"> <span class='rt'> <a href="#" onclick="modify('smtp_server')">修改</a></span>
 <span class='rt2'><input type='button' onclick="showadvance('email_advance')" value='高级' /></span>
 <span id='email_advance' style='display:<?php echo $display ?>;padding-left:20px;line-height:25px;'>
 <br>&nbsp;&nbsp;&nbsp;<input type='checkbox' name='use_smtp_authz' value='true' <?php echo $smtp_authz ?> id='use_authz' onclick="showadvance('smtp_authz')"><label for='use_authz'>SMTP需要认证</label>

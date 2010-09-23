@@ -26,10 +26,17 @@ if ($_SESSION['role'] !='admin')
 在此页面中，您可以为所有用户设定一个有效期(从今天开始算起的有效天数，如有效期设为1天，则明天到期）。当用户有效期到时，系统会提前2个星期为每个用户发激活邮件。用户可以通过邮件的链接对有效期进行重新续订。如果用户不续订，则有效期过后，系统会自动删除用户及其对应权限信息，以达到清理无效用户的目的。
 <br><strong>重设有效期：</strong>此功能将为选定用户指定“用户有效期限”，过期用户将被删除。（默认下，用户被删除前2周内会收到即将过期的邮件通知，并可通过邮件进行激活。）
 <br><strong>到期不通知：</strong>此功能将使得所选定的用户在到期时，会被默默删除，而不会给用户发任何提醒激活邮件(状态值>3的用户将不发送激活邮件)。
+<br><strong>状态：</strong>激活邮件的发送次数，当状态值>3时将不再发送激活邮件。
 <p class='tb1'>
 <?php echo '今天：'.date("Y-m-d");?>
 </p>
+<p>
+<form action="" method="get" name="searchform">
+用户过滤：<input type="text" size="20" name="username"><input type="submit" onclick="return searchform.username.value;" value="搜索">&nbsp;&nbsp;&nbsp;&nbsp;
+输入组名：<input type="text" size="20" name="groupname"><input type="submit" onclick="return searchform.groupname.value;" value="列出组用户">
+</form>
 
+</p>
 <script language="javascript">
 <!--
 var odd=true;
@@ -42,6 +49,7 @@ function fCheck(ii){
 		return false;
 	}
 }	
+
 function checkuser(ii)
 { 
 	var ii;
@@ -85,7 +93,19 @@ function selall(ii)
 <?php
 include('../../../config.inc');
 include('../include/dbconnect.php');
-$query='select user_id,user_name,full_name,expire,infotimes from svnauth_user order by expire ASC';
+$para='';
+$user=trim(mysql_real_escape_string($_GET['username']));
+$group=trim(mysql_real_escape_string($_GET['groupname']));
+if(!empty($user))
+{
+	$para=" where user_name like '%$user%' ";
+}
+$query="select user_id,user_name,full_name,expire,infotimes from svnauth_user  $para order by expire ASC";
+if(!empty($group))
+{
+	if(!empty($para))$para=" and user_name like '%$user%' ";
+	$query="select svnauth_user.user_id,user_name,full_name,expire,infotimes from svnauth_user,svnauth_group,svnauth_groupuser where svnauth_group.group_name = '$group'  and svnauth_group.group_id=svnauth_groupuser.group_id and svnauth_groupuser.user_id=svnauth_user.user_id $para order by expire ASC";
+}
 $result = mysql_query($query);
 	$ii=mysql_num_rows($result);
 	echo  <<<SCMBBS

@@ -75,6 +75,21 @@ if(! empty($_GET['username'])){
   echo "</table>";
 	
 }
+if($_SESSION['role'] != "admin")
+{
+	echo <<<SCMBBS
+<h3>用户管理</h3>
+<br><a href='reg_user.php'>注册</a>
+<br><a href='../extension/topwd.php'>找回密码</a>
+<br><a href='../extension/pwdhelp.php'>修改密码</a>
+<br>&nbsp;
+<h3>权限管理</h3>
+<br><a href='../extension/autopriv/rtpriv.php'>权限申请</a>
+<br><a href="../priv/viewpriv.php?u={$_SESSION['uid']}">权限查询</a>
+<br>&nbsp;
+<h3>其他</h3>
+SCMBBS;
+}
 if (!((isset($_SESSION['username']))and($_SESSION['role']=="admin"))){ 
 	include('../template/footer.tmpl');
 	exit;
@@ -176,7 +191,7 @@ if(!is_numeric($page))
 	{
 	  $query = "select user_id,user_name,full_name,email,staff_no,department from svnauth_user ORDER BY user_name limit $begin,$perpage;";
 	}else{
-	  $query = "select user_id,user_name,full_name,email,staff_no,department from svnauth_user where user_name like \"{$pw}%\" ORDER BY user_name;";
+	  $query = "select user_id,user_name,full_name,email,staff_no,department from svnauth_user where user_name like '{$pw}%' ORDER BY user_name;";
 	}
 	if($_GET['p']=='a')
 	  $query = "select user_id,user_name,full_name,email,staff_no,department from svnauth_user ORDER BY user_name;";

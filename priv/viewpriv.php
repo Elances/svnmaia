@@ -12,15 +12,17 @@ include('../include/dbconnect.php');
 $user_id=$_GET['u'];
 if(!is_numeric($user_id))
 {
-	echo "参数非法！";
-	exit;
+	echo "参数非法！转向显示你自己的权限。";
+	$user_id=$_SESSION['uid'];	
 }
+$querystr=$_SERVER['QUERY_STRING'];
 pri_modify();
 function pri_modify()
 {
+	global $uinfo,$querystr;
 	if($_SESSION['role']!='admin')return 1;
 	$user_id=$_GET['u'];
-	$action=mysql_real_escape_string($_GET['action']);
+	$action=$_GET['action'];
 	$repos=mysql_real_escape_string($_GET['repos']);
 	$path=mysql_real_escape_string($_GET['path']);
 	if(empty($user_id)or empty($repos) or empty($path))return 1;
@@ -47,6 +49,24 @@ function pri_modify()
 		$query="delete from svnauth_permission where user_id=$user_id and repository='$repos' and path='$path' ";
 		mysql_query($query);
 	}
+	$uinfo="变更已保存，但尚未生效，请点击<a href='./gen_access.php?fromurl=./viewpriv.php?$querystr'>【立刻生效】</a>";
+}
+group_modify();
+function group_modify()
+{
+	global $uinfo,$querystr;
+	if($_SESSION['role']!='admin')return 1;
+	$user_id=$_GET['u'];
+	$gid=$_GET['gid'];
+	if(!is_numeric($user_id))return 1;
+	if(!is_numeric($gid))return 1;
+	$action=$_GET['action'];
+	if($action=='out')
+	{
+		$query="delete from svnauth_groupuser where user_id=$user_id and group_id=$gid";
+		mysql_query($query);
+		$uinfo="变更已保存，但尚未生效，请点击<a href='./gen_access.php?fromurl=./viewpriv.php?$querystr'>【立刻生效】</a>";
+	}
 }
 $query="select repository,path,permission from svnauth_permission where user_id = $user_id";
 //echo $query;exit;
@@ -61,11 +81,13 @@ if($_SESSION['role']=='admin')
 	$str='操作';
 }
 echo <<<HTML
+
 <style type='text/css'>
 .trc2{background: #d7d7d7;font-size:10pt;}
 .trc1{font-size:10pt
 </style>
 HTML;
+echo $uinfo;
 echo "<table><tr><th>路径</th><th>权限</th><th>$str</th></tr>";
 while (($result)and($row= mysql_fetch_array($result, MYSQL_BOTH))) {
 	$repos=$row['repository'];
@@ -90,6 +112,28 @@ while (($result)and($row= mysql_fetch_array($result, MYSQL_BOTH))) {
 	}
 	($tr_class=="trc1")?($tr_class="trc2"):($tr_class="trc1");	
 	echo "<tr class=$tr_class><td>$path</td><td>$permission</td><td>$act</td></tr>";
+}
+echo "</table>";
+$query="select svnauth_group.group_name,svnauth_group.group_id from svnauth_groupuser,svnauth_group where svnauth_groupuser.group_id=svnauth_group.group_id and svnauth_groupuser.user_id = $user_id";
+$result = mysql_query($query);
+echo "<h4>所在权限组:</h4>";
+echo "<table>";
+while (($result)and($row= mysql_fetch_array($result, MYSQL_BOTH))) {
+	$groupname=$row['group_name'];
+	$gid=$row['group_id'];
+	if ($tr_class=="trc1"){
+		$tr_class="trc2";
+	}else
+	{			
+		$tr_class="trc1";
+	}
+	$act='';
+	if($_SESSION['role']=='admin')
+	{
+		$act="&nbsp;&nbsp;<a href='./viewpriv.php?action=out&u={$user_id}&gid={$gid}'>退除</a>";
+	}
+
+	echo "<tr class=$tr_class><td><a href='../user/viewgroup.php?gid=$gid&grp=$groupname&fromurl=../priv/viewpriv.php?$querystr'>$groupname</a></td><td>$act</td></tr>";
 }
 echo "</table>";
 //--------

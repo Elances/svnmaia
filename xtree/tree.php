@@ -7,6 +7,7 @@ if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
 	header("Content-Type: text/xml;  charset=gb2312");
 }else
 {
+	$_GET['d']=iconv("GB2312","UTF-8",$_GET['d']);
 	$path=urlencode(escapeshellcmd($_GET['d']));
 	header("Content-Type: text/xml;  charset=utf-8");
 }
@@ -57,6 +58,7 @@ if($d == '0')
 	$i=1;
 	foreach($dirs_arr as $dir)
 	{
+		$dir=iconv("GB2312","UTF-8",$dir);
 		if($dir{strlen($dir)-1}=='/')
 		{
 			$dir_utf=urlencode($dir);
