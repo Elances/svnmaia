@@ -19,7 +19,7 @@ $passwd0=$_POST['passwd0'];
 foreach($_POST as $key=>$value){
 	$value=htmlspecialchars($value,ENT_QUOTES);
 	$_POST["$key"]=mysql_real_escape_string($value,$mlink);
-	if (function_exists('iconv'))$_POST["$key"]=iconv("UTF-8","GB2312",$_POST["$key"]);
+	if (function_exists('iconv'))$_POST["$key"]=iconv("GB2312","UTF-8",$_POST["$key"]);
 }
 $username=trim($_POST['username']);
 $username=str_replace(' ','',$username);
