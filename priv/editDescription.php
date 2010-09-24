@@ -40,7 +40,7 @@ if (mysql_select_db(DBNAME))
 		echo "参数非法！请勿越权操作！";
 		exit;
 	}
-	if (function_exists('iconv'))$_POST["newdescript"]=iconv("GB2312","UTF-8",$_POST["newdescript"]);
+#	if (function_exists('iconv'))$_POST["newdescript"]=iconv("GB2312","UTF-8",$_POST["newdescript"]);
 	$des=safe($_POST['newdescript']);
 	$pattern='/(\d+)\.\d+\.\d+/i';
 	preg_match($pattern,mysql_get_server_info(),$out);
