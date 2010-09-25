@@ -1,6 +1,6 @@
 <?php
 @ include(dirname(__FILE__).'/../config/config.php');
-$db_charset='gb2312';
+$db_charset='utf-8';
 $M_db= new Mailconfig(
 	array(
 		'ifopen'=> 1,
