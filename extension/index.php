@@ -45,6 +45,7 @@ br{clear:both;}
   <a href='../extension/pwdhelp.php' target='_blank'>修改密码工具</a>
   <br><a href='../user/reg_user.php' target='_blank'>用户注册工具</a>
   <br><a href='../extension/topwd.php' target='_blank'>找回密码工具</a>
+  <br><a href='../extension/svn_monitor.php' target='_blank'>监控svn代码提交</a>
  </div>
  <h3>权限工具</h3>
   <div class='st'>
