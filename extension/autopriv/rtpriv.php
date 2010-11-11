@@ -42,6 +42,7 @@ fieldset{border:2px solid #A4CDF2;padding:20px;background:#DFE8F6;width:70%}
 function turnback(){
 	window.location.href = window.location.href;	
 }
+pwdform.wurl.focus();
 function fCheck(){
 	
   if( pwdform.username.value =="" ) {
