@@ -58,7 +58,7 @@ if(isset($_POST['flag']))
 	  echo "处理成功！<a href='' onclick=\"javascript:self.close();\">关闭</a>";
 	  //发邮件通知
 	  $body="Hi,$us\n
-		  你对$svnurl/$repos/$path 的svn权限申请已被 $ops 拒绝，回执如下：$mail_back
+		  你对$svnurl/$repos/$path 的svn($wpriv)权限申请已被 $ops 拒绝，回执如下：$mail_back
 
 这只是一封系统自动发出的邮件，请勿回复。
 --------------------
@@ -72,7 +72,7 @@ if(isset($_POST['flag']))
 	  echo "<script>alert('已给申请者发送回执，请登录权限系统进行处理！');</script>";
 	  echo "<script>setTimeout('document.location.href=\"../../default.htm\"',5)</script>";//跳转
 	  $body="Hi,$us\n
-		  你对$svnurl/$repos/$path 的svn权限申请已被 $ops 手工处理，回执如下：$mail_back
+		  你对$svnurl/$repos/$path 的svn($wpriv)权限申请已被 $ops 手工处理，回执如下：$mail_back
 
  这只是一封系统自动发出的邮件，请勿回复。
 --------------------
@@ -134,7 +134,7 @@ if(isset($_POST['flag']))
   echo "处理成功！<a href='' onclick=\"javascript:self.close();\">关闭</a>";
 	  //发邮件通知
   $body="Hi,$us\n
-	  你对 $backpath 的svn权限申请已被 $ops 批准，回执如下：$mail_back
+	  你对 $backpath 的svn($wpriv)权限申请已被 $ops 批准，回执如下：$mail_back
 
  这只是一封系统自动发出的邮件，请勿回复。
 --------------------
