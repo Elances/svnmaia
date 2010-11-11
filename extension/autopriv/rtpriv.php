@@ -1,6 +1,7 @@
 <?php
 include('../../include/charset.php');
 error_reporting(0);
+$url=$_GET['url'];
 ?>
 <html>
 <head>
@@ -13,7 +14,7 @@ fieldset{border:2px solid #A4CDF2;padding:20px;background:#DFE8F6;width:70%}
 </style>
 <body>
 
-   <form action=./sendmail.php name=pwdform method=post onSubmit="return tCheck()">
+<form action=./sendmail.php name=pwdform method=post value="<?php echo $url; ?>" onSubmit="return tCheck()">
    	<fieldset>
 	<legend>svn权限申请</legend>
    <div id='inputblock'>
