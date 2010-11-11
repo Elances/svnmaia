@@ -14,13 +14,13 @@ fieldset{border:2px solid #A4CDF2;padding:20px;background:#DFE8F6;width:70%}
 </style>
 <body>
 
-<form action=./sendmail.php name=pwdform method=post value="<?php echo $url; ?>" onSubmit="return tCheck()">
+<form action=./sendmail.php name=pwdform method=post  onSubmit="return tCheck()">
    	<fieldset>
 	<legend>svn权限申请</legend>
    <div id='inputblock'>
    		
    <table valign=top>
- <tr><td>申请的url:<input type=text name='wurl' size='45'  onBlur="checkurl();"></td>
+ <tr><td>申请的url:<input type=text name='wurl' size='45' value="<?php echo $url; ?>" onBlur="checkurl();"></td>
        <td>&nbsp;&nbsp;权限:<select name="wpriv"><option value='r' label='只读'>只读</option>
 <option value='w' label='读写'>读写</option>
 </select></td></tr>
