@@ -3,11 +3,11 @@ session_start();
 include('../../include/charset.php');
 error_reporting(0);
 /*
-   ÎÄ¼şÃû£ºsendmail.php
-   ¹¦ÄÜ£º´¦ÀíÈ¨ÏŞÉêÇë£¬ÒÀ¾İurlºÍ¹æÔò·¢ËÍÓÊ¼ş¸ø¶ÔÓ¦¹ÜÀíÔ±¡£
-   ÊäÈë£ºurl¡¢ÓÃ»§Ãû¡¢ÉêÇëÈ¨ÏŞÀàĞÍ¡¢ÉêÇëËµÃ÷
-   Êä³ö£º·¢ËÍÓÊ¼ş
-   Âß¼­£º
+   æ–‡ä»¶åï¼šsendmail.php
+   åŠŸèƒ½ï¼šå¤„ç†æƒé™ç”³è¯·ï¼Œä¾æ®urlå’Œè§„åˆ™å‘é€é‚®ä»¶ç»™å¯¹åº”ç®¡ç†å‘˜ã€‚
+   è¾“å…¥ï¼šurlã€ç”¨æˆ·åã€ç”³è¯·æƒé™ç±»å‹ã€ç”³è¯·è¯´æ˜
+   è¾“å‡ºï¼šå‘é€é‚®ä»¶
+   é€»è¾‘ï¼š
 */
 include('../../../../config.inc');
 include('../../config/config.php');
@@ -20,8 +20,8 @@ foreach($_POST as $k=>$v)
 $wurl=$_POST['wurl'];
 if(empty($wurl))
 {
-	echo " <script>window.alert(\"ÊäÈëĞÅÏ¢²»È«!\")</script>";
-  echo " <a href='javascript:history.back()'>µã»÷ÕâÀï·µ»Ø</a>";
+	echo " <script>window.alert(\"è¾“å…¥ä¿¡æ¯ä¸å…¨!\")</script>";
+  echo " <a href='javascript:history.back()'>ç‚¹å‡»è¿™é‡Œè¿”å›</a>";
   echo " <script>setTimeout('document.location.href=\"javascript:history.go(-1)\"',5)</script>";
   exit;
 	
@@ -31,10 +31,10 @@ function safe($str)
 	return "'".mysql_real_escape_string($str)."'";
 }
 //*******
-//´´½¨Êı¾İ¿â
+//åˆ›å»ºæ•°æ®åº“
 //*******
 $createtb = "create table IF NOT EXISTS monitor_url(
-		`monitor_id` varchar(128) NOT NULL UNIQUE , PRIMARY KEY (`monitor_id`),		
+		`monitor_id` INT(20) NOT NULL UNIQUE AUTO_INCREMENT, PRIMARY KEY (`monitor_id`),		
   `url` varchar(255) NOT NULL  UNIQUE, 
   `version` int(40) NOT NULL
 		)ENGINE=MyISAM;";
@@ -42,7 +42,7 @@ mysql_query($createtb);
 
 $createtb = "create table IF NOT EXISTS monitor_user(
 	`id` INT NOT NULL AUTO_INCREMENT, 		
-	`monitor_id` varchar(128) NOT NULL , 		
+	`monitor_id` INT(20) NOT NULL , 		
    `user_id` int(11) NOT NULL, 
    `pattern` varchar(40),
   PRIMARY KEY (`user_id`,`monitor_id`)
@@ -50,21 +50,22 @@ $createtb = "create table IF NOT EXISTS monitor_user(
 mysql_query($createtb);
 
 //***
-//¼ÇÂ¼Êı¾İ
+//è®°å½•æ•°æ®
 //***
 include('./geturl.php');
 $ver=-1;
 $wurl=geturl($wurl);
 if($ver < 0 )
 {
-	echo " <script>window.alert(\"ÎŞ·¨»ñÈ¡¸ÃurlµÄ°æ±¾ĞÅÏ¢£¬ÇëÈ·ÈÏÊäÈëÊÇ·ñÕıÈ·!\")</script>";
-	echo " <a href='javascript:history.back()'>µã»÷ÕâÀï·µ»Ø</a>";
+	echo " <script>window.alert(\"æ— æ³•è·å–è¯¥urlçš„ç‰ˆæœ¬ä¿¡æ¯ï¼Œè¯·ç¡®è®¤è¾“å…¥æ˜¯å¦æ­£ç¡®!\")</script>";
+	echo " <a href='javascript:history.back()'>ç‚¹å‡»è¿™é‡Œè¿”å›</a>";
 	echo " <script>setTimeout('document.location.href=\"javascript:history.go(-1)\"',5)</script>";
 	exit;
 
 }
-$monitor_id=md5($wurl);
-$query="insert into monitor_url set url=$wurl,version=$ver,monitor_id='$monitor_id'";
+#$monitor_id=md5($wurl);
+$wurl=safe($wurl);
+$query="insert into monitor_url set url=$wurl,version=$ver";
 echo $query;
 mysql_query($query);
 $nameflag=true;
@@ -77,7 +78,7 @@ if (($_SESSION['role'] == 'admin')or($_SESSION['role'] == 'diradmin')){
 		if(empty($e))continue;
 		list($u,$ot)=splite('@',$e);
 		$u=safe($u);
-		$query="insert into monitor_user (monitor_id,user_id) select '$monitor_id',user_id from svnauth_user where user_name=$u;";
+		$query="insert into monitor_user (monitor_id,user_id) select monitor_url.monitor_id,svnauth_user.user_id from svnauth_user,monitor_url where svnauth_user.user_name=$u and monitor_url.url=$wurl;";
 			//	echo $query;
 		mysql_query($query);
 		$error=mysql_error();
@@ -85,7 +86,7 @@ if (($_SESSION['role'] == 'admin')or($_SESSION['role'] == 'diradmin')){
 		if (mysql_affected_rows() > 0)
 		{
 			unset($usrArray[$i]);
-			//¸üĞÂsvnÓÊÏäµØÖ·~~
+			//æ›´æ–°svné‚®ç®±åœ°å€~~
 			if(strpos($e,'@'))
 			{
 				$e=safe($e);
@@ -96,36 +97,36 @@ if (($_SESSION['role'] == 'admin')or($_SESSION['role'] == 'diradmin')){
 		}else
 		{
 			echo $error;
-			echo "<br><b>Error</b>: $u not found in svn username lists! ";
+			echo "<br><b>Error</b>: $u not found in svn username lists! è¯¥ç”¨æˆ·è®¢é˜…å¤±è´¥ï¼ ";
 		}
 
 	}
 	if($nameflag)
 	{		
-		$query="insert into monitor_user (monitor_id,user_id) values ('$monitor_id',$u_ID);";
+		$query="insert into monitor_user (monitor_id,user_id) select monitor_url.monitor_id,$u_ID from monitor_url where monitor_url.url=$wurl;";
 		mysql_query($query);
 	}
 }else{
-	$query="insert into monitor_user (monitor_id,user_id) values ('$monitor_id',$u_ID);";
+	$query="insert into monitor_user (monitor_id,user_id) select monitor_url.monitor_id,$u_ID from monitor_url where monitor_url.url=$wurl;";
 	mysql_query($query);
 	
 }
-echo "<br>´¦ÀíÍê³É£¡"
+echo "<br>å¤„ç†å®Œæˆï¼";
 
 //***
-//Èç¹ûÓÃ»§Ã»ÓĞemailĞÅÏ¢£¬Òıµ¼ÆäÌîĞ´email¡£
+//å¦‚æœç”¨æˆ·æ²¡æœ‰emailä¿¡æ¯ï¼Œå¼•å¯¼å…¶å¡«å†™emailã€‚
 //***
 $query="select email from svnauth_user where user_id=$u_ID and email=''";
 $result=mysql_query($query);
 if($result)
 {
-	echo "<script>alert('ÄãµÄÓÊ¼şµØÖ·Îª¿Õ£¬ÇëÍêÉÆÄãµÄÓÊ¼şµØÖ·¼°¸öÈËĞÅÏ¢£¡')</script>";
-	$url="../user/user_modify.php?userArray[]=${u_ID}&action=±à¼­";
+	echo "<script>alert('ä½ çš„é‚®ä»¶åœ°å€ä¸ºç©ºï¼Œè¯·å®Œå–„ä½ çš„é‚®ä»¶åœ°å€åŠä¸ªäººä¿¡æ¯ï¼')</script>";
+	$url="../user/user_modify.php?userArray[]=${u_ID}&action=ç¼–è¾‘";
 	echo" <script>setTimeout('document.location.href=\"$url\"',0)</script>";  	
 	exit;
 }
 
-echo "<a href=''>·µ»Ø</a>";
+echo " <script>setTimeout('document.location.href=\"svn_monitor.php\"',5)</script>";
 
 
 

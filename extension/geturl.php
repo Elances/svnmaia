@@ -3,6 +3,7 @@ function geturl($t_url)
 {
 	global $svnparentpath,$svn,$svnurl,$ver;
 	if($t_url=='')return false;
+	$t_url=($t_url{strlen($t_url)-1}=='/')?(substr($t_url,0,-1)):($t_url); 
 	$dir=str_replace($svnurl,'',$t_url);
 	if(preg_match("/^http:/i",$dir)){
 		$dir=str_replace("http://",'',$dir);
