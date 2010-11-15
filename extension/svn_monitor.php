@@ -19,6 +19,8 @@ $url=$_GET['url'];
 </head>
 <style type='text/css'>
 div{margin:15px;}
+.tb1{ cellspacing:1; cellpadding:0; width:70%; border:0; background:#aaa}
+.tb1 tr{background:#ecf0e1;}
 fieldset{border:2px solid #A4CDF2;padding:20px;background:#DFE8F6;width:70%}
  legend{color:#AA0000;font-weight:bold;padding:3px 20px;border:2px solid #A4CDF2;}
 </style>
@@ -30,7 +32,7 @@ fieldset{border:2px solid #A4CDF2;padding:20px;background:#DFE8F6;width:70%}
    <div id='inputblock'>
    		
    <table valign=top>
-   <tr><td>监控的svn url:<input type=text name='wurl' size='65' value="<?php echo $url ?>" onBlur="checkurl();"></td>
+   <tr><td colspan=3>监控的svn url:</td><tr><td><input type=text name='wurl' size='65' value="<?php echo $url ?>" onBlur="checkurl();"></td>
 <td><input type=button value="提交" style='width:80px'  onclick="return tCheck()">&nbsp;&nbsp;&nbsp;<a href='http://www.scmbbs.com/maia' target=_blank>want more</a></td></tr>
   <tr><td colspan=3><label id='urltip' style='color:red;font-size:12px;'></label></td></tr>
 <?php echo $extstr;?>
@@ -42,6 +44,34 @@ fieldset{border:2px solid #A4CDF2;padding:20px;background:#DFE8F6;width:70%}
 //*********
 //列出当前用户的监控列表
 //*********
+$u_ID=$_SESSION['uid'];
+if (($_SESSION['role'] == 'admin'))
+{
+	$title="<h2>我的订阅/<a href='?s=all'>查看所有订阅</a></h2>";
+	if ('all'==$_GET['s'])
+	{
+		$para='1=1';
+		$title="<h2><a href=?reflash>我的订阅</a>/查看所有订阅</h2>";
+	}
+
+else{
+	$title="<h2>我的订阅</h2>";
+	$para="monitor_user.user_id=$u_ID";
+}
+	
+$query="select url,version,id from monitor_url,monitor_user where $para";
+$result=mysql_query($query);
+if($result)
+{
+	echo $title;
+	echo "<table class='tb1'>
+	<tr><td>svn地址</td><td>当前版本</td><td>操作</td>";
+}
+while (($result)and($row= mysql_fetch_array($result, MYSQL_BOTH))) {
+	$url=$row['url'];
+	$id=$row['id'];
+	$ver=$row['version'];
+	echo "<tr><td>$url</td><td>$ver</td><td><a href='monitor_modify.php?id=$id&action='del'>删除</a></td></tr>";
 ?>
 </body>
 
@@ -61,14 +91,14 @@ function tCheck()
 	{
 		if (! confirm('此URL可能不存在或者为外部服务器的，您确实要添加此监控吗？'))return false;
 	}
-	if(firstflag && admin)document.getElementById('cleantip').innerHTML ='';
+	if(firstflag && admin)document.getElementById('notelist').innerHTML ='';
 	urlform.submit();
 	return true;
 }
 function cleantip()
 {
 	if(firstflag){
-		document.getElementById('cleantip').innerHTML ='';
+		document.getElementById('notelist').innerHTML ='';
 		firstflag=false;
 	}
 }
