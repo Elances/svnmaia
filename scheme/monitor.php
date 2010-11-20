@@ -45,7 +45,7 @@ if (mysql_select_db(DBNAME))
 		unset($logarr);
 		exec("{$svn}svn log -r${oldver}:$ver \"$localurl\"",$logarr);
 		$body=implode('\n',$logarr);
-		$query="update monitor_url set version=$ver where monitor_id=$monitor_id"
+		$query="update monitor_url set version=$ver where monitor_id=$monitor_id";
 		$result2=mysql_query($query);
 		if($result2)
 		{
