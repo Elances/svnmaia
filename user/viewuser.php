@@ -88,6 +88,7 @@ if($_SESSION['role'] != "admin")
 <br><a href="../priv/viewpriv.php?u={$_SESSION['uid']}">权限查询</a>
 <br>&nbsp;
 <h3>其他</h3>
+<br><a href='../extension/svn_monitor.php'>监控svn代码提交</a>
 SCMBBS;
 }
 if (!((isset($_SESSION['username']))and($_SESSION['role']=="admin"))){ 
@@ -211,6 +212,7 @@ if(!is_numeric($page))
 		<td width=160><input name="action" type=submit value="编辑"></td>
 		<td width=160><input name="action" type=submit value="重置密码"></td>		
 		<td width=160><input name="action" type=submit value="设为超级用户"></td>
+		<td width=160><input name="action" type=submit value="复制用户权限"></td>		
 	   </tr>
 	</table>
 	
@@ -249,6 +251,7 @@ $i=0;
 		<td width=160><input name="action" type=submit value="编辑"></td>
 		<td width=160><input name="action" type=submit value="重置密码"></td>		
 		<td width=160><input name="action" type=submit value="设为超级用户"></td>
+		<td width=160><input name="action" type=submit value="复制用户权限"></td>
 	   </tr>
 	</table>
 	</form>

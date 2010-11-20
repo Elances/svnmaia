@@ -173,6 +173,37 @@ HTML;
 HTML;
 	}
 
+	if($action == '复制用户权限')
+	{
+	
+	echo <<<HTML
+		<form method="post" action="">
+		<fieldset>
+		<legend>复制组</legend>
+		<input type=hidden name=action value='copyuserpriv'>
+说明：复制成员的权限到其他用户，可选择追加还是覆盖。
+		<table  cellspacing='1' cellpadding='0' width='70%' border='0' >
+		<tr><th>源</th><th>目标</th></tr>
+HTML;
+		$query="select user_id,user_name,full_name from svnauth_user where $paras";
+			$result = mysql_query($query); 			 			
+			while (($result)and($row= mysql_fetch_array($result, MYSQL_BOTH))) {
+				$user_id=$row['user_id'];
+				$user_name=$row['user_name'];
+				$full_name=$row['full_name'];
+				echo "<tr><td>从用户<input type=hidden name='userArray' value='$user_id'>
+				 <input type=text readonly value='$user_name($full_name)'></td><td>复制到<input type=text name='username'></td>";
+			}
+	echo <<<HTML
+		</table>
+<br><b>复制类别：</b>
+<input type=checkbox checked value='cpm' name='copym'>追加 <input type=checkbox value='cpp' name='copypriv'>覆盖
+		<table style="position:relative;left:300px;top:20px" >
+		<tr><td><input style="width:80" type=submit value="确定" ></td><td><input style="width:80" type=reset value="取消" onclick="turnback()"></td></tr>
+	</table>
+		</fieldset></form>
+HTML;
+	}
 
 	if($action == 'modify')
 	{

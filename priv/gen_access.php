@@ -1,4 +1,5 @@
 <?php
+ error_reporting(0);
 include('../include/charset.php');
 include('../include/requireAuth.php');
 include('../../../config.inc');
