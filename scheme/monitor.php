@@ -10,7 +10,7 @@ include('../include/charset.php');
 或者您可以将本页面作为计划任务执行，定时执行一次（如2分钟）。
 <br><br>方法如下：
 <br><strong>Linux系统</strong>：在crontab中添加一行：
-<br>  */2 * * * * "wget --delete-after <?php echo $_SERVER['SERVER_NAME'].$_SERVER['PHP_SELF']; ?>"
+<br>  */2 * * * * "wget --delete-after http://<?php echo $_SERVER['SERVER_NAME'].$_SERVER['PHP_SELF']; ?>"
 <br><strong>Windows系统</strong>:在计划任务中：
 打开“控制面板”-->双击“计划任务”-->添加新任务-->选择运行程序中，点击浏览，在弹出对话框中，输入本页面的url
 如：http://www.example.com/svnmaia/scheme/monitor.php，然后一直点下一步，直到完成。
@@ -34,6 +34,7 @@ if (mysql_select_db(DBNAME))
 		{
 			$localurl=($svnparentpath{0}=='/')?("file://$svnparentpath/$url"):("file:///$svnparentpath/$url");
 		}
+		unset($dirs_arr);
 		 exec("{$svn}svn log --limit 1 -q \"$localurl\"",$dirs_arr);
 	  if(count($dirs_arr)>1)
 	  {
@@ -43,8 +44,8 @@ if (mysql_select_db(DBNAME))
 		list($ot,$ver)=explode('r',$ver);
 		if($oldver == $ver)continue;
 		unset($logarr);
-		exec("{$svn}svn log -r${oldver}:$ver \"$localurl\"",$logarr);
-		$body=implode('\n',$logarr);
+		exec("{$svn}svn log -v -r${oldver}:$ver \"$localurl\"",$logarr);
+		$body=implode('\n\r',$logarr);
 		$query="update monitor_url set version=$ver where monitor_id=$monitor_id";
 		$result2=mysql_query($query);
 		if($result2)
