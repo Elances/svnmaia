@@ -39,8 +39,8 @@ if (mysql_select_db(DBNAME))
 	  {
 		$ver=current($dirs_arr);
 		$ver=next($dirs_arr);
-		list($ver,$ot)=splite(' ',$ver);
-		list($ot,$ver)=splite('r',$ver);
+		list($ver,$ot)=explode(' ',$ver);
+		list($ot,$ver)=explode('r',$ver);
 		if($oldver == $ver)continue;
 		unset($logarr);
 		exec("{$svn}svn log -r${oldver}:$ver \"$localurl\"",$logarr);
