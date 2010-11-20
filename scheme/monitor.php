@@ -10,7 +10,7 @@ include('../include/charset.php');
 或者您可以将本页面作为计划任务执行，定时执行一次（如2分钟）。
 <br><br>方法如下：
 <br><strong>Linux系统</strong>：在crontab中添加一行：
-<br>  */2 * * * * "wget --delete-after <?php echo $_SERVER['SERVER_NAME']$_SERVER['PHP_SELF'] ?>"
+<br>  */2 * * * * "wget --delete-after <?php echo $_SERVER['SERVER_NAME'].$_SERVER['PHP_SELF']; ?>"
 <br><strong>Windows系统</strong>:在计划任务中：
 打开“控制面板”-->双击“计划任务”-->添加新任务-->选择运行程序中，点击浏览，在弹出对话框中，输入本页面的url
 如：http://www.example.com/svnmaia/scheme/monitor.php，然后一直点下一步，直到完成。
