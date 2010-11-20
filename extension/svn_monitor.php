@@ -36,7 +36,7 @@ fieldset{border:2px solid #A4CDF2;padding:20px;background:#DFE8F6;width:70%}
    		
    <table valign=top>
    <tr><td colspan=3>监控的svn url:</td><tr><td><input type=text name='wurl' size='65' value="<?php echo $url ?>" onBlur="checkurl();"></td>
-<td><input type=button value="提交" style='width:80px'  onclick="return tCheck()">&nbsp;&nbsp;&nbsp;<a href='http://www.scmbbs.com/maia' target=_blank>want more</a></td></tr>
+<td><input type=button value="提交" style='width:80px'  onclick="return tCheck()">&nbsp;&nbsp;&nbsp;<a href='http://www.scmbbs.com/cn/maia/2010/11/maia15.php' target=_blank>want more</a></td></tr>
   <tr><td colspan=3><label id='urltip' style='color:red;font-size:12px;'></label></td></tr>
 <?php echo $extstr;?>
    </table>  
