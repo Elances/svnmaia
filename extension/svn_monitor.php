@@ -3,6 +3,7 @@ session_start();
 include('../include/charset.php');
 include('../../../config.inc');
 include('../include/dbconnect.php');
+$adminflag='admin=false;';
 if (!isset($_SESSION['username'])){	
 	echo "请先<a href='../user/loginfrm.php'>登录</a> ！";
 	echo" <script>setTimeout('document.location.href=\"../user/loginfrm.php\"',0)</script>"; 	
@@ -61,7 +62,7 @@ if (($_SESSION['role'] == 'admin'))
 	$para="monitor_user.user_id=$u_ID";
 }
 	
-$query="select url,version,id from monitor_url,monitor_user where $para";
+$query="select url,version,id from monitor_url,monitor_user where $para and monitor_url.monitor_id=monitor_user.monitor_id";
 $result=mysql_query($query);
 $num_rows = mysql_num_rows($result);
 if($num_rows > 0)
