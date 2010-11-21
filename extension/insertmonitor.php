@@ -117,7 +117,8 @@ if (($_SESSION['role'] == 'admin')or($_SESSION['role'] == 'diradmin')){
 	$error=mysql_error();	
 }
 echo $error;
-if(strpos($error,"Duplicate entry"))
+$pos=strpos($error,"Duplicate entry");
+if($pos !== false)
 {
 	echo "<br>该监控已在，不能重复添加！";
 	echo " <script>setTimeout('document.location.href=\"svn_monitor.php\"',2000)</script>";
