@@ -36,9 +36,9 @@ fieldset{border:2px solid #A4CDF2;padding:20px;background:#DFE8F6;width:70%}
    		
    <table valign=top>
    <tr><td colspan=3>监控的svn url:</td><tr><td><input type=text name='wurl' size='65' value="<?php echo $url ?>" onBlur="checkurl();"></td>
-<td><input type=button value="提交" style='width:80px'  onclick="return tCheck()">&nbsp;&nbsp;&nbsp;<a href='http://www.scmbbs.com/cn/maia/2010/11/maia15.php' target=_blank onclick="showmore();">want more</a></td></tr>
+<td><input type=button value="提交" style='width:80px'  onclick="return tCheck()">&nbsp;&nbsp;&nbsp;<a href='' onclick="showmore();">高级</a></td></tr>
   <tr><td colspan=3><label id='urltip' style='color:red;font-size:12px;'></label></td></tr>
-<tr><td colspan=3><span id='pattern_span' style='display:none'><b>监控文件类型：</b><input type=text size='10' name='pattern'><br>说明：如果为空则监控所有代码变更；多个文件类型之间用空格分割，如"*.java *.xml *.json"。
+<tr><td colspan=3><span id='pattern_span' style='display:none'><b>监控文件类型：</b><input type=text size='30' name='pattern'><br>说明：如果为空则监控所有代码变更；多个文件类型之间用空格分割，如"*.java *.xml *.json"。<a href='http://www.scmbbs.com/cn/maia/2010/11/maia15.php' target=_blank>更多</a>
  </span></td></tr>
 <?php echo $extstr;?>
    </table>  
@@ -71,7 +71,7 @@ if($num_rows > 0)
 {
 	echo $title;
 	echo "<table class='tb1'>
-	<tr><td>svn地址</td><td>当前版本</td><td>用户名</td><td>操作</td>";
+	<tr><td>svn地址</td><td>当前版本</td><td>订阅者</td><td>操作</td>";
 }
 while (($result)and($row= mysql_fetch_array($result, MYSQL_BOTH))) {
 	$url=$row['url'];
