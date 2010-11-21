@@ -49,6 +49,18 @@ if (mysql_select_db(DBNAME))
 		if($oldver == $ver)continue;
 		unset($logarr);
 		exec("{$svn}svn log -v -r${oldver}:$ver \"$localurl\"",$logarr);
+		$filestr='';
+		foreach($logarr as $k => $v)
+		{
+			if(preg_match("/^[\t\s]+(\w)\s+(.*)/",$v,$matches))
+			{				
+				$v=$matches[2];
+				$filestr .= ' '.$v;
+				if($matches[1] == 'M')
+					$logarr[$k]="$v  "."<a href=http://".$_SERVER['SERVER_NAME']."/viewvc/$v?r1=$oldver&r2=$ver>diff</a>";
+			}
+		}
+		$
 		$body=implode("\n\r",$logarr);
 		$query="update monitor_url set version=$ver where monitor_id=$monitor_id";
 		$result2=mysql_query($query);
@@ -56,14 +68,16 @@ if (mysql_select_db(DBNAME))
 		{
 			$query="select email,user_name,pattern from svnauth_user,monitor_user where monitor_id=$monitor_id and svnauth_user.user_id=monitor_user.user_id";
 			$result3=mysql_query($query);
+			$found=false;			
 			while (($result3)and($userrow= mysql_fetch_array($result3, MYSQL_BOTH))) {
 				$email=$userrow['email'];
 				$user=$userrow['email'];
 				$email=(empty($email))?($user.$email_ext):$email;
 				$pattern=$userrow['pattern'];
+				$found=true;
 				if(!empty($pattern))
 				{
-					if(! preg_match("/$pattern/",$body))continue;
+					if(! preg_match("/$pattern/",$filestr))continue;
 				}
 				$subject="代码变更 r$ver:$url";	
 				$windid='svn-changed';
@@ -76,6 +90,11 @@ if (mysql_select_db(DBNAME))
 					echo "发送到$user时发生错误：$mail_info";
 				}
 	
+			}
+			if(!$found)
+			{
+				$myquery="delete from monitor_url where monitor_id=$monitor_id";
+				mysql_query($myquery);
 			}			
 		}
 	  }

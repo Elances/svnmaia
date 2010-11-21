@@ -62,21 +62,24 @@ if (($_SESSION['role'] == 'admin'))
 	$para="monitor_user.user_id=$u_ID";
 }
 	
-$query="select url,version,id from monitor_url,monitor_user where $para and monitor_url.monitor_id=monitor_user.monitor_id";
+$query="select url,version,monitor_user.id,svnauth_user.user_name from monitor_url,monitor_user,svnauth_user where $para and monitor_url.monitor_id=monitor_user.monitor_id and monitor_user.user_id=svnauth_user.user_id";
 $result=mysql_query($query);
 $num_rows = mysql_num_rows($result);
 if($num_rows > 0)
 {
 	echo $title;
 	echo "<table class='tb1'>
-	<tr><td>svn地址</td><td>当前版本</td><td>操作</td>";
+	<tr><td>svn地址</td><td>当前版本</td><td>用户名</td><td>操作</td>";
 }
 while (($result)and($row= mysql_fetch_array($result, MYSQL_BOTH))) {
 	$url=$row['url'];
 	$id=$row['id'];
 	$ver=$row['version'];
-	echo "<tr><td>$url</td><td>$ver</td><td><a href='monitor_modify.php?id=$id&action='del'>删除</a></td></tr>";
+	$user=$row['user_name'];
+	echo "<tr><td>$url</td><td>$ver</td><td>$user</td><td><a href='monitor_modify.php?id=$id&action='del'>删除</a></td></tr>";
 }
+if($num_rows >0)
+	echo "</table>";
 ?>
 </body>
 
