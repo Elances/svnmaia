@@ -48,8 +48,10 @@ if (mysql_select_db(DBNAME))
 		list($ot,$ver)=explode('r',$ver);
 		if($oldver == $ver)continue;
 		unset($logarr);
-		exec("{$svn}svn log -v -r${oldver}:$ver \"$localurl\"",$logarr);
+		$v1=$oldver+1;
+		exec("{$svn}svn log -v -r${v1}:$ver \"$localurl\"",$logarr);
 		$filestr='';
+		list($repos,$ot)=explode('/',$url,2);
 		foreach($logarr as $k => $v)
 		{
 			if(preg_match("/^[\t\s]+(\w)\s+(.*)/",$v,$matches))
@@ -57,7 +59,7 @@ if (mysql_select_db(DBNAME))
 				$f=$matches[2];
 				$filestr .= ' '.$f;
 				if($matches[1] == 'M')
-					$logarr[]="查看diff:  "."http://".$_SERVER['SERVER_NAME']."/viewvc/$f?r1=$oldver&r2=$ver";
+					$logarr[]="查看diff:  "."http://".$_SERVER['SERVER_NAME']."/viewvc/$repos/$f?r1=$oldver&r2=$ver";
 			}
 		}
 		$body=implode("\n\r",$logarr);
