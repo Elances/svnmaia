@@ -36,8 +36,10 @@ fieldset{border:2px solid #A4CDF2;padding:20px;background:#DFE8F6;width:70%}
    		
    <table valign=top>
    <tr><td colspan=3>监控的svn url:</td><tr><td><input type=text name='wurl' size='65' value="<?php echo $url ?>" onBlur="checkurl();"></td>
-<td><input type=button value="提交" style='width:80px'  onclick="return tCheck()">&nbsp;&nbsp;&nbsp;<a href='http://www.scmbbs.com/cn/maia/2010/11/maia15.php' target=_blank>want more</a></td></tr>
+<td><input type=button value="提交" style='width:80px'  onclick="return tCheck()">&nbsp;&nbsp;&nbsp;<a href='http://www.scmbbs.com/cn/maia/2010/11/maia15.php' target=_blank onclick="showmore();">want more</a></td></tr>
   <tr><td colspan=3><label id='urltip' style='color:red;font-size:12px;'></label></td></tr>
+<tr><td colspan=3><span id='pattern_span' style='display:none'><b>监控文件类型：</b><input type=text size='10' name='pattern'><br>说明：如果为空则监控所有代码变更；多个文件类型之间用空格分割，如"*.java *.xml *.json"。
+ </span></td></tr>
 <?php echo $extstr;?>
    </table>  
   </div>
@@ -76,7 +78,7 @@ while (($result)and($row= mysql_fetch_array($result, MYSQL_BOTH))) {
 	$id=$row['id'];
 	$ver=$row['version'];
 	$user=$row['user_name'];
-	echo "<tr><td>$url</td><td>$ver</td><td>$user</td><td><a href='monitor_modify.php?id=$id&action='del'>删除</a></td></tr>";
+	echo "<tr><td>$url</td><td>$ver</td><td>$user</td><td><a href='monitor_modify.php?id=$id&action=del'>删除</a></td></tr>";
 }
 if($num_rows >0)
 	echo "</table>";
@@ -88,6 +90,12 @@ if($num_rows >0)
 <!--
 	firstflag=true;
 <?php echo $adminflag; ?>
+function showmore(){
+	if(document.getElementById('pattern_span').style.display=="none")
+	  document.getElementById('pattern_span').style.display =''
+	else
+	  document.getElementById('pattern_span').style.display = "none";
+}
 function turnback(){
 	window.location.href = window.location.href;	
 }
