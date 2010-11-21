@@ -54,13 +54,12 @@ if (mysql_select_db(DBNAME))
 		{
 			if(preg_match("/^[\t\s]+(\w)\s+(.*)/",$v,$matches))
 			{				
-				$v=$matches[2];
-				$filestr .= ' '.$v;
+				$f=$matches[2];
+				$filestr .= ' '.$f;
 				if($matches[1] == 'M')
-					$logarr[$k]="$v  "."<a href=http://".$_SERVER['SERVER_NAME']."/viewvc/$v?r1=$oldver&r2=$ver>diff</a>";
+					$logarr[]="查看diff:  "."http://".$_SERVER['SERVER_NAME']."/viewvc/$f?r1=$oldver&r2=$ver";
 			}
 		}
-		$
 		$body=implode("\n\r",$logarr);
 		$query="update monitor_url set version=$ver where monitor_id=$monitor_id";
 		$result2=mysql_query($query);

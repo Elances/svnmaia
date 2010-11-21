@@ -120,7 +120,7 @@ echo $error;
 $pos=strpos($error,"Duplicate entry");
 if($pos !== false)
 {
-	echo "<script>alert('该监控已在，不能重复添加！')</script>";
+	echo "<script>alert('该url监控已在，不能重复添加！')</script>";
 	echo " <script>setTimeout('document.location.href=\"svn_monitor.php\"',5)</script>";
 }
 //***
