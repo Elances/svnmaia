@@ -31,7 +31,7 @@ if('del' == $action)
 {
 	$query="delete from monitor_user where user_id=$user_id and id=$id";
 	$result=mysql_query($query);
-	$num=mysql_affected_rows($result); 
+	$num=mysql_affected_rows(); 
 	if($num == 0)
 	{
 		echo "<script>alert('删除失败，只能删除自己的订阅!')</script>";
