@@ -75,9 +75,10 @@ if (mysql_select_db(DBNAME))
 			$found=false;			
 			while (($result3)and($userrow= mysql_fetch_array($result3, MYSQL_BOTH))) {
 				$email=$userrow['email'];
-				$user=$userrow['email'];
+				$user=$userrow['user_name'];
 				$email=(empty($email))?($user.$email_ext):$email;
 				$pattern=$userrow['pattern'];
+				if(empty($user))continue;
 				$found=true;
 				if(!empty($pattern))
 				{
