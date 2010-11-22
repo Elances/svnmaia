@@ -23,12 +23,12 @@ if (mysql_select_db(DBNAME))
 {
 	include('../include/email.php');
 	$query="select monitor_id,url,version from monitor_url";
-	$myurl=$_SERVER['SERVER_NAME'].$_SERVER['PHP_SELF'];
+	$myurl="http://".$_SERVER['SERVER_NAME'].$_SERVER['PHP_SELF'];
 	$myurl=str_replace('scheme/monitor.php','extension/svn_monitor.php',$myurl);
 	$tail="
 		------
 		您收到本邮件是因为您或者某管理员为您订阅了此目录svn代码变更监控。
-如要退订此邮件，请登录此地址操作： http://$myrul" ;
+如要退订此邮件，请登录此地址操作： ".$myurl ;
 	$result=mysql_query($query);
 	while (($result)and($row= mysql_fetch_array($result, MYSQL_BOTH))) {
 		$monitor_id=$row['monitor_id'];
