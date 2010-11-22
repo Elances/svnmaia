@@ -30,8 +30,13 @@ $user_id=$_SESSION['uid'];
 if('del' == $action)
 {
 	$query="delete from monitor_user where user_id=$user_id and id=$id";
-	mysql_query($query);
-	echo "<script>alert('该订阅已删除!')</script>";
+	$result=mysql_query($query);
+	$num=mysql_affected_rows($result); 
+	if($num == 0)
+	{
+		echo "<script>alert('删除失败，只能删除自己的订阅!')</script>";
+	}else
+		echo "<script>alert('该订阅已删除!')</script>";
 	echo " <script>setTimeout('document.location.href=\"svn_monitor.php\"',5)</script>";
 }
 
