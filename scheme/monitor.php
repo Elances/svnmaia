@@ -23,10 +23,12 @@ if (mysql_select_db(DBNAME))
 {
 	include('../include/email.php');
 	$query="select monitor_id,url,version from monitor_url";
+	$myurl=$_SERVER['SERVER_NAME'].$_SERVER['PHP_SELF'];
+	$myurl=str_replace('scheme/monitor.php','extension/svn_monitor.php',$myurl);
 	$tail="
 		------
 		您收到本邮件是因为您或者某管理员为您订阅了此目录svn代码变更监控。
-如要退订此邮件，请登录此地址操作： http://".$_SERVER['SERVER_NAME'].$_SERVER['PHP_SELF'] ;
+如要退订此邮件，请登录此地址操作： http://$myrul" ;
 	$result=mysql_query($query);
 	while (($result)and($row= mysql_fetch_array($result, MYSQL_BOTH))) {
 		$monitor_id=$row['monitor_id'];
@@ -57,9 +59,10 @@ if (mysql_select_db(DBNAME))
 			if(preg_match("/^[\t\s]+(\w)\s+(.*)/",$v,$matches))
 			{				
 				$f=$matches[2];
+				$fn=basename($f);
 				$filestr .= ' '.$f;
 				if($matches[1] == 'M')
-					$logarr[]="查看diff:  "."http://".$_SERVER['SERVER_NAME']."/viewvc/$repos/$f?r1=$oldver&r2=$ver";
+					$logarr[]="查看$fn diff:  "."http://".$_SERVER['SERVER_NAME']."/viewvc/$repos/$f?r1=$oldver&r2=$ver";
 			}
 		}
 		$body=implode("\n\r",$logarr);

@@ -10,7 +10,7 @@ if (!isset($_SESSION['username'])){
 	exit;
 }
 if (($_SESSION['role'] == 'admin')or($_SESSION['role'] == 'diradmin')){
-	$extstr="<tr><td colspan=3>通知到：<input type=text name='notelist' id='notelist' size=35 value='多用户之间用分号或逗号分割；不填则只通知到自己。' onclick=\"cleantip();\"></td></tr>";
+	$extstr="<tr><td colspan=3>通知到：<input type=text name='notelist' id='notelist' size=40 value='多用户之间用分号或逗号分割；不填则只通知到自己。' onclick=\"cleantip();\"></td></tr>";
 	$adminflag='admin=true;';
 }
 error_reporting(0);
