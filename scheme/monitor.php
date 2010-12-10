@@ -68,7 +68,7 @@ if (mysql_select_db(DBNAME))
 		}
 		$tmpstr=implode("\n\r",$diffarr);
 		$body=implode("\n\r",$logarr);
-		$body=$body.$tmpstr;
+		$body=$body."\n\r".$tmpstr;
 		$query="update monitor_url set version=$ver where monitor_id=$monitor_id";
 		$result2=mysql_query($query);
 		if($result2)
@@ -104,7 +104,7 @@ if (mysql_select_db(DBNAME))
 					}
 					$tmpstr=implode("\n\r",$diffarr);
 					$body=implode("\n\r",$logarr);
-					$body=$body.$tmpstr;
+					$body=$body."\n\r".$tmpstr;
 				}
 				$subject="代码变更 r$ver:$url";	
 				$windid='svn-changed';
