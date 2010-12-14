@@ -12,7 +12,9 @@ if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
 	header("Content-Type: text/xml;  charset='utf-8'");
 }
 $path=str_replace('%2F','/',$path);
-$path=str_replace('%5C%23','%23',$path);//解决#字符目录无法列出问题
+$path=str_replace('%28','(',$path);
+$path=str_replace('%29',')',$path);
+$path=str_replace('%5C%23','%23',$path);//char "#"
 $path=str_replace('+',' ',$path);
 include('../config/config.php');
 echo "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
