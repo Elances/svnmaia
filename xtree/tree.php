@@ -7,9 +7,9 @@ if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
 	header("Content-Type: text/xml;  charset='gb2312'");
 }else
 {
-	$_GET['d']=iconv("GB2312","UTF-8",$_GET['d']);
-	$path=urlencode(escapeshellcmd($_GET['d']));
 	header("Content-Type: text/xml;  charset='utf-8'");
+	//$_GET['d']=iconv("GB2312","UTF-8",$_GET['d']);
+	$path=urlencode($_GET['d']);
 }
 $path=str_replace('%2F','/',$path);
 $path=str_replace('%5C','',$path);//char '\'
