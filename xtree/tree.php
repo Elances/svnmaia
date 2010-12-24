@@ -78,6 +78,8 @@ if($d == '0')
 			$path_raw=urldecode($path);
 			$path_raw=htmlspecialchars($path_raw);
 			$dir=htmlspecialchars($dir);
+			$dir=str_replace('&','%26',$dir);
+			$path_raw=str_replace('&','%26',$path_raw);
 			$url2="../priv/dirpriv.php?d=$path_raw/$dir";
 			echo"<tree src=\"$url\" target=\"rt1\" action=\"$url2\" text=\"$dir\"/>\n";
 		    $i++;
