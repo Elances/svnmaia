@@ -76,6 +76,8 @@ if($d == '0')
 			} 
 			$url="./tree.php?d=$path/$dir_utf";
 			$path_raw=urldecode($path);
+			$path_raw=htmlspecialchars($path_raw);
+			$dir=htmlspecialchars($dir);
 			$url2="../priv/dirpriv.php?d=$path_raw/$dir";
 			echo"<tree src=\"$url\" target=\"rt1\" action=\"$url2\" text=\"$dir\"/>\n";
 		    $i++;
