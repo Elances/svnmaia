@@ -32,7 +32,7 @@ $fullname=trim($_POST['fullname']);
 $staff_no=$_POST['staff_no'];
 $department=$_POST['department'];
 $email=$_POST['email'];
-if(isset($_POST['randompwd']))
+if(!empty($_POST['randompwd']))
 {
 	$passwd=$passwd0=rand().rand();
 }
