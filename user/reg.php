@@ -32,6 +32,10 @@ $fullname=trim($_POST['fullname']);
 $staff_no=$_POST['staff_no'];
 $department=$_POST['department'];
 $email=$_POST['email'];
+if(isset($_POST['randompwd']))
+{
+	$passwd=$passwd0=rand().rand();
+}
 if($email=="")$email=$username.$email_ext;
 if(($passwd == "")||($username =="")||($fullname ==""))
 {
