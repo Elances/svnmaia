@@ -26,6 +26,11 @@ if ($passwd != $passwd0)
   echo "<script>history.go(-1);</script>";
   exit;
 }
+if(isSamplePassword($passwd,$usr))
+{
+		echo "密码过于简单,密码由至少6个英文字母和数字/符号组成，且不能包含用户名。";
+		exit;
+}
 
 //SQL查询语句;
 $query = "SELECT user_name,password FROM svnauth_user WHERE user_name ='$usr'"; 

@@ -47,6 +47,14 @@ if ($passwd != $passwd0)
  
   exit;
 }
+if(!empty($_POST['randompwd']))
+{
+	if(isSamplePassword($passwd,$username))
+	{
+		echo "密码过于简单,密码由至少6个英文字母和数字/符号组成，且不能包含用户名。";
+		exit;
+	}
+}
 //$passwd= system($htpasswd.' -m -b -n '.escapeshellarg($usr).' '.escapeshellarg($passwd));
 //list($ot,$passwd)=explode(':',$passwd);
 $passwd=cryptMD5Pass($passwd);
