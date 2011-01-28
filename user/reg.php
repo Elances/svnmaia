@@ -47,7 +47,7 @@ if ($passwd != $passwd0)
  
   exit;
 }
-if(!empty($_POST['randompwd']))
+if(empty($_POST['randompwd']))
 {
 	if(isSamplePassword($passwd,$username))
 	{
