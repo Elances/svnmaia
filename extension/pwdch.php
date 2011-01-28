@@ -28,7 +28,7 @@ if ($passwd != $passwd0)
 }
 if(isSamplePassword($passwd,$usr))
 {
-		echo "密码过于简单,密码由至少6个英文字母和数字/符号组成，且不能包含用户名。";
+		echo "<script>window.alert(\"密码过于简单,密码由至少6个英文字母和数字/符号组成，且不能包含用户名。\")</script>";
 		exit;
 }
 
