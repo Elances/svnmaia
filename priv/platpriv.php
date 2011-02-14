@@ -65,6 +65,7 @@ while($result and($row= mysql_fetch_array($result, MYSQL_BOTH)))
 $a_path=array_merge($a_upath,$a_gpath);
 $a_upath[]=$dir;
 $a_path[]=$dir;
+$a_gpath[]=$dir;
 $a_path=array_unique($a_path);
 sort($a_path);
 #2、将dir唯一化，逐个遍历组权限表、用户权限表
