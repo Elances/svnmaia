@@ -37,7 +37,7 @@ function safe($str)
 }
 $dir=safe($_GET['p']);
 $repos=safe($_GET['r']);
-$fromurl=$_GET['fromurl'];
+$fromurl=safe($_GET['fromurl']);
 if($repos=='/')
 {
 	echo "不能对根目录进行递归！";
@@ -70,7 +70,7 @@ $a_path=array_unique($a_path);
 sort($a_path);
 #2、将dir唯一化，逐个遍历组权限表、用户权限表
 
-echo "<a href=$fromurl>返回</a>";
+echo "<a href='$fromurl'>返回</a>";
 foreach($a_path as $path)
 {
 	echo "<h5>$repos$path</h5>";
@@ -103,4 +103,4 @@ foreach($a_path as $path)
 	}
 	echo "</table>";
 }
-echo "<a href=$fromurl>返回</a>";
+echo "<a href='$fromurl'>返回</a>";
