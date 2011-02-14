@@ -44,7 +44,7 @@ if($repos=='/')
 	exit;
 }
 #1、取得递归的dir名，从组权限表和用户权限表
-$dir_p=safe($_GET['p'].'/%');
+$dir_p=($dir=='/')?("$dir%"):("$dir/%");
 $a_path=array();
 $a_upath=array();
 $a_gpath=array();
