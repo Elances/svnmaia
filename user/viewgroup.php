@@ -375,7 +375,7 @@ if($_SESSION['role']=="admin")
 		<table class='subtitle'>
 	   <tr>
 	  <td width="40"><input type=hidden name='del_g' value='del_g'></td>
-		<td><input name="action" type=submit value="删除" onclick="return confirm('确实要删除这些组吗?');"></td><td width=80>&nbsp;</td><td><a href="#addgroup" class='bt'><font color=white>创建组</font></a></td><td><a href="cleangroup.php" class='bt'><font color=white>清除空组</font></a></td><td width=80>&nbsp;</td><td><input name="action" type=submit value="重命名"></td><td width=80>&nbsp;</td><td><input name="action" type=submit value="复制组"></td>	
+		<td><input name="action" type=submit value="删除" onclick="return confirm('确实要删除这些组吗?');"></td><td width=40>&nbsp;</td><td><a href="#addgroup" class='bt'><font color=white>创建组</font></a></td><td width=40>&nbsp;</td><td><a href="cleangroup.php" class='bt'><font color=white>清除空组</font></a></td><td width=80>&nbsp;</td><td><input name="action" type=submit value="重命名"></td><td width=80>&nbsp;</td><td><input name="action" type=submit value="复制组"></td>	
 	   </tr>
 	</table>
 SCMBBS;
