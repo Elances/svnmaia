@@ -22,6 +22,14 @@ if(!empty($_POST['gArray']))
 	}
 }
 ?>
+<style type='text/css'>
+.title{background: #007ED1 url(../img/bg.png)  100% 100%;font-size:11pt;color:white;}
+.subtitle{background: #007ED1;color:white;}
+.trc2{background: #d7d7d7;font-size:10pt;}
+.trc1{font-size:10pt}
+.detail{width:680px}
+</style>
+<strong>说明：</strong>下面列出了成员为空的空权限组，过多的权限组将影响性能，建议您删掉冗余组。
 <form method="post" action="" name='dirform' onsubmit="return fCheck()">	
 	<table class='subtitle'>
 	   <tr>
@@ -56,7 +64,7 @@ while (($result)and($row= mysql_fetch_array($result, MYSQL_BOTH))) {
 
 		$i++;
 		echo"<tr class=$tr_class><td><input  name=\"gArray[$i]\"  id=\"gArray[$i]\"  value=\"$gid\" type=checkbox></td>
-			<td>$gname</td></tr>";
+			<td><a href='./viewgroup.php?gid=$gid&grp=$gname&fromurl=cleangroup.php'>$gname</td></tr>";
 
 	}
 }
