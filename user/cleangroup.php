@@ -13,10 +13,10 @@ if(!empty($_POST['gArray']))
 	$dirArray=$_POST["gArray"];
 	foreach($dirArray as $gid)
 	{
-		$gid= trim($value);
+		$gid= trim($gid);
 		if(is_numeric($gid))
 		{
-			$query="delete from svnauth_groupuser where group_id=$gid";
+			$query="delete from svnauth_group where group_id=$gid";
 			mysql_query($query);
 		}
 	}
