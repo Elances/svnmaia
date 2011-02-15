@@ -20,6 +20,9 @@ include('../include/dbconnect.php');
 echo "<link rel=\"stylesheet\" href=\"../css/base.css\" type=\"text/css\">";
 echo "
 <style type='text/css'>
+a.f{
+text-decoration:none;
+}
 a.g:Link,a.g:Visited{
         color:#0044DD;
         text-decoration:none;
@@ -73,7 +76,7 @@ sort($a_path);
 echo "<a href='$fromurl'>返回</a>";
 foreach($a_path as $path)
 {
-	echo "<h5>$repos$path</h5>";
+	echo "<a class='f' href='./dirpriv.php?d=$repos$path'><h5>$repos$path</h5></a>";
 	echo "<table>";
 	$p_a=array('n'=>'无权限','r'=>'只读','w'=>'读写');
 	if(in_array($path,$a_upath))
