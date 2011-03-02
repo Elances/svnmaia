@@ -1,11 +1,11 @@
 <?php
-header("content-type:text/html; charset=gb2312");
+include('../../include/charset.php');
 error_reporting(0);
 /*
-   ÎÄ¼þÃû£ºcheckurl.php
-   ¹¦ÄÜ£ºÐ£ÑéurlÕýÈ·ÐÔ£¬Èç¹ûÕýÈ·Ôò¸ø³öurl¶ÔÓ¦µÄÆäÖÐÒ»¸öÄ¿Â¼¹ÜÀíÔ±
-   ÊäÈë£ºurl
-   Êä³ö£º¼ì²é½á¹û
+   æ–‡ä»¶åï¼šcheckurl.php
+   åŠŸèƒ½ï¼šæ ¡éªŒurlæ­£ç¡®æ€§ï¼Œå¦‚æžœæ­£ç¡®åˆ™ç»™å‡ºurlå¯¹åº”çš„å…¶ä¸­ä¸€ä¸ªç›®å½•ç®¡ç†å‘˜
+   è¾“å…¥ï¼šurl
+   è¾“å‡ºï¼šæ£€æŸ¥ç»“æžœ
    
 */
 include('../../../../config.inc');
@@ -13,9 +13,9 @@ include('../../include/dbconnect.php');
 function checkurl($t_url)
 {
 	global $svnparentpath,$svn;
-	if($t_url=='')return true;
+//	if($t_url=='')return true; // å…è®¸ç”³è¯·æ ¹ç›®å½•æƒé™
 	if(strpos($t_url,':'))return false;
-//ÖÐÎÄÄ¿Â¼ÅÐ¶ÏÓÐÎÊÌâ
+//ä¸­æ–‡ç›®å½•åˆ¤æ–­æœ‰é—®é¢˜
 //	if(isset($_GET['from_d']))
 	{
 	  $t_url=escapeshellcmd($t_url);
@@ -32,11 +32,15 @@ function checkurl($t_url)
 include('../../config/config.php');
 $dir=trim(mysql_real_escape_string($_GET['wurl']));
 $dir=str_replace($svnurl,'',$dir);
+if(preg_match("/^http:/i",$dir)){
+	$dir=str_replace("http://",'',$dir);
+	list($tmp1,$tmp2,$dir)=explode('/',$dir,3);
+}
 $dir=($dir{0}=='/')?(substr($dir,1)):($dir);
 $dir=str_replace('//','/',$dir);
 if(!checkurl($dir))
 {
-	echo "URL²»´æÔÚ!";
+	echo "URLä¸å­˜åœ¨!";
 	exit;
 }
 list($repos,$dir)=explode('/',$dir,2);
@@ -59,7 +63,7 @@ for($ii=0;$ii<20;$ii++)
 		if(!empty($fulln))$fn="($fulln)";
 		if(!empty($uname))
 		{
-			echo "ÉóÅúÕß£º$uname{$fn}";
+			echo "å®¡æ‰¹è€…ï¼š$uname{$fn}";
 			exit;	
 		}		
 	}
@@ -79,11 +83,11 @@ while (($result)and($row= mysql_fetch_array($result, MYSQL_BOTH))) {
 		$root=$fn;
 	}else
 	{
-		echo "ÉóÅúÕß£º$uname($fn)";
+		echo "å®¡æ‰¹è€…ï¼š$uname($fn)";
 		exit;
 	}
 }
-echo "ÉóÅúÕß:$root";
+echo "å®¡æ‰¹è€…:$root";
 	
 
 ?>

@@ -1,16 +1,16 @@
 <?php header("Cache-Control: no-cache"); 
-header("content-type:text/html; charset=gb2312");
+include('../../include/charset.php');
 /*
-   ÎÄ¼şÃû£ºindex.php
-   ¹¦ÄÜ£ºÃÜÂë°ïÖúµÄĞŞ¸ÄÃÜÂë½çÃæ
-   ÊäÈë£ºÓÃ»§Ãû¡¢¼ÓÃÜ×Ö·û´®
-   Êä³ö£ºÇ©Ãû¡¢ÓÃ»§Ãû¡¢ĞÂÃÜÂë
-   Âß¼­£º¸ù¾İÓÃ»§ÃûºÍ¼ÓÃÜ×Ö·û´®£¬Ñ°ÕÒpwdurlÎÄ¼ş£¬ÅĞ¶ÏÊÇ·ñ´æÔÚÏàÍ¬ĞÅÏ¢
-         Ã»ÓĞÔòÏÔÊ¾ÎŞĞ§Á´½Ó£¬¸ø³ö·µ»ØÖ÷Ò³µÄurl¡£
-				 ÓĞ£¬ÔòÏÔÊ¾ĞŞ¸ÄÃÜÂë½çÃæ£¬´«Èë¸øchpasswd.php£»Éú³ÉuserºÍÄ³×Ö·û´®µÄ¼ÓÃÜÇ©Ãû²ÎÊı
+   æ–‡ä»¶åï¼šindex.php
+   åŠŸèƒ½ï¼šå¯†ç å¸®åŠ©çš„ä¿®æ”¹å¯†ç ç•Œé¢
+   è¾“å…¥ï¼šç”¨æˆ·åã€åŠ å¯†å­—ç¬¦ä¸²
+   è¾“å‡ºï¼šç­¾åã€ç”¨æˆ·åã€æ–°å¯†ç 
+   é€»è¾‘ï¼šæ ¹æ®ç”¨æˆ·åå’ŒåŠ å¯†å­—ç¬¦ä¸²ï¼Œå¯»æ‰¾pwdurlæ–‡ä»¶ï¼Œåˆ¤æ–­æ˜¯å¦å­˜åœ¨ç›¸åŒä¿¡æ¯
+         æ²¡æœ‰åˆ™æ˜¾ç¤ºæ— æ•ˆé“¾æ¥ï¼Œç»™å‡ºè¿”å›ä¸»é¡µçš„urlã€‚
+				 æœ‰ï¼Œåˆ™æ˜¾ç¤ºä¿®æ”¹å¯†ç ç•Œé¢ï¼Œä¼ å…¥ç»™chpasswd.phpï¼›ç”Ÿæˆuserå’ŒæŸå­—ç¬¦ä¸²çš„åŠ å¯†ç­¾åå‚æ•°
 */
 include('../../../../config.inc');
-$mlink=mysql_connect(SERVER,USERNAME2,PASSWORD2) or die("Êı¾İ¿âÁ´½ÓÊ§°Ü£¡ÇëÁªÏµ¹ÜÀíÔ±");
+$mlink=mysql_connect(SERVER,USERNAME2,PASSWORD2) or die("æ•°æ®åº“é“¾æ¥å¤±è´¥ï¼è¯·è”ç³»ç®¡ç†å‘˜");
 if (!mysql_select_db(DBNAME))
 {
   exit;
@@ -25,10 +25,10 @@ $nt=substr($nt,6);
 $nt=$nt-substr($ss,6);
 if(($nt>3600*23)||($nt<0))
 {
-	echo "Á´½ÓÒÑ¹ıÆÚ£¡ÇëÖØĞÂ»ñÈ¡¼¤»îÁ´½Ó¡£";
+	echo "é“¾æ¥å·²è¿‡æœŸï¼è¯·é‡æ–°è·å–æ¿€æ´»é“¾æ¥ã€‚";
 	exit;
 }
-//ÑéÖ¤ÊäÈëÊÇ·ñÕıÈ·
+//éªŒè¯è¾“å…¥æ˜¯å¦æ­£ç¡®
 $trueurl=false;
 $user=mysql_real_escape_string($user,$mlink);
 $para_str=mysql_real_escape_string($para_str,$mlink);
@@ -38,45 +38,45 @@ if (mysql_num_rows($result) == 0){
 	$trueurl=false;
 }else
   $trueurl=true;
-//Ã»ÓĞÕÒµ½£¬ÕâÏÔÊ¾ÎŞĞ§Á´½Ó
+//æ²¡æœ‰æ‰¾åˆ°ï¼Œè¿™æ˜¾ç¤ºæ— æ•ˆé“¾æ¥
 if (!$trueurl)
 {
-	echo "<font color=red><h2>³ö´íÀ²£¡ÎŞĞ§Á´½Ó</h2></font>";
-	echo "<p>µã»÷<a href=/>·µ»ØÖ÷Ò³</a>";
+	echo "<font color=red><h2>å‡ºé”™å•¦ï¼æ— æ•ˆé“¾æ¥</h2></font>";
+	echo "<p>ç‚¹å‡»<a href=/>è¿”å›ä¸»é¡µ</a>";
 	echo "<p><IMG  src='../../img/waiting.gif'>";
 	exit;
 }
 
-//ÓĞ£¬ÔòÉú³ÉÇ©Ãû£¬ÏÔÊ¾ĞŞ¸ÄÃÜÂë½çÃæ¡£
+//æœ‰ï¼Œåˆ™ç”Ÿæˆç­¾åï¼Œæ˜¾ç¤ºä¿®æ”¹å¯†ç ç•Œé¢ã€‚
 $sig=md5($para_str.$user.SECRET_KEY);
 ?>
 <style type='text/css'>
  fieldset{border:2px solid #A4CDF2;padding:20px;background:#FFFFFF;width:60%}
  legend{color:#1E7ACE;padding:3px 20px;border:1px solid #A4CDF2;background:#FFFFFF;}
 </style>
-<h1>svnÃÜÂë°ïÖú£¬ĞŞ¸ÄÃÜÂë</h1>
+<h1>svnå¯†ç å¸®åŠ©ï¼Œä¿®æ”¹å¯†ç </h1>
 <form name=regform action="./chpasswd.php" method="post"  onSubmit="return fCheck()">
 	<fieldset>
-		<legend>ÖØÖÃÃÜÂë</legend>
+		<legend>é‡ç½®å¯†ç </legend>
 <table >
 	<tr>
-		<th>ÓÃ»§Ãû£º</th>
+		<th>ç”¨æˆ·åï¼š</th>
 		<td><input type=text readonly name=user value="<?php echo $user ?>">
 			<input name=sig type=hidden value=<?php echo urlencode($sig) ?>>
 		<input name=para type=hidden value=<?php echo $para_str ?>>
 		<td>
 	</tr>
 	<tr>
-		<th>ÇëÊäÈëĞÂÃÜÂë£º</th>
+		<th>è¯·è¾“å…¥æ–°å¯†ç ï¼š</th>
 		<td><input name=pswd type=password></td>
 	</tr>
 	<tr>
-		<th>ÇëÔÙÊäÈëÒ»´Î£º</th>
+		<th>è¯·å†è¾“å…¥ä¸€æ¬¡ï¼š</th>
 		<td><input name=pswd0 type=password></td>
 	</tr>
 	<tr>
-		<td><input type=reset value=È¡Ïû></td>
-		<td><input type=submit value=Ìá½»></td>
+		<td><input type=reset value=å–æ¶ˆ></td>
+		<td><input type=submit value=æäº¤></td>
 	</tr>
 </table>
 </fieldset>
@@ -89,19 +89,19 @@ function fCheck(){
 	
 	if( ! isPassword( regform.pswd.value ) )
    {
-        alert("\ÇëÖØĞÂÊäÈëÃÜÂë,ÃÜÂëÓÉÖÁÉÙ6¸öÓ¢ÎÄ×ÖÄ¸»òÊı×Ö×é³É !"); 
+        alert("\è¯·é‡æ–°è¾“å…¥å¯†ç ,å¯†ç ç”±è‡³å°‘6ä¸ªè‹±æ–‡å­—æ¯æˆ–æ•°å­—ç»„æˆ !"); 
         regform.pswd.select();
         regform.pswd.focus();
         return false;
    }
   if( regform.pswd0.value =="" ) {
-      alert("\ÇëÊäÈëÃÜÂëÈ·ÈÏ !");
+      alert("\è¯·è¾“å…¥å¯†ç ç¡®è®¤ !");
       regform.pswd0.select();
       regform.pswd0.focus();
       return false;
   }
   if( regform.pswd0.value != regform.pswd.value ) {
-     alert("\Á½´ÎÃÜÂëÊäÈë²»Ò»ÖÂ !");
+     alert("\ä¸¤æ¬¡å¯†ç è¾“å…¥ä¸ä¸€è‡´ !");
      regform.pswd.focus();
      return false;
   }

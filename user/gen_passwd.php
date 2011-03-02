@@ -1,5 +1,5 @@
 <?php
-header("content-type:text/html; charset=gb2312");
+include('../include/charset.php');
 include('../include/requireAuth.php');
 //import user from passwd file
 if(file_exists('../config/config.php'))
@@ -7,7 +7,7 @@ if(file_exists('../config/config.php'))
 	include('../config/config.php');
 }else
 {
-	echo "window.alert('ÇëÏÈ½øÐÐÏµÍ³ÉèÖÃ!')";
+	echo "window.alert('è¯·å…ˆè¿›è¡Œç³»ç»Ÿè®¾ç½®!')";
 	echo" <script>setTimeout('document.location.href=\"../config/index.php\"',0)</script>";  	
 	exit;
 }
@@ -27,8 +27,8 @@ include('../include/dbconnect.php');
 	//write the file
 	$handle = fopen($passwdfile, "w+");
 	if (fwrite($handle, $filestr) === FALSE) {
-       		 echo "<strong>Error:</strong>²»ÄÜÐ´Èëµ½ÎÄ¼þ $passwdfile ! ±£´æÊ§°Ü£¡";
+       		 echo "<strong>Error:</strong>ä¸èƒ½å†™å…¥åˆ°æ–‡ä»¶ $passwdfile ! ä¿å­˜å¤±è´¥ï¼";
 	}else
-		echo "ÓÃ»§ÒÑÉúÐ§£¡";
+		echo "ç”¨æˆ·å·²ç”Ÿæ•ˆï¼";
 	fclose($handle);
 ?>

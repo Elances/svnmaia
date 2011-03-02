@@ -4,10 +4,10 @@ error_reporting(0);
 if (!isset($_SESSION['username'])){	
 	exit;
 }
-header("content-type:text/html; charset=gb2312");
+include('../../include/charset.php');
 if (($_SESSION['role'] !='admin'))
 {
-	echo "ÄúÎŞÈ¨½øĞĞ´Ë²Ù×÷£¡";
+	echo "æ‚¨æ— æƒè¿›è¡Œæ­¤æ“ä½œï¼";
 	exit;
 }
 if(isset($_POST['flag']))
@@ -29,8 +29,8 @@ if(isset($_POST['flag']))
 	$handle=fopen('./autopriv.conf','w+');
 	if (fwrite($handle, $str) === FALSE) {
 		$tmppath=realpath('./');
-   		echo "<strong>Error:</strong>²»ÄÜĞ´Èëµ½ÎÄ¼ş $tmppath/autopriv.conf ! ±£´æÊ§°Ü£¡";
- 	}else echo "<font color=red>±£´æ³É¹¦£¡</font>";
+   		echo "<strong>Error:</strong>ä¸èƒ½å†™å…¥åˆ°æ–‡ä»¶ $tmppath/autopriv.conf ! ä¿å­˜å¤±è´¥ï¼";
+ 	}else echo "<font color=red>ä¿å­˜æˆåŠŸï¼</font>";
 	fclose($handle);
 }
 if(file_exists('./autopriv.conf'))include('./autopriv.conf');
@@ -49,20 +49,20 @@ br{clear:both;}
 <link rel="stylesheet" href="../css/base.css" type="text/css">
 <form method='post' action=''>
 <fieldset>
-<h3>È¨ÏŞ×Ô¶¯ÉóÅúÉèÖÃ</h3>
+<h3>æƒé™è‡ªåŠ¨å®¡æ‰¹è®¾ç½®</h3>
 <div class='st'>
 <input type='hidden' name='flag' value='1'>
-<br><input type='checkbox' name='dir_admin_op' value='true' <?php echo $dir_admin_op ?> id='diradmin'><label for='diradmin'>·¢ËÍµ½Ä¿Â¼¹ÜÀíÔ±ÉóÅúÈ¨ÏŞ¡£ÈôÎŞ£¬Ôò·¢ËÍµ½³¬¼¶¹ÜÀíÔ±</label>
-<br><input type='checkbox' name='thenlist_op' value='true' <?php echo $thenlist_op ?> id='thenlist'><label for='thenlist'>·¢ËÍµ½Ä¿Â¼¹ÜÀíÔ±ÉóÅúÈ¨ÏŞ¡£ÎŞ,Ôò·¢ËÍµ½ÈçÏÂÁĞ±í£º</label>
+<br><input type='checkbox' name='dir_admin_op' value='true' <?php echo $dir_admin_op ?> id='diradmin'><label for='diradmin'>å‘é€åˆ°ç›®å½•ç®¡ç†å‘˜å®¡æ‰¹æƒé™ã€‚è‹¥æ— ï¼Œåˆ™å‘é€åˆ°è¶…çº§ç®¡ç†å‘˜</label>
+<br><input type='checkbox' name='thenlist_op' value='true' <?php echo $thenlist_op ?> id='thenlist'><label for='thenlist'>å‘é€åˆ°ç›®å½•ç®¡ç†å‘˜å®¡æ‰¹æƒé™ã€‚æ— ,åˆ™å‘é€åˆ°å¦‚ä¸‹åˆ—è¡¨ï¼š</label>
 <input type=text name='email_list2' value="<?php echo $email_list2 ?>">
-<br><input type='checkbox' name='tosuper_op' value='true' <?php echo $tosuper_op ?> id='superadmin'><label for='superadmin'>·¢ËÍµ½³¬¼¶¹ÜÀíÔ±</label>
-<br><input type='checkbox' name='tolist_op' value='true' <?php echo $tolist_op ?> id='tolist'><label for='tolist'>·¢ËÍµ½ÈçÏÂÁĞ±í£º</label>
+<br><input type='checkbox' name='tosuper_op' value='true' <?php echo $tosuper_op ?> id='superadmin'><label for='superadmin'>å‘é€åˆ°è¶…çº§ç®¡ç†å‘˜</label>
+<br><input type='checkbox' name='tolist_op' value='true' <?php echo $tolist_op ?> id='tolist'><label for='tolist'>å‘é€åˆ°å¦‚ä¸‹åˆ—è¡¨ï¼š</label>
 <input type=text name='email_list' value="<?php echo $email_list ?>">
 </div>
 <div class='ft'>
-<input type='submit' value='Ìá½»±£´æ'>
+<input type='submit' value='æäº¤ä¿å­˜'>
 </div>
 </fieldset>
-<a href='viewrequest.php'>²é¿´ÉêÇëÁĞ±í</a>
+<a href='viewrequest.php'>æŸ¥çœ‹ç”³è¯·åˆ—è¡¨</a>
 </form>
 

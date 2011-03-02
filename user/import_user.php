@@ -1,5 +1,5 @@
 <?php
-header("content-type:text/html; charset=gb2312");
+include('../include/charset.php');
 include('../include/requireAuth.php');
 //import user from passwd file
 if(! file_exists($passwdfile))
@@ -35,6 +35,6 @@ if ($handle) {
 
     }
 }
-echo "µ¼Èë³É¹¦£¡";
+echo "å¯¼å…¥æˆåŠŸï¼";
 
 

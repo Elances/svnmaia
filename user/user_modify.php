@@ -1,10 +1,10 @@
 <?php
    session_start();
-header("content-type:text/html; charset=gb2312");
+include('../include/charset.php');
 ?>
 <?php
 if (!isset($_SESSION['username'])){	
-	echo "ÇëÏÈ<a href='./loginfrm.php'>µÇÂ¼</a> £¡";
+	echo "è¯·å…ˆ<a href='./loginfrm.php'>ç™»å½•</a> ï¼";
 	echo" <script>setTimeout('document.location.href=\"./loginfrm.php\"',0)</script>";  	
 	exit;
 }
@@ -24,7 +24,7 @@ if (mysql_select_db(DBNAME))
 	$paras_array='';
 	if(empty($userArray))
 	{
-	  echo " <script>window.alert(\"Ñ¡ÔñÎª¿Õ£¡\")</script>";
+	  echo " <script>window.alert(\"é€‰æ‹©ä¸ºç©ºï¼\")</script>";
 			echo " <script>setTimeout('document.location.href=\"javascript:history.back()\"',3)</script>";
 			exit;	
 	}			
@@ -35,7 +35,7 @@ if (mysql_select_db(DBNAME))
 	}
  
 	$paras=implode(' or ',$paras_array);
-	if($action == 'É¾³ı')
+	if($action == 'åˆ é™¤')
 	{
 		if ($_SESSION['role']!='admin'){
 			echo "You are not allowed to access this file!";
@@ -54,7 +54,7 @@ if (mysql_select_db(DBNAME))
 		//header("Cache-Control: no-cache");
 		//echo "<script>window.history.back();</script>";
 	}
-	if($action == 'ÉèÎª³¬¼¶ÓÃ»§')
+	if($action == 'è®¾ä¸ºè¶…çº§ç”¨æˆ·')
 	{
 		if ($_SESSION['role']!='admin'){
 			echo "You are not allowed to access this file!";
@@ -66,7 +66,7 @@ if (mysql_select_db(DBNAME))
 		$result=mysql_query($query);
 		echo " <script>setTimeout('top.location.href=\"../default.htm\"',0)</script>";
 	}
-	if($action == 'È¡Ïû³¬¼¶ÓÃ»§')
+	if($action == 'å–æ¶ˆè¶…çº§ç”¨æˆ·')
 	{
 		if ($_SESSION['role']!='admin'){
 			echo "You are not allowed to access this file!";
@@ -82,18 +82,18 @@ if (mysql_select_db(DBNAME))
 
 	if($action=='chpasswd')
 	{
-		echo "Ôİ²»Ìá¹©³¬¼¶ÓÃ»§ÖØÖÃÃÜÂë¹¦ÄÜ(ºÃÏñÃ»±ØÒªÄØ)¡£<br>ÈçÒªĞŞ¸ÄÃÜÂë£¬ÇëÊ¹ÓÃ<a href='../extension/pwdhelp.php'>ĞŞ¸ÄÃÜÂë¹¤¾ß</a>¡£<br>ÈçÄúÈÏÎª´Ë¹¦ÄÜÊÇ±ØÒªµÄ£¬Çëµ½ÂÛÌ³<a href='http://www.scmbbs.com/cn/maia.php'>·´À¡</a>¡£";
+		echo "æš‚ä¸æä¾›è¶…çº§ç”¨æˆ·é‡ç½®å¯†ç åŠŸèƒ½(å¥½åƒæ²¡å¿…è¦å‘¢)ã€‚<br>å¦‚è¦ä¿®æ”¹å¯†ç ï¼Œè¯·ä½¿ç”¨<a href='../extension/pwdhelp.php'>ä¿®æ”¹å¯†ç å·¥å…·</a>ã€‚<br>å¦‚æ‚¨è®¤ä¸ºæ­¤åŠŸèƒ½æ˜¯å¿…è¦çš„ï¼Œè¯·åˆ°è®ºå›<a href='http://www.scmbbs.com/cn/maia.php'>åé¦ˆ</a>ã€‚";
 		
 	}
-	if( $action == '±à¼­')
+	if( $action == 'ç¼–è¾‘')
 	{
 		echo <<<HTML
 		<form method="post" action="">
 		<fieldset>
-		<legend>±à¼­ÓÃ»§ĞÅÏ¢</legend>
+		<legend>ç¼–è¾‘ç”¨æˆ·ä¿¡æ¯</legend>
 		<input type=hidden name=action value='modify'>
 		<table  cellspacing='1' cellpadding='0' width='70%' border='0' >
-		<tr><th>ÓÃ»§Ãû</th><th>ĞÕÃû</th><th>¹¤ºÅ</th><th>²¿ÃÅ</th><th>ÓÊ¼ş</th></tr>
+		<tr><th>ç”¨æˆ·å</th><th>å§“å</th><th>å·¥å·</th><th>éƒ¨é—¨</th><th>é‚®ä»¶</th></tr>
 HTML;
 		if ($_SESSION['role']=='admin'){
 			$query="select user_id,user_name,full_name,email,department,staff_no from svnauth_user where $paras";
@@ -106,6 +106,7 @@ HTML;
 				$department=$row['department'];
 				$email=$row['email'];
 				echo "<tr><td><input type=hidden name='userArray[]' value='$user_id'>
+				 <input type=hidden name='oldname[]' value='$user_name'>
 				 <input type=text name='username[]' value='$user_name'></td>
 				 <td><input type=text name='fullname[]' value='$full_name'></td>
 				 <td><input type=text name='staff_no[]' value='$staff_no'></td>
@@ -134,21 +135,21 @@ HTML;
 		echo <<<HTML
 		</table>
 		<table style="position:relative;left:300px;top:20px" >
-		<tr><td><input style="width:80" type=submit value="È·¶¨" ></td><td><input style="width:80" type=reset value="È¡Ïû" onclick="turnback()"></td></tr>
+		<tr><td><input style="width:80" type=submit value="ç¡®å®š" ></td><td><input style="width:80" type=reset value="å–æ¶ˆ" onclick="turnback()"></td></tr>
 	</table>
 		</fieldset></form>
-<br><a href="../priv/viewpriv.php?u=$user_id">²é¿´ÎÒµÄÈ¨ÏŞÏêÇé</a>
+<br><a href="../priv/viewpriv.php?u=$user_id">æŸ¥çœ‹æˆ‘çš„æƒé™è¯¦æƒ…</a>
 HTML;
 	}
-	if( $action == 'ÖØÖÃÃÜÂë')
+	if( $action == 'é‡ç½®å¯†ç ')
 	{
 		echo <<<HTML
 		<form method="post" action="">
 		<fieldset>
-		<legend>ÖØÖÃÓÃ»§ÃÜÂë</legend>
+		<legend>é‡ç½®ç”¨æˆ·å¯†ç </legend>
 		<input type=hidden name=action value='chpasswd'>
 		<table  cellspacing='1' cellpadding='0' width='70%' border='0' >
-		<tr><th>ÓÃ»§Ãû</th><th>ĞÂÃÜÂë</th><th>ĞÂÃÜÂëÈ·ÈÏ</th></tr>
+		<tr><th>ç”¨æˆ·å</th><th>æ–°å¯†ç </th><th>æ–°å¯†ç ç¡®è®¤</th></tr>
 HTML;
 		if ($_SESSION['role']=='admin'){
 			$query="select user_id,user_name,full_name from svnauth_user where $paras";
@@ -166,25 +167,59 @@ HTML;
 		echo <<<HTML
 		</table>
 		<table style="position:relative;left:300px;top:20px" >
-		<tr><td><input style="width:80" type=submit value="È·¶¨" ></td><td><input style="width:80" type=reset value="È¡Ïû" onclick="turnback()"></td></tr>
+		<tr><td><input style="width:80" type=submit value="ç¡®å®š" ></td><td><input style="width:80" type=reset value="å–æ¶ˆ" onclick="turnback()"></td></tr>
 	</table>
 		</fieldset></form>
 HTML;
 	}
 
+	if($action == 'å¤åˆ¶ç”¨æˆ·æƒé™')
+	{
+	
+	echo <<<HTML
+		<form method="post" action="">
+		<fieldset>
+		<legend>å¤åˆ¶ç”¨æˆ·æƒé™</legend>
+		<input type=hidden name=action value='copyuserpriv'>
+è¯´æ˜ï¼šå¤åˆ¶æˆå‘˜çš„æƒé™åˆ°å…¶ä»–ç”¨æˆ·ï¼Œå¯é€‰æ‹©è¿½åŠ è¿˜æ˜¯è¦†ç›–ã€‚--æ­¤åŠŸèƒ½ä¸‹ä¸€ç‰ˆæœ¬ä¸Šçº¿
+		<table  cellspacing='1' cellpadding='0' width='70%' border='0' >
+		<tr><th>æº</th><th>ç›®æ ‡</th></tr>
+HTML;
+		$query="select user_id,user_name,full_name from svnauth_user where $paras";
+			$result = mysql_query($query); 			 			
+			while (($result)and($row= mysql_fetch_array($result, MYSQL_BOTH))) {
+				$user_id=$row['user_id'];
+				$user_name=$row['user_name'];
+				$full_name=$row['full_name'];
+				echo "<tr><td>ä»ç”¨æˆ·<input type=hidden name='userArray' value='$user_id'>
+				 <input type=text readonly value='$user_name($full_name)'></td><td>å¤åˆ¶åˆ°<input type=text name='username'></td>";
+			}
+	echo <<<HTML
+		</table>
+<br><b>å¤åˆ¶ç±»åˆ«ï¼š</b>
+<input type=checkbox checked value='cpm' name='copym'>è¿½åŠ  <input type=checkbox value='cpp' name='copypriv'>è¦†ç›–
+		<table style="position:relative;left:300px;top:20px" >
+		<tr><td><input style="width:80" type=submit value="ç¡®å®š" ></td><td><input style="width:80" type=reset value="å–æ¶ˆ" onclick="turnback()"></td></tr>
+	</table>
+		</fieldset></form>
+HTML;
+	}
 
 	if($action == 'modify')
 	{
 		$userid=$_POST['userArray'];
 		$username=$_POST['username'];
+		$oldname=$_POST['oldname'];
 		$fullname=$_POST['fullname'];
 		$staff_no=$_POST['staff_no'];
 		$email=$_POST['email'];	
 		$department=$_POST['department'];
 		if ($_SESSION['role']=='admin')
 		{
+			$data_c=false;
 			for($i=0;$i<count($userid);$i++)
 			{
+			  if($oldname[$i] != $username[$i])$data_c=true;
 			  $username[$i]=safe($username[$i]);
 			  $fullname[$i]=safe($fullname[$i]);
 			  $userid[$i]=safe($userid[$i]);
@@ -194,6 +229,11 @@ HTML;
 			  if(empty($userid[$i]))continue;
 		  	  $query="update svnauth_user set user_name=$username[$i],full_name=$fullname[$i],staff_no=$staff_no[$i],email=$email[$i],department=$department[$i] where user_id=$userid[$i]";
 		  	  mysql_query($query);
+			}
+			if($data_c)
+			{
+				@include('./gen_passwd.php');
+				@include('../priv/gen_access.php');
 			}
 		}else if($_SESSION['username']==$username[0])
 		{

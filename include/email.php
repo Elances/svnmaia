@@ -1,10 +1,10 @@
 <?php
 @ include(dirname(__FILE__).'/../config/config.php');
-$db_charset='gb2312';
+$db_charset='utf-8';
 $M_db= new Mailconfig(
 	array(
 		'ifopen'=> 1,
-		'method'=> 1,
+		'method'=> $mail_method,
 		'host'	=> $smtp_server,
 		'port'	=> $smtp_port,
 		'auth'	=> $use_smtp_authz,
@@ -52,8 +52,9 @@ Class Mailconfig {
 }
 
 function send_mail($toemail,$subject,$message,$additional=null){
-	global $M_db,$db_charset,$sendtoname,$windid;
-	!$sendtoname && $sendtoname = $toemail;
+	global $M_db,$db_charset,$windid;
+	 if (!strstr($toemail,'@'))$toemail=$toemail.$email_ext;
+	$sendtoname = $toemail;	
 	!$windid && $windid = 'svn-info';
 	$send_subject = "=?$db_charset?B?".base64_encode(str_replace(array("\r","\n"), array('',' '),$subject)).'?=';
 	$send_message = chunk_split(base64_encode(str_replace("\r\n.", " \r\n..", str_replace("\n", "\r\n", str_replace("\r", "\n", str_replace("\r\n", "\n", str_replace("\n\r", "\r", $message)))))));
@@ -111,7 +112,12 @@ function send_mail($toemail,$subject,$message,$additional=null){
 			return 'email_toemail_failed';
 		}
 		fwrite($fp, "DATA\r\n");
-		if(strncmp(fgets($fp,512),'354',3)!=0){
+		$result_fp=fgets($fp,512);
+		if(strncmp($result_fp,'250',3)==0){
+			$result_fp=fgets($fp,512);
+		}
+		if(strncmp($result_fp,'354',3)!=0){
+			echo $result_fp;
 			return 'email_data_failed';
 		}
 		$msg  = "Date: ".Date("r")."\r\n";
@@ -123,7 +129,8 @@ function send_mail($toemail,$subject,$message,$additional=null){
 		if(substr($lastmessage, 0, 3) != 250)
 		{
 			//Showmsg('email_connect_failed');
-			echo "email connect failed";
+			echo $lastmessage;
+			return "email connect failed";
 		}
 		fwrite($fp, "QUIT\r\n");
 		fclose($fp);

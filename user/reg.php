@@ -1,6 +1,6 @@
 <?php
-//ÓÃ»§×¢²á´¦Àí
-header("content-type:text/html; charset=gb2312");
+//ç”¨æˆ·æ³¨å†Œå¤„ç†
+include('../include/charset.php');
 error_reporting(0);
 include('../../../config.inc');
 include('../include/basefunction.php');
@@ -9,7 +9,7 @@ if(file_exists('../config/config.php'))
 	include('../config/config.php');
 }else
 {
-	echo "ÇëÏÈ½øĞĞÏµÍ³ÉèÖÃ!";
+	echo "è¯·å…ˆè¿›è¡Œç³»ç»Ÿè®¾ç½®!";
 	echo" <script>setTimeout('document.location.href=\"../config/index.php\"',0)</script>";  	
 	exit;
 }
@@ -19,51 +19,63 @@ $passwd0=$_POST['passwd0'];
 foreach($_POST as $key=>$value){
 	$value=htmlspecialchars($value,ENT_QUOTES);
 	$_POST["$key"]=mysql_real_escape_string($value,$mlink);
-	if (function_exists('iconv'))$_POST["$key"]=iconv("UTF-8","GB2312",$_POST["$key"]);
+#	if (function_exists('iconv'))$_POST["$key"]=iconv("GB2312","UTF-8",$_POST["$key"]);
 }
 $username=trim($_POST['username']);
 $username=str_replace(' ','',$username);
 if(!checkUserGroup($username))
 {
-	echo "ÓÃ»§Ãû·Ç·¨£¡";
+	echo "ç”¨æˆ·åéæ³•ï¼";
 	exit;
 }
 $fullname=trim($_POST['fullname']);
 $staff_no=$_POST['staff_no'];
 $department=$_POST['department'];
 $email=$_POST['email'];
+if(!empty($_POST['randompwd']))
+{
+	$passwd=$passwd0=rand().rand();
+}
 if($email=="")$email=$username.$email_ext;
 if(($passwd == "")||($username =="")||($fullname ==""))
 {
-	echo " ÃÜÂëºÍÓÃ»§Ãû²»ÄÜÎª¿Õ£¬ÇëÊäÈë!";
+	echo " å¯†ç å’Œç”¨æˆ·åä¸èƒ½ä¸ºç©ºï¼Œè¯·è¾“å…¥!";
   exit;
 }
 if ($passwd != $passwd0)  
-{ echo " Á½´ÎÊäÈëµÄÃÜÂë²»Ò»ÖÂ£¬ÇëÖØĞÂÊäÈë!";
+{ echo " ä¸¤æ¬¡è¾“å…¥çš„å¯†ç ä¸ä¸€è‡´ï¼Œè¯·é‡æ–°è¾“å…¥!";
  
   exit;
+}
+if(empty($_POST['randompwd']))
+{
+	if(isSamplePassword($passwd,$username))
+	{
+		echo "å¯†ç è¿‡äºç®€å•,å¯†ç ç”±è‡³å°‘6ä¸ªè‹±æ–‡å­—æ¯å’Œæ•°å­—/ç¬¦å·ç»„æˆï¼Œä¸”ä¸èƒ½åŒ…å«ç”¨æˆ·åã€‚";
+		exit;
+	}
 }
 //$passwd= system($htpasswd.' -m -b -n '.escapeshellarg($usr).' '.escapeshellarg($passwd));
 //list($ot,$passwd)=explode(':',$passwd);
 $passwd=cryptMD5Pass($passwd);
 
-//ÉèÖÃ×Ö·û¼¯
+//è®¾ç½®å­—ç¬¦é›†
 $query = "select user_name from svnauth_user WHERE user_name ='$username'; ";
 $result =mysql_query($query);
 if (mysql_num_rows($result) > 0){
-		echo "ÓÃ»§ÃûÒÑ´æÔÚ£¡Èç¹ûÍü¼ÇÃÜÂë£¬ÇëÊ¹ÓÃ¡°ÕÒ»ØÃÜÂë¡±¹¦ÄÜ¡£"; 
+		echo "ç”¨æˆ·åå·²å­˜åœ¨ï¼å¦‚æœå¿˜è®°å¯†ç ï¼Œè¯·ä½¿ç”¨â€œæ‰¾å›å¯†ç â€åŠŸèƒ½ã€‚"; 
 		mysql_close($mlink);
 		exit;
 }else
 {
   $expire=date("Y-m-d" , strtotime("+$user_t day"));
   $query = "insert into svnauth_user (user_name,password,full_name,email,staff_no,department,supervisor,expire) values ('$username','$passwd','$fullname','$email','$staff_no','$department',0,'$expire')";
-  $result =mysql_query($query) or die('×¢²áÊ§°Ü£º'.mysql_error());
+  $result =mysql_query($query) or die('æ³¨å†Œå¤±è´¥ï¼š'.mysql_error());
   if($result){
 	$username=escapeshellarg($username); 
 	$passwd0=escapeshellarg($passwd0);
   	exec($htpasswd.' -m -b '. $passwdfile . ' '.$username.' '.$passwd0);
-  	echo "ÓÃ»§×¢²á³É¹¦£¡"; 
+  	echo "ç”¨æˆ·æ³¨å†ŒæˆåŠŸï¼"; 
 		mysql_close($mlink);
 		exit;
   }

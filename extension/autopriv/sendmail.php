@@ -1,13 +1,13 @@
 <?php
 session_start();
-header("content-type:text/html; charset=gb2312");
+include('../../include/charset.php');
 error_reporting(0);
 /*
-   ÎÄ¼şÃû£ºsendmail.php
-   ¹¦ÄÜ£º´¦ÀíÈ¨ÏŞÉêÇë£¬ÒÀ¾İurlºÍ¹æÔò·¢ËÍÓÊ¼ş¸ø¶ÔÓ¦¹ÜÀíÔ±¡£
-   ÊäÈë£ºurl¡¢ÓÃ»§Ãû¡¢ÉêÇëÈ¨ÏŞÀàĞÍ¡¢ÉêÇëËµÃ÷
-   Êä³ö£º·¢ËÍÓÊ¼ş
-   Âß¼­£º
+   æ–‡ä»¶åï¼šsendmail.php
+   åŠŸèƒ½ï¼šå¤„ç†æƒé™ç”³è¯·ï¼Œä¾æ®urlå’Œè§„åˆ™å‘é€é‚®ä»¶ç»™å¯¹åº”ç®¡ç†å‘˜ã€‚
+   è¾“å…¥ï¼šurlã€ç”¨æˆ·åã€ç”³è¯·æƒé™ç±»å‹ã€ç”³è¯·è¯´æ˜
+   è¾“å‡ºï¼šå‘é€é‚®ä»¶
+   é€»è¾‘ï¼š
 */
 include('../../../../config.inc');
 include('../../config/config.php');
@@ -23,11 +23,11 @@ $b_email=$_POST['email'];
 $wurl=$_POST['wurl'];
 $wpriv=$_POST['wpriv'];
 $comment=$_POST['comment'];
-//******ÊäÈëºÏ·¨ĞÔ¼ì²é********
+//******è¾“å…¥åˆæ³•æ€§æ£€æŸ¥********
 if((empty($reg_usr))or(empty($wpriv))or(empty($wurl))or(empty($comment)))
 {
-	echo " <script>window.alert(\"ÊäÈëĞÅÏ¢²»È«!\")</script>";
-  echo " <a href='javascript:history.back()'>µã»÷ÕâÀï·µ»Ø</a>";
+	echo " <script>window.alert(\"è¾“å…¥ä¿¡æ¯ä¸å…¨!\")</script>";
+  echo " <a href='javascript:history.back()'>ç‚¹å‡»è¿™é‡Œè¿”å›</a>";
   echo " <script>setTimeout('document.location.href=\"javascript:history.go(-1)\"',5)</script>";
   exit;
 	
@@ -37,7 +37,7 @@ function checkurl($t_url)
 	global $svnparentpath,$svn;
 	if($t_url=='')return true;
 	if(strpos($t_url,':'))return false;
-//ÖĞÎÄÄ¿Â¼ÅĞ¶ÏÓĞÎÊÌâ
+//ä¸­æ–‡ç›®å½•åˆ¤æ–­æœ‰é—®é¢˜
 //	if(isset($_GET['from_d']))
 	{
 	  $t_url=escapeshellcmd($t_url);
@@ -53,12 +53,16 @@ function checkurl($t_url)
 }
 $dir=trim($wurl);
 $dir=str_replace($svnurl,'',$dir);
+if(preg_match("/^http:/i",$dir)){
+	$dir=str_replace("http://",'',$dir);
+	list($tmp1,$tmp2,$dir)=explode('/',$dir,3);
+}
 $dir=($dir{0}=='/')?(substr($dir,1)):($dir);
 $dir=str_replace('//','/',$dir);
 if(!checkurl($dir))
 {
-  echo " <script>window.alert(\"url²»ÕıÈ·!\")</script>";
-  echo " <a href='javascript:history.back()'>µã»÷ÕâÀï·µ»Ø</a>";
+  echo " <script>window.alert(\"urlä¸æ­£ç¡®!\")</script>";
+  echo " <a href='javascript:history.back()'>ç‚¹å‡»è¿™é‡Œè¿”å›</a>";
   echo " <script>setTimeout('document.location.href=\"javascript:history.go(-1)\"',5)</script>";
   exit;
 }
@@ -71,7 +75,7 @@ if(empty($repos) and ($dir=='/'))
 }
 $subdir=$dir;
 $maillist=array();
-//*****Ä¿Â¼¹ÜÀíÔ±ÉóÅú
+//*****ç›®å½•ç®¡ç†å‘˜å®¡æ‰¹
 if(($dir_admin_op=='checked')or($thenlist_op=='checked'))
  for($ii=0;$ii<20;$ii++)
 {
@@ -92,7 +96,7 @@ if(($dir_admin_op=='checked')or($thenlist_op=='checked'))
 	if(strlen($subdir)>1)$subdir=dirname($subdir);
 	if($subdir=='\\')$subdir='/';
 }
-//********·¢ËÍµ½³¬¼¶¹ÜÀíÔ±
+//********å‘é€åˆ°è¶…çº§ç®¡ç†å‘˜
 if(($tosuper_op=='checked')or((!$t_found)and ($dir_admin_op=='checked')))
 {
   $query="select user_name,email from svnauth_user where supervisor=1";
@@ -106,14 +110,14 @@ if(($tosuper_op=='checked')or((!$t_found)and ($dir_admin_op=='checked')))
 	$maillist[]=$t_email;
   }
 }
-//*********·¢ËÍµ½Ö¸¶¨ÓÊ¼şÁĞ±í
+//*********å‘é€åˆ°æŒ‡å®šé‚®ä»¶åˆ—è¡¨
 if($tolist_op=='checked')
 {
 	$listArray=preg_split('/[;, ]/',$email_list);
 	foreach($listArray as $v)
 		if(strpos($v,'@'))$maillist[]=$v;
 }
-//******ÎŞÄ¿Â¼¹ÜÀíÔ±ÊÇ·¢ËÍµ½Ö¸¶¨ÁĞ±í
+//******æ— ç›®å½•ç®¡ç†å‘˜æ˜¯å‘é€åˆ°æŒ‡å®šåˆ—è¡¨
 if((!$t_found)and ($thenlist_op=='checked'))
 {
 	$listArray=preg_split('/[;, ]/',$email_list2);
@@ -123,15 +127,15 @@ if((!$t_found)and ($thenlist_op=='checked'))
 //****************	
 if(count($maillist)==0)
 {
-	echo "ÎŞ·¨·¢ÏÖ¸ÃurlµÄÉóÅúÕß£¡ÄãµÄÉêÇëÃ»ÓĞ·¢ËÍ³É¹¦£¡ÇëÓëÅä¹Ü×éÁªÏµ¡£";
+	echo "æ— æ³•å‘ç°è¯¥urlçš„å®¡æ‰¹è€…ï¼ä½ çš„ç”³è¯·æ²¡æœ‰å‘é€æˆåŠŸï¼è¯·ä¸é…ç®¡ç»„è”ç³»ã€‚";
 	exit;
 }
 //$para_str=urldecode($para_str);
-//¼ÇÂ¼ÉêÇëÁ´½Ó
+//è®°å½•ç”³è¯·é“¾æ¥
 $createtb = "create table IF NOT EXISTS rt_svnpriv(
 		`id` INT NOT NULL AUTO_INCREMENT, PRIMARY KEY (`id`),		
 		`username` varchar(40) NOT NULL,
-  `repository` varchar(20) NOT NULL,
+  `repository` varchar(50) NOT NULL,
   `path` varchar(255) NOT NULL,
   `email` varchar(80) default NULL,
   `permission` varchar(1) NOT NULL,
@@ -148,59 +152,73 @@ if($result)
 	$id=$row[0];
 	if(empty($id))$id=1;
 }
-
+$query="select full_name from svnauth_user where user_name ='$reg_usr';";
+$result = mysql_query($query);
+if($result)$totalnum=mysql_num_rows($result); 
+if($totalnum>0){
+	$row = mysql_fetch_array($result, MYSQL_BOTH);
+	if(!empty($row['full_name']))
+	{
+		$full_name="(".$row['full_name'].")";
+	}
+}
 $query="insert into rt_svnpriv (`id`,`username`,`repository`,`path`,`permission`,`email`,`rtdate`) values($id,'$reg_usr','$repos','$dir','$wpriv','$b_email',NOW())";
 mysql_query($query);
-
-//******Éú³É´¦ÀíÁ´½Ó*******
+$rc_error=mysql_error();
+//******ç”Ÿæˆå¤„ç†é“¾æ¥*******
 $salt=mt_rand();
 $para_str=urlencode(md5($salt.SECRET_KEY.$id));
 $url_raw="http://".$_SERVER['HTTP_HOST']. rtrim(dirname($_SERVER['PHP_SELF']))."/index.php?c=$para_str&ss=$salt&s=$id";
 
-//**¼ÇÂ¼Á´½Ó********
+//**è®°å½•é“¾æ¥********
 $createtb = "create table IF NOT EXISTS svn_hex(
 		`id`  INT UNIQUE, PRIMARY KEY (id),
 		`hexkey` varchar(255)
 		)ENGINE=MyISAM;";
 	mysql_query($createtb);
-$query="insert IGNORE into svn_hex set id=$id,hexkey='$para_str';";
+$query="insert  into svn_hex set id=$id,hexkey='$para_str';";
 mysql_query($query);
-
-//½«×Ö·û´®·¢¸ø¶ÔÓ¦ÓÊÏä
+$rc_error=$rc_error.mysql_error();
+if(!empty($rc_error))
+{
+	echo "è®°å½•è¯·æ±‚æ—¶å‘ç”Ÿé”™è¯¯ï¼Œæ— æ³•å‘é€ç”³è¯·ï¼Œè¯·ç¨ä¾¯å†è¯•ã€‚é”™è¯¯ä¿¡æ¯ï¼š".$rc_error;
+	exit;
+}
+//å°†å­—ç¬¦ä¸²å‘ç»™å¯¹åº”é‚®ç®±
 include("../../include/email.php");
 $addr=$_SERVER['REMOTE_ADDR'];
-($wpriv=='w')?($priv='¶ÁĞ´'):($priv='Ö»¶Á');
+($wpriv=='w')?($priv='è¯»å†™'):($priv='åªè¯»');
 foreach($maillist as $mail)
 {
   list($user_raw,$m)=explode('@',$mail);
   $user=urlencode(base64_encode($user_raw));
   $url=$url_raw."&u=$user";
   $body="Hi,$user_raw\n
-   $reg_usr ÉêÇësvn·ÃÎÊÈ¨ÏŞ£¬ĞèÒªÄúµÄ´¦Àí£¬ÏêÇéÈçÏÂ£º
-	ÉêÇë·ÃÎÊÂ·¾¶£º$wurl
-	ÉêÇëÈ¨ÏŞ£º$priv
-	ÉêÇëËµÃ÷£º$comment
+   $reg_usr $full_name ç”³è¯·svnè®¿é—®æƒé™ï¼Œéœ€è¦æ‚¨çš„å¤„ç†ï¼Œè¯¦æƒ…å¦‚ä¸‹ï¼š
+	ç”³è¯·è®¿é—®è·¯å¾„ï¼š$wurl
+	ç”³è¯·æƒé™ï¼š$priv
+	ç”³è¯·è¯´æ˜ï¼š$comment
 
-ÎŞÂÛÄúÊÇÍ¬Òâ»¹ÊÇ¾Ü¾ø£¬Çëµã»÷ÈçÏÂÁ´½Ó½øĞĞ´¦Àí£º
+æ— è®ºæ‚¨æ˜¯åŒæ„è¿˜æ˜¯æ‹’ç»ï¼Œè¯·ç‚¹å‡»å¦‚ä¸‹é“¾æ¥è¿›è¡Œå¤„ç†ï¼š
 $url
 
-Èç¹ûÍ¨¹ıµã»÷ÒÔÉÏÁ´½ÓÎŞ·¨·ÃÎÊ£¬Çë½«¸ÃÍøÖ·¸´ÖÆ²¢Õ³ÌùÖÁĞÂµÄä¯ÀÀÆ÷´°¿ÚÖĞ¡£
+å¦‚æœé€šè¿‡ç‚¹å‡»ä»¥ä¸Šé“¾æ¥æ— æ³•è®¿é—®ï¼Œè¯·å°†è¯¥ç½‘å€å¤åˆ¶å¹¶ç²˜è´´è‡³æ–°çš„æµè§ˆå™¨çª—å£ä¸­ã€‚
 
-ÕâÖ»ÊÇÒ»·âÏµÍ³×Ô¶¯·¢³öµÄÓÊ¼ş£¬ÎÒÃÇ²»¼à¿ØËüµÄ·¢ËÍ¡£
+è¿™åªæ˜¯ä¸€å°ç³»ç»Ÿè‡ªåŠ¨å‘å‡ºçš„é‚®ä»¶ï¼Œæˆ‘ä»¬ä¸ç›‘æ§å®ƒçš„å‘é€ã€‚
 
-´¥·¢´ËÓÊ¼şÀ´×ÔIP:$addr
+è§¦å‘æ­¤é‚®ä»¶æ¥è‡ªIP:$addr
 
 --------------------
-ÅäÖÃ¹ÜÀí×é\n
+é…ç½®ç®¡ç†ç»„\n
 ";
- $subject="svnÈ¨ÏŞÉêÇë-$reg_usr";
+ $subject="svnæƒé™ç”³è¯·-$reg_usr";
  $windid="svn-rt";
  $sendinfo =send_mail($mail,$subject,$body);
  if ($sendinfo === true) {
-    echo "<br>ÉêÇëÒÑ·¢³öÖÁ $mail";
+    echo "<br>ç”³è¯·å·²å‘å‡ºè‡³ $mail";
  }else {
-	echo(is_string($sendinfo) ? $sendinfo : 'reg_email_fail:'.$mail);
+	echo(is_string($sendinfo) ? $sendinfo : ' å‘é€å¤±è´¥:'.$mail);
  }
 }
-echo "<br>µã»÷<a href='' onclick='javascript:self.close();'>¹Ø±Õ</a>";
+echo "<br>ç‚¹å‡»<a href='' onclick='javascript:self.close();'>å…³é—­</a>";
 ?>

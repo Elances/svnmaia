@@ -1,6 +1,6 @@
 <?php
 	include('../config/config.php');
-header("content-type:text/html; charset=gb2312");
+include('../include/charset.php');
 ?>
 <!--
 Author:lixuejiang
@@ -9,7 +9,7 @@ Date:2009-02-19
 -->
 <html>
 <head>
-  <title>svnÓÃ»§×¢²á</title>
+  <title>svnç”¨æˆ·æ³¨å†Œ</title>
 </head>
 <style type='text/css'>
 h1{text-align:center;}
@@ -25,46 +25,46 @@ td{height:35px;}
 <body>
 
   <p>
-  <noscript><strong>ÄúµÄä¯ÀÀÆ÷²»Ö§³Öscript½Å±¾¡£<br>ÓÃ»§×¢²á¹¦ÄÜ½«²»ÄÜÕý³£Ê¹ÓÃ£¡<br></noscript>
+  <noscript><strong>æ‚¨çš„æµè§ˆå™¨ä¸æ”¯æŒscriptè„šæœ¬ã€‚<br>ç”¨æˆ·æ³¨å†ŒåŠŸèƒ½å°†ä¸èƒ½æ­£å¸¸ä½¿ç”¨ï¼<br></noscript>
   	<form name='regform' action=reg.php method=post onsubmit="return fCheck()">
 	<fieldset>
-  	 <legend>×¢²ásubversionÓÃ»§</legend>
+  	 <legend>æ³¨å†Œsubversionç”¨æˆ·</legend>
    	<table>
 	<tr>
-		<td  class='lb'>ÓÃ»§Ãû£º</td>
-		<td ><input type="text" name="username" size="20" onblur="addemail()"> * <span class='m'>ÇëÓëÄúµÄÓÊÏäÇ°×º±£³ÖÒ»ÖÂ£¬ÓÉ×ÖÄ¸×é³É</span></td>
+		<td  class='lb'>ç”¨æˆ·åï¼š</td>
+		<td ><input type="text" name="username" size="20" onblur="addemail()"> * <span class='m'>è¯·ä¸Žæ‚¨çš„é‚®ç®±å‰ç¼€ä¿æŒä¸€è‡´ï¼Œç”±å­—æ¯ç»„æˆ</span></td>
  	</tr>
  
 	<tr>
-		<td  class='lb'>ÃÜÂë£º</td>
+		<td  class='lb'>å¯†ç ï¼š</td>
 		<td ><input type="password" name="passwd" size="20"> * </td>
 	</tr>
 	<tr>
-		<td  class='lb'>È·ÈÏÐÂÃÜÂë£º</td>
+		<td  class='lb'>ç¡®è®¤æ–°å¯†ç ï¼š</td>
 		<td><input type=password name="passwd0" size="20"> *</td>
 	</tr>
 	<tr>
-		<td  class='lb'>ÖÐÎÄÐÕÃû£º</td>
-		<td ><input type="text" name="fullname" size="20" > * <span class='m'>ÇëÌîÐ´ÕæÊµÐÕÃû</span></td>
+		<td  class='lb'>ä¸­æ–‡å§“åï¼š</td>
+		<td ><input type="text" name="fullname" size="20" > * <span class='m'>è¯·å¡«å†™çœŸå®žå§“å</span></td>
  	</tr>
  	<tr>
-		<td  class='lb'>¹¤ºÅ£º</td>
-		<td ><input type="text" name="staff_no" size="20" >  <span class='m'>ÊµÏ°Éú¿É²»Ìî</span></td>
+		<td  class='lb'>å·¥å·ï¼š</td>
+		<td ><input type="text" name="staff_no" size="20" >  <span class='m'>å®žä¹ ç”Ÿå¯ä¸å¡«</span></td>
  	</tr>	
  	<tr>
-		<td  class='lb'>²¿ÃÅ£º</td>
+		<td  class='lb'>éƒ¨é—¨ï¼š</td>
 		<td ><input type="text" name="department" size="20" >  <span class='m'></span></td>
 	</tr>	
 		<tr>
-		<td  class='lb'>µç×ÓÓÊ¼þ£º</td>
+		<td  class='lb'>ç”µå­é‚®ä»¶ï¼š</td>
 		<td ><input type="text" name="email" size="20" > </td>
  	</tr>	
  </table>
 	<table border="0" width="84%" id="table2">
 	<tr>
-		<td width="104"><input type=button value="Ìá½»" onclick="return tCheck()"></td>
-		<td><input type=reset value="È¡Ïû"></td>
-		<td align=right><a href='./viewuser.php'>ÐÞ¸ÄÓÃ»§</a></td>
+		<td width="104"><input type=button value="æäº¤" onclick="return tCheck()"></td>
+		<td><input type=reset value="å–æ¶ˆ"></td>
+		<td align=right><a href='./viewuser.php'>ä¿®æ”¹ç”¨æˆ·</a></td>
 		</tr>
 	</table>
 </fieldset>
@@ -85,46 +85,48 @@ function addemail()
  
  if( regform.username.value =="") 
  {
-       alert("\ÓÃ»§Ãû²»ÄÜÎª¿Õ!");
+       alert("\ç”¨æˆ·åä¸èƒ½ä¸ºç©º!");
        regform.username.focus();
        return false;
   }
  if( regform.passwd.value =="") 
  {
-       alert("\ÃÜÂë²»ÄÜÎª¿Õ!");
+       alert("\å¯†ç ä¸èƒ½ä¸ºç©º!");
        regform.passwd.focus();
        return false;
   }
 
    if( ! isPassword( regform.passwd.value ) )
    {
-        alert("\ÇëÖØÐÂÊäÈëÃÜÂë,ÃÜÂëÓÉÖÁÉÙ6¸öÓ¢ÎÄ×ÖÄ¸»òÊý×Ö×é³É !"); 
+	 alert("\å¯†ç è¿‡äºŽç®€å•,å¯†ç ç”±è‡³å°‘6ä¸ªè‹±æ–‡å­—æ¯å’Œæ•°å­—/ç¬¦å·ç»„æˆ !"); 
         regform.passwd.select();
         regform.passwd.focus();
         return false;
    }
   if( regform.passwd0.value =="" )
   {
-      alert("\ÇëÊäÈëÃÜÂëÈ·ÈÏ !");
+      alert("\è¯·è¾“å…¥å¯†ç ç¡®è®¤ !");
       regform.passwd0.select();
       regform.passwd0.focus();
       return false;
   }
   if(  regform.passwd0.value != regform.passwd.value ) {
-     alert("\Á½´ÎÃÜÂëÊäÈë²»Ò»ÖÂ !");
+     alert("\ä¸¤æ¬¡å¯†ç è¾“å…¥ä¸ä¸€è‡´ !");
      regform.passwd.focus();
      return false;
   }
  if( regform.fullname.value =="" )
   {
-      alert("\ÇëÊäÈëÄúµÄÕæÊµÐÕÃû!");
+      alert("\è¯·è¾“å…¥æ‚¨çš„çœŸå®žå§“å!");
       regform.fullname.select();
       regform.fullname.focus();
       return false;
   }
 function isPassword( password )
   {
-     return /^[\w\W]{6,20}$/.test( password );
+      if(password.search(regform.username.value)>=0 ||/^hello1234$/i.test(password))return false;
+      if(password.length < 6||!/[0-9\W]+/.test(password)||!/[a-zA-Z]+/.test(password))return false;
+      return true;
   }
   return true;
 }  
@@ -135,19 +137,19 @@ function tCheck()
 	return true;
 }
 
-//ÓÃÓÚ´´½¨XMLHttpRequest¶ÔÏó
+//ç”¨äºŽåˆ›å»ºXMLHttpRequestå¯¹è±¡
 function createXmlHttp() {
-    //¸ù¾Ýwindow.XMLHttpRequest¶ÔÏóÊÇ·ñ´æÔÚÊ¹ÓÃ²»Í¬µÄ´´½¨·½Ê½
+    //æ ¹æ®window.XMLHttpRequestå¯¹è±¡æ˜¯å¦å­˜åœ¨ä½¿ç”¨ä¸åŒçš„åˆ›å»ºæ–¹å¼
     if (window.XMLHttpRequest) {
-       xmlHttp = new XMLHttpRequest();                  //FireFox¡¢OperaµÈä¯ÀÀÆ÷Ö§³ÖµÄ´´½¨·½Ê½
+       xmlHttp = new XMLHttpRequest();                  //FireFoxã€Operaç­‰æµè§ˆå™¨æ”¯æŒçš„åˆ›å»ºæ–¹å¼
     } else {
-       xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");//IEä¯ÀÀÆ÷Ö§³ÖµÄ´´½¨·½Ê½
+       xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");//IEæµè§ˆå™¨æ”¯æŒçš„åˆ›å»ºæ–¹å¼
     }
 }
 function displayTip(content) {
 	alert(content);
 }
-//´Ó·þÎñÆ÷¼ÓÔØ¹Ø¼ü´ÊµÄÏêÏ¸ÐÅÏ¢
+//ä»ŽæœåŠ¡å™¨åŠ è½½å…³é”®è¯çš„è¯¦ç»†ä¿¡æ¯
 function loadTip() {
     if(!fCheck())return false;
    var username="username="+regform.username.value
@@ -155,18 +157,18 @@ function loadTip() {
       +"&fullname="+regform.fullname.value
       +"&staff_no="+regform.staff_no.value
       +"&email="+regform.email.value;
-    createXmlHttp();                                //´´½¨XMLHttpRequest¶ÔÏó
-    xmlHttp.onreadystatechange = loadTipCallBack;   //ÉèÖÃ»Øµ÷º¯Êý
+    createXmlHttp();                                //åˆ›å»ºXMLHttpRequestå¯¹è±¡
+    xmlHttp.onreadystatechange = loadTipCallBack;   //è®¾ç½®å›žè°ƒå‡½æ•°
     xmlHttp.open("POST", "./reg.php", true);
     xmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     xmlHttp.send(username);
 }
 
-//»ñÈ¡²éÑ¯Ñ¡ÏîµÄ»Øµ÷º¯Êý
+//èŽ·å–æŸ¥è¯¢é€‰é¡¹çš„å›žè°ƒå‡½æ•°
 function loadTipCallBack() {
     if (xmlHttp.readyState == 4) {
-        displayTip(xmlHttp.responseText);           //ÏÔÊ¾¼ÓÔØÍê±ÏµÄÏêÏ¸ÐÅÏ¢
-        if(xmlHttp.responseText=="ÓÃ»§×¢²á³É¹¦£¡")regform.reset();
+        displayTip(xmlHttp.responseText);           //æ˜¾ç¤ºåŠ è½½å®Œæ¯•çš„è¯¦ç»†ä¿¡æ¯
+        if(xmlHttp.responseText=="ç”¨æˆ·æ³¨å†ŒæˆåŠŸï¼")regform.reset();
         regform.username.focus();
         
     }

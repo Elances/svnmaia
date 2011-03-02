@@ -4,14 +4,15 @@ error_reporting(0);
 $d=$_GET['parentId'];
 if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
 	$path=escapeshellcmd($_GET['d']);
-	header("Content-Type: text/xml;  charset=gb2312");
+	header("Content-Type: text/xml;  charset='gb2312'");
 }else
 {
-	$path=urlencode(escapeshellcmd($_GET['d']));
-	header("Content-Type: text/xml;  charset=utf-8");
+	header("Content-Type: text/xml;  charset='utf-8'");
+	//$_GET['d']=iconv("GB2312","UTF-8",$_GET['d']);
+	$path=urlencode($_GET['d']);
 }
 $path=str_replace('%2F','/',$path);
-$path=str_replace('%5C%23','%23',$path);//解决#字符目录无法列出问题
+$path=str_replace('%5C','',$path);//char '\'
 $path=str_replace('+',' ',$path);
 include('../config/config.php');
 echo "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
@@ -57,6 +58,7 @@ if($d == '0')
 	$i=1;
 	foreach($dirs_arr as $dir)
 	{
+		$dir=iconv("GB2312","UTF-8",$dir);
 		if($dir{strlen($dir)-1}=='/')
 		{
 			$dir_utf=urlencode($dir);
@@ -74,6 +76,10 @@ if($d == '0')
 			} 
 			$url="./tree.php?d=$path/$dir_utf";
 			$path_raw=urldecode($path);
+			$path_raw=htmlspecialchars($path_raw);
+			$dir=htmlspecialchars($dir);
+			$dir=str_replace('&','%26',$dir);
+			$path_raw=str_replace('&','%26',$path_raw);
 			$url2="../priv/dirpriv.php?d=$path_raw/$dir";
 			echo"<tree src=\"$url\" target=\"rt1\" action=\"$url2\" text=\"$dir\"/>\n";
 		    $i++;
