@@ -179,9 +179,9 @@ HTML;
 	echo <<<HTML
 		<form method="post" action="">
 		<fieldset>
-		<legend>复制组</legend>
+		<legend>复制用户权限</legend>
 		<input type=hidden name=action value='copyuserpriv'>
-说明：复制成员的权限到其他用户，可选择追加还是覆盖。
+说明：复制成员的权限到其他用户，可选择追加还是覆盖。--此功能下一版本上线
 		<table  cellspacing='1' cellpadding='0' width='70%' border='0' >
 		<tr><th>源</th><th>目标</th></tr>
 HTML;
