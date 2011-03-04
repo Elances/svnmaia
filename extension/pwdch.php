@@ -1,4 +1,5 @@
 <?php
+include('../include/charset.php');
 include('../config/config.php');
 include('../../../config.inc');
 include('../include/dbconnect.php');
