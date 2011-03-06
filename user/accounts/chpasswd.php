@@ -37,6 +37,8 @@ if ($newpasswd != $newpasswd1)
 if(isSamplePassword($newpasswd,$user))
 {
 		echo "<script>window.alert(\"密码过于简单,密码由至少6个英文字母和数字/符号组成，且不能包含用户名。\")</script>";
+		echo " <a href='javascript:history.back()'>点击这里返回</a>";
+		echo " <script>setTimeout('document.location.href=\"javascript:history.go(-1)\"',5)</script>";
 		exit;
 }
 include('../../config/config.php');
