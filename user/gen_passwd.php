@@ -15,7 +15,7 @@ include('../../../config.inc');
 include('../include/dbconnect.php');
 	mysql_query("SET NAMES UTF8"); 
 
-	$query="select user_name,password from svnauth_user order by user_name where fresh!=1";
+	$query="select user_name,password from svnauth_user  where fresh!=1 order by user_name";
 	$result=mysql_query($query);
 	$filestr='';
 	while($result and ($row= mysql_fetch_array($result, MYSQL_BOTH))) {	
