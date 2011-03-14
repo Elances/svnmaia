@@ -259,7 +259,7 @@ HTML;
 			echo "用户名不存在，请确认输入是否正确！";
 			exit;
 		}
-		$data_c=false
+		$data_c=false;
 		if($_POST['copym'] == 'cpm')
 		{
 		
