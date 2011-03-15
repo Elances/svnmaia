@@ -225,6 +225,11 @@ while (($result)and($row= mysql_fetch_array($result, MYSQL_BOTH))) {
 	
 }
 //echo str_replace("\n","<br>",$access);
+		if("[groups]\n" == $access)
+		{
+			echo "权限信息为空！";
+			exit;
+		}
 
 		$handle=fopen($accessfile,'w+');
 		if (fwrite($handle, $access) === FALSE) {

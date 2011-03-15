@@ -23,6 +23,11 @@ include('../include/dbconnect.php');
 		$passwd=$row['password'];
 		$filestr .="$user:$passwd\n";
 	}
+	if(empty($filestr))
+	{
+		echo "用户信息为空！";
+		exit;
+	}
 
 	//write the file
 	$handle = fopen($passwdfile, "w+");
