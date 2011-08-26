@@ -4,10 +4,10 @@ error_reporting(0);
 if (!isset($_SESSION['username'])){	
 //	exit;
 }
-header("content-type:text/html; charset=gb2312");
-if (($_SESSION['role'] !='admin')and($_SESSION['role'] !='diradmin'))
+include('../include/charset.php');
+if ($_SESSION['role'] !='admin')
 {
-	echo "ÄúÎŞÈ¨½øĞĞ´Ë²Ù×÷£¡";
+	echo "æ‚¨æ— æƒè¿›è¡Œæ­¤æ“ä½œï¼";
 	exit;
 }
 include('../../../config.inc');
@@ -49,8 +49,34 @@ if (mysql_select_db(DBNAME))
 			{
 					$v=base64_encode($v);
 			}
-			if($para=='svnparentpath')$v=str_replace('\\','/',$v);
+			if($para=='svnparentpath')
+			{
+				$v=str_replace('\\','/',$v);
+				$sp = opendir( $v );
+				if( $sp ) {
+					$nodb=true;
+				        while( $dir = readdir( $sp ) ) {
+					   if ($dir == "." || $dir == "..")continue; 
+				           $svndir = $v . "/" . $dir;
+					   $svndbdir = $svndir . "/db";
+					   $svnhooksdir=$svndir ."/hooks";
+					   if( is_dir( $svndir ) && is_dir( $svndbdir ) && is_dir($svnhooksdir))
+					   {
+						   $nodb=false;
+						   break; 
+					   }
+					}
+					if($nodb)$err_svnpath="<span class='err'><strong>Error:</strong>$v è¯¥ç›®å½•ä¸‹æ²¡æ‰¾åˆ°ä»»ä½•svnåº“!è¯•è¯•å¡«å†™ä¸Šä¸€çº§ç›®å½•ï¼Ÿ</span>";
+				}
+			}
 			if($para=='use_smtp_authz')$flag=true;
+			if($para=='mail_method')
+			{
+				if((trim($_POST['smtp_server'])=='localhost')||($_POST['smtp_server']=='127.0.0.1'))
+				{
+					$v='1';
+				}else  $v='2';
+			}
 			$para=mysql_real_escape_string($para);	
 			$v="'".mysql_real_escape_string($v)."'";
 			$query="update svnauth_para set value=$v where para='$para'";
@@ -62,22 +88,22 @@ if (mysql_select_db(DBNAME))
 			}
 			$file_str .= "\${$para}=$v;\n";
 		}
-		//Éú³ÉÅäÖÃÎÄ¼ş
+		//ç”Ÿæˆé…ç½®æ–‡ä»¶
 		$file_str .="?>\n";
 		$handle=fopen('./config.php','w+');
 		if (fwrite($handle, $file_str) === FALSE) {
 			$tmppath=realpath('./');
-       			 echo "<strong>Error:</strong>²»ÄÜĞ´Èëµ½ÎÄ¼ş $tmppath/config.php ! ±£´æÊ§°Ü£¡";
+       			 echo "<strong>Error:</strong>ä¸èƒ½å†™å…¥åˆ°æ–‡ä»¶ $tmppath/config.php ! ä¿å­˜å¤±è´¥ï¼";
     		}
 		fclose($handle);
-		echo "<script>window.alert('±£´æ³É¹¦£¡')</script>";
+		echo "<script>window.alert('ä¿å­˜æˆåŠŸï¼')</script>";
 		if(!$flag)
 		{
 			$query="update svnauth_para set value='false' where para='use_smtp_authz'";
 			mysql_query($query);
 		}
 	}
-	//*****ÁĞ³öpara²ÎÊı
+	//*****åˆ—å‡ºparaå‚æ•°
 	$query="select para,value from svnauth_para";
 	$result = mysql_query($query);	
 	$para_array=array();
@@ -86,6 +112,7 @@ if (mysql_select_db(DBNAME))
 	$para_array['htpasswd']='htpasswd';
 	$para_array['smtp_server']='localhost';
 	$para_array['write_t']='180';
+	$para_array['mail_method']='1';
 	$para_array['read_t']='365';
 	$para_array['user_t']='1095';
 	$para_array['email_ext']='@yahoo.com.cn';
@@ -105,7 +132,7 @@ if (mysql_select_db(DBNAME))
 		}
 	}
 }else{
-	echo "Error:²»ÄÜÑ¡ÔñÊı¾İ¿â!".DBNAME;
+	echo "Error:ä¸èƒ½é€‰æ‹©æ•°æ®åº“!".DBNAME;
 }
 ?>
 <style type='text/css'>
@@ -146,51 +173,51 @@ function showadvance(myid)
 }
 -->
 </script>
-<h2>ÉèÖÃ</h2>
+<h2>è®¾ç½®</h2>
 <form method='post' action=''>
 <fieldset>
-<h3>ÏµÍ³²ÎÊıÉèÖÃ</h3>
+<h3>ç³»ç»Ÿå‚æ•°è®¾ç½®</h3>
 <div class='st'>
-<br>1¡¢È¨ÏŞ¿ØÖÆÎÄ¼şÂ·¾¶£º<input type='text' class='ipt' readonly name='accessfile' id='accessfile' value="<?php echo $para_array['accessfile'];?>"> <span class='rt'> <a href="#" onclick="modify('accessfile')">ĞŞ¸Ä</a>&nbsp;&nbsp;<font class=sf onclick="showreadme('readmetip')"><img src='../img/help.gif'></font> <?php echo $err_acc ?></span><span id='readmetip' class='sf' style='display:none'><p><br><b>ËµÃ÷£º</b>¡¾±ØÌîÏî¡¿Ö¸¶¨svnµÄÈ¨ÏŞ¿ØÖÆÎÄ¼şaccess fileµÄÏµÍ³Â·¾¶¡£</p>
+<br>1ã€æƒé™æ§åˆ¶æ–‡ä»¶è·¯å¾„ï¼š<input type='text' class='ipt' readonly name='accessfile' id='accessfile' value="<?php echo $para_array['accessfile'];?>"> <span class='rt'> <a href="#" onclick="modify('accessfile')">ä¿®æ”¹</a>&nbsp;&nbsp;<font class=sf onclick="showreadme('readmetip')"><img src='../img/help.gif'></font> <?php echo $err_acc ?></span><span id='readmetip' class='sf' style='display:none'><p><br><b>è¯´æ˜ï¼š</b>ã€å¿…å¡«é¡¹ã€‘æŒ‡å®šsvnçš„æƒé™æ§åˆ¶æ–‡ä»¶access fileçš„ç³»ç»Ÿè·¯å¾„ã€‚</p>
  </span>
-<br>2¡¢ÓÃ»§ÎÄ¼şpasswdÂ·¾¶£º<input type='text' class='ipt'  readonly name='passwdfile' id='passwdfile'  value="<?php echo $para_array['passwdfile'];?>"> <span class='rt'> <a href="#" onclick="modify('passwdfile')">ĞŞ¸Ä</a>&nbsp;&nbsp;<font class=sf onclick="showreadme('readmetip2')"><img src='../img/help.gif'></font> <?php echo $err_pass ?></span><span id='readmetip2' class='sf' style='display:none'><p><br><b>ËµÃ÷£º</b>¡¾±ØÌîÏî¡¿Ö¸¶¨svnµÄÓÃ»§ÃÜÂëÎÄ¼şpasswd fileµÄÏµÍ³Â·¾¶¡£</p>
+<br>2ã€ç”¨æˆ·æ–‡ä»¶passwdè·¯å¾„ï¼š<input type='text' class='ipt'  readonly name='passwdfile' id='passwdfile'  value="<?php echo $para_array['passwdfile'];?>"> <span class='rt'> <a href="#" onclick="modify('passwdfile')">ä¿®æ”¹</a>&nbsp;&nbsp;<font class=sf onclick="showreadme('readmetip2')"><img src='../img/help.gif'></font> <?php echo $err_pass ?></span><span id='readmetip2' class='sf' style='display:none'><p><br><b>è¯´æ˜ï¼š</b>ã€å¿…å¡«é¡¹ã€‘æŒ‡å®šsvnçš„ç”¨æˆ·å¯†ç æ–‡ä»¶passwd fileçš„ç³»ç»Ÿè·¯å¾„ã€‚</p>
  </span>
-<br>3¡¢htpasswdÂ·¾¶:<input type='text' class='ipt'  readonly name='htpasswd' id='htpasswd'  value="<?php echo $para_array['htpasswd'];?>"> <span class='rt'> <a href="#" onclick="modify('htpasswd')">ĞŞ¸Ä</a> &nbsp;&nbsp;<font class=sf onclick="showreadme('readmetip3')"><img src='../img/help.gif'></font><?php echo $err_htpa ?></span><span id='readmetip3' class='sf' style='display:none'><p><br><b>ËµÃ÷£º</b>Èç¹û·şÎñÆ÷ÏµÍ³±äÁ¿ÎŞ·¨Ê¶±ğhtpasswd£¬ÔòĞëÖ¸¶¨htpasswdËùÔÚµÄ¾ßÌåÂ·¾¶¡£Èç:/usr/bin/htpasswd£¬»ò:D:/apache2/bin/htpasswd¡£Èç¹ûÏµÍ³ÄÜÊ¶±ğ£¬ÔòÖ»ĞèÒªÌîĞ´"htpasswd"¼´¿É¡£Èç¹ûÌîĞ´´íÎó£¬ÔòÔöÉ¾ÓÃ»§ºÍÓÃ»§ĞŞ¸ÄÃÜÂëÊ±ĞèÒª¹ÜÀíÔ±Ê¹ÓÃ¡¾Éú³ÉÓÃ»§ÎÄ¼ş¡¿¹¤¾ßºó²ÅÄÜÉúĞ§¡£</p>
+<br>3ã€htpasswdè·¯å¾„:<input type='text' class='ipt'  readonly name='htpasswd' id='htpasswd'  value="<?php echo $para_array['htpasswd'];?>"> <span class='rt'> <a href="#" onclick="modify('htpasswd')">ä¿®æ”¹</a> &nbsp;&nbsp;<font class=sf onclick="showreadme('readmetip3')"><img src='../img/help.gif'></font><?php echo $err_htpa ?></span><span id='readmetip3' class='sf' style='display:none'><p><br><b>è¯´æ˜ï¼š</b>å¦‚æœæœåŠ¡å™¨ç³»ç»Ÿå˜é‡æ— æ³•è¯†åˆ«htpasswdï¼Œåˆ™é¡»æŒ‡å®šhtpasswdæ‰€åœ¨çš„å…·ä½“è·¯å¾„ã€‚å¦‚:/usr/bin/htpasswdï¼Œæˆ–:D:/apache2/bin/htpasswdã€‚å¦‚æœç³»ç»Ÿèƒ½è¯†åˆ«ï¼Œåˆ™åªéœ€è¦å¡«å†™"htpasswd"å³å¯ã€‚å¦‚æœå¡«å†™é”™è¯¯ï¼Œåˆ™å¢åˆ ç”¨æˆ·å’Œç”¨æˆ·ä¿®æ”¹å¯†ç æ—¶éœ€è¦ç®¡ç†å‘˜ä½¿ç”¨ã€ç”Ÿæˆç”¨æˆ·æ–‡ä»¶ã€‘å·¥å…·åæ‰èƒ½ç”Ÿæ•ˆã€‚</p>
  </span>
-<br>4¡¢svn¸¸Ä¿Â¼url:<input type='text' class='ipt'  readonly name='svnurl' id='svnurl'  value="<?php echo $para_array['svnurl'];?>"> <span class='rt'> <a href="#" onclick="modify('svnurl')">ĞŞ¸Ä</a>&nbsp;&nbsp;<font class=sf onclick="showreadme('readmetip4')"><img src='../img/help.gif'></font></span><span id='readmetip4' class='sf' style='display:none'><p><br><b>ËµÃ÷£º</b>¡¾±ØÌîÏî¡¿Ö¸¶¨Í¨¹ıweb·ÃÎÊ¾ßÌåsvn¿âµÄURLµÄ¸¸¼¶Ä¿Â¼¡£Èç£ºhttp://svnmaia.scmbbs.com/repos_parent/</p>
+<br>4ã€svnçˆ¶ç›®å½•url:<input type='text' class='ipt'  readonly name='svnurl' id='svnurl'  value="<?php echo $para_array['svnurl'];?>"> <span class='rt'> <a href="#" onclick="modify('svnurl')">ä¿®æ”¹</a>&nbsp;&nbsp;<font class=sf onclick="showreadme('readmetip4')"><img src='../img/help.gif'></font></span><span id='readmetip4' class='sf' style='display:none'><p><br><b>è¯´æ˜ï¼š</b>ã€å¿…å¡«é¡¹ã€‘æŒ‡å®šé€šè¿‡webè®¿é—®å…·ä½“svnåº“çš„URLçš„çˆ¶çº§ç›®å½•ã€‚å¦‚ï¼šhttp://svnmaia.scmbbs.com/repos_parent/</p>
  </span>
-<br>5¡¢svn²Ö¿â¸¸Â·¾¶£º<input type='text' class='ipt'  readonly name='svnparentpath' id='svnparentpath'  value="<?php echo $para_array['svnparentpath'];?>">  <span class='rt'><a href="#" onclick="modify('svnparentpath')">ĞŞ¸Ä</a> &nbsp;&nbsp;<font class=sf onclick="showreadme('readmetip6')"><img src='../img/help.gif'></font> <?php echo $err_svnpath ?></span><span id='readmetip6' class='sf' style='display:none'><p><br><b>ËµÃ÷£º</b>¡¾±ØÌîÏî¡¿Ö¸¶¨svn²Ö¿âÈºËùÔÚµÄÏµÍ³Â·¾¶£¬ÒªÓëapacheµÄSVNParentPath²ÎÊıËùÖ¸¶¨Ò»ÖÂ¡£Èç£ºD:/svnroot/£¬¶ÔÓÚwindowsÏµÍ³Çë×¢ÒâÂ·¾¶ÒªÓÃ"/"×öÂ·¾¶·Ö¸î·û¶ø²»ÊÇ·´Ğ±Ïß¡£</p>
+<br>5ã€svnä»“åº“çˆ¶è·¯å¾„ï¼š<input type='text' class='ipt'  readonly name='svnparentpath' id='svnparentpath'  value="<?php echo $para_array['svnparentpath'];?>">  <span class='rt'><a href="#" onclick="modify('svnparentpath')">ä¿®æ”¹</a> &nbsp;&nbsp;<font class=sf onclick="showreadme('readmetip6')"><img src='../img/help.gif'></font> <?php echo $err_svnpath ?></span><span id='readmetip6' class='sf' style='display:none'><p><br><b>è¯´æ˜ï¼š</b>ã€å¿…å¡«é¡¹ã€‘æŒ‡å®šsvnä»“åº“ç¾¤æ‰€åœ¨çš„ç³»ç»Ÿè·¯å¾„ï¼Œè¦ä¸apacheçš„SVNParentPathå‚æ•°æ‰€æŒ‡å®šä¸€è‡´ã€‚å¦‚ï¼šD:/svnroot/ï¼Œå¯¹äºwindowsç³»ç»Ÿè¯·æ³¨æ„è·¯å¾„è¦ç”¨"/"åšè·¯å¾„åˆ†å‰²ç¬¦è€Œä¸æ˜¯åæ–œçº¿ã€‚</p>
  </span>
-<br>6¡¢svnlookÂ·¾¶£º<input type='text' class='ipt'  readonly name='svn' id='svn'  value="<?php echo $para_array['svn'];?>">  <span class='rt'><a href="#" onclick="modify('svn')">ĞŞ¸Ä</a> &nbsp;&nbsp;<font class=sf onclick="showreadme('readmetip5')"><img src='../img/help.gif'></font><?php echo $err_svn ?></span><span id='readmetip5' class='sf' style='display:none'><p><br><b>ËµÃ÷£º</b>Èç¹û·şÎñÆ÷ÎŞ·¨Ê¶±ğsvnÃüÁî£¬Ó¦Ö¸¶¨svnÃüÁîËùÔÚ¾ßÌåÏµÍ³Â·¾¶£¬·ñÔòÇëÁô¿Õ¡£Èç¹ûÊÇwindowsÏµÍ³£¬±¾À¸Ó¦Áô¿Õ£¬²¢Ê¹»·¾³±äÁ¿°üº¬svnÃüÁîÂ·¾¶¡£</p>
+<br>6ã€svnlookè·¯å¾„ï¼š<input type='text' class='ipt'  readonly name='svn' id='svn'  value="<?php echo $para_array['svn'];?>">  <span class='rt'><a href="#" onclick="modify('svn')">ä¿®æ”¹</a> &nbsp;&nbsp;<font class=sf onclick="showreadme('readmetip5')"><img src='../img/help.gif'></font><?php echo $err_svn ?></span><span id='readmetip5' class='sf' style='display:none'><p><br><b>è¯´æ˜ï¼š</b>å¦‚æœæœåŠ¡å™¨æ— æ³•è¯†åˆ«svnå‘½ä»¤ï¼Œåº”æŒ‡å®šsvnå‘½ä»¤æ‰€åœ¨å…·ä½“ç³»ç»Ÿè·¯å¾„ï¼Œå¦åˆ™è¯·ç•™ç©ºã€‚å¦‚æœæ˜¯windowsç³»ç»Ÿï¼Œæœ¬æ åº”ç•™ç©ºï¼Œå¹¶ä½¿ç¯å¢ƒå˜é‡åŒ…å«svnå‘½ä»¤è·¯å¾„ã€‚</p>
  </span>
 
-<br>7¡¢ÓÊ¼şÉèÖÃ: 
-<br>&nbsp;&nbsp;&nbsp;&nbsp;smtp_server:<input type='text' class='ipt'  readonly name='smtp_server' id='smtp_server'  value="<?php echo $para_array['smtp_server'];?>"> <span class='rt'> <a href="#" onclick="modify('smtp_server')">ĞŞ¸Ä</a></span>
-<span class='rt2'><input type='button' onclick="showadvance('email_advance')" value='¸ß¼¶' /></span>
+<br>7ã€é‚®ä»¶è®¾ç½®: 
+<br>&nbsp;&nbsp;&nbsp;&nbsp;smtp_server:<input type='text' class='ipt'  readonly name='smtp_server' id='smtp_server'  value="<?php echo $para_array['smtp_server'];?>"><input type=hidden name='mail_method' id='mail_method'  value="<?php echo $para_array['mail_method'];?>"> <span class='rt'> <a href="#" onclick="modify('smtp_server')">ä¿®æ”¹</a></span>
+<span class='rt2'><input type='button' onclick="showadvance('email_advance')" value='é«˜çº§' /></span>
 <span id='email_advance' style='display:<?php echo $display ?>;padding-left:20px;line-height:25px;'>
-<br>&nbsp;&nbsp;&nbsp;<input type='checkbox' name='use_smtp_authz' value='true' <?php echo $smtp_authz ?> id='use_authz' onclick="showadvance('smtp_authz')"><label for='use_authz'>SMTPĞèÒªÈÏÖ¤</label>
+<br>&nbsp;&nbsp;&nbsp;<input type='checkbox' name='use_smtp_authz' value='true' <?php echo $smtp_authz ?> id='use_authz' onclick="showadvance('smtp_authz')"><label for='use_authz'>SMTPéœ€è¦è®¤è¯</label>
 <div id='smtp_authz' style='display:<?php echo $display ?>;'>
-<br>&nbsp;&nbsp;&nbsp;&nbsp;SMTPÈÏÖ¤ÓÃ»§Ãû£º<input class='ipt'  type='text' name='smtp_user'  value="<?php echo $para_array['smtp_user'];?>">
-<br>&nbsp;&nbsp;&nbsp;&nbsp;SMTPÈÏÖ¤ÃÜÂë£º<input class='ipt'  type='password' name='smtp_passwd'  value="<?php echo $para_array['smtp_passwd'];?>">
+<br>&nbsp;&nbsp;&nbsp;&nbsp;SMTPè®¤è¯ç”¨æˆ·åï¼š<input class='ipt'  type='text' name='smtp_user'  value="<?php echo $para_array['smtp_user'];?>">
+<br>&nbsp;&nbsp;&nbsp;&nbsp;SMTPè®¤è¯å¯†ç ï¼š<input class='ipt'  type='password' name='smtp_passwd'  value="<?php echo $para_array['smtp_passwd'];?>">
 </div>
-<br>&nbsp;&nbsp;&nbsp;&nbsp;SMTP¶Ë¿Ú <input class='ipt'  type='text' name='smtp_port'  value="<?php echo $para_array['smtp_port'];?>">
+<br>&nbsp;&nbsp;&nbsp;&nbsp;SMTPç«¯å£ <input class='ipt'  type='text' name='smtp_port'  value="<?php echo $para_array['smtp_port'];?>">
 </span>
 </div>
 <br>
-<h3>È¨ÏŞÉèÖÃ</h3>
+<h3>æƒé™è®¾ç½®</h3>
 <div class='st'>
-<br>1¡¢Ğ´È¨ÏŞÄ¬ÈÏÓĞĞ§ÆÚ:<input type='text' class='ipt' maxlength=4 readonly name='write_t' id='write_t'  value="<?php echo $para_array['write_t'];?>"> <span class='rt'>Ìì <a href="#" onclick="modify('write_t')">ĞŞ¸Ä</a></span>
-<br>2¡¢¶ÁÈ¨ÏŞÄ¬ÈÏÓĞĞ§ÆÚ:<input type='text' class='ipt' maxlength=4 readonly name='read_t' id='read_t'  value="<?php echo $para_array['read_t'];?>"> <span class='rt'>Ìì <a href="#" onclick="modify('read_t')">ĞŞ¸Ä</a></span>
-<br>3¡¢ÓÃ»§ÓĞĞ§ÆÚ:<input type='text' class='ipt' maxlength=4 readonly name='user_t' id='user_t'  value="<?php echo $para_array['user_t'];?>"> <span class='rt'>Ìì <a href="#" onclick="modify('user_t')">ĞŞ¸Ä</a></span>
+<br>1ã€å†™æƒé™é»˜è®¤æœ‰æ•ˆæœŸ:<input type='text' class='ipt' maxlength=4 readonly name='write_t' id='write_t'  value="<?php echo $para_array['write_t'];?>"> <span class='rt'>å¤© <a href="#" onclick="modify('write_t')">ä¿®æ”¹</a></span>
+<br>2ã€è¯»æƒé™é»˜è®¤æœ‰æ•ˆæœŸ:<input type='text' class='ipt' maxlength=4 readonly name='read_t' id='read_t'  value="<?php echo $para_array['read_t'];?>"> <span class='rt'>å¤© <a href="#" onclick="modify('read_t')">ä¿®æ”¹</a></span>
+<br>3ã€ç”¨æˆ·æœ‰æ•ˆæœŸ:<input type='text' class='ipt' maxlength=4 readonly name='user_t' id='user_t'  value="<?php echo $para_array['user_t'];?>"> <span class='rt'>å¤© <a href="#" onclick="modify('user_t')">ä¿®æ”¹</a></span>
 </div>
 <br>
-<h3>¹«Ë¾ÓÊÏä</h3>
+<h3>å…¬å¸é‚®ç®±</h3>
 <div class='st'>
-<br>ÓÊÏäºó×º£º<input type='text' readonly name='email_ext' id='email_ext' class='ipt' value="<?php echo $para_array['email_ext'];?>"> <span class='rt'><a href="#" onclick="modify('email_ext')">ĞŞ¸Ä</a></span>
-<br>ÏµÍ³¹ÜÀíÔ±ÓÊÏä£º<input type='text' readonly name='email_from' id='email_from' class='ipt' value="<?php echo $para_array['email_from'];?>"> <span class='rt'><a href="#" onclick="modify('email_from')">ĞŞ¸Ä</a></span>
+<br>é‚®ç®±åç¼€ï¼š<input type='text' readonly name='email_ext' id='email_ext' class='ipt' value="<?php echo $para_array['email_ext'];?>"> <span class='rt'><a href="#" onclick="modify('email_ext')">ä¿®æ”¹</a></span>
+<br>ç³»ç»Ÿç®¡ç†å‘˜é‚®ç®±ï¼š<input type='text' readonly name='email_from' id='email_from' class='ipt' value="<?php echo $para_array['email_from'];?>"> <span class='rt'><a href="#" onclick="modify('email_from')">ä¿®æ”¹</a></span>
 </div>
 <div class='ft'>
-<input type='submit' value='Ìá½»±£´æ'>
+<input type='submit' value='æäº¤ä¿å­˜'>
 </div>
 </fieldset>
 </form>

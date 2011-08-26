@@ -1,5 +1,5 @@
 <?php
-header("content-type:text/html; charset=gb2312");
+include('../include/charset.php');
 include('../include/requireAuth.php');
 //import user from passwd file
 if(file_exists('../config/config.php'))
@@ -7,7 +7,7 @@ if(file_exists('../config/config.php'))
 	include('../config/config.php');
 }else
 {
-	echo "window.alert('«Îœ»Ω¯––œµÕ≥…Ë÷√!')";
+	echo "window.alert('ËØ∑ÂÖàËøõË°åÁ≥ªÁªüËÆæÁΩÆ!')";
 	echo" <script>setTimeout('document.location.href=\"../config/index.php\"',0)</script>";  	
 	exit;
 }
@@ -15,7 +15,7 @@ include('../../../config.inc');
 include('../include/dbconnect.php');
 	mysql_query("SET NAMES UTF8"); 
 
-	$query="select user_name,password from svnauth_user order by user_name";
+	$query="select user_name,password from svnauth_user  where fresh!=1 order by user_name";
 	$result=mysql_query($query);
 	$filestr='';
 	while($result and ($row= mysql_fetch_array($result, MYSQL_BOTH))) {	
@@ -23,12 +23,23 @@ include('../include/dbconnect.php');
 		$passwd=$row['password'];
 		$filestr .="$user:$passwd\n";
 	}
+	if(empty($filestr))
+	{
+		echo "Áî®Êà∑‰ø°ÊÅØ‰∏∫Á©∫ÔºÅ";
+		exit;
+	}
 
 	//write the file
-	$handle = fopen($passwdfile, "w+");
-	if (fwrite($handle, $filestr) === FALSE) {
-       		 echo "<strong>Error:</strong>≤ªƒ‹–¥»ÎµΩŒƒº˛ $passwdfile ! ±£¥Ê ß∞‹£°";
-	}else
-		echo "”√ªß“—…˙–ß£°";
-	fclose($handle);
+	$query="select name  from svnauth_server ";
+	$result=mysql_query($query);
+	while($result and ($row= mysql_fetch_array($result, MYSQL_BOTH))) {	
+		$name=trim($row['name']);
+		$handle = fopen($name$passwdfile, "w+");
+		if (fwrite($handle, $filestr) === FALSE) {
+       			 echo "<strong>Error:</strong>‰∏çËÉΩÂÜôÂÖ•Âà∞Êñá‰ª∂ $name$passwdfile ! ‰øùÂ≠òÂ§±Ë¥•ÔºÅ";
+		}else
+			echo "$name Áî®Êà∑Â∑≤ÁîüÊïàÔºÅ";
+		fclose($handle);
+	}
+
 ?>

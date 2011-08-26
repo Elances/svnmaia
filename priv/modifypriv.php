@@ -1,24 +1,24 @@
 <?php
 session_start();
-header("content-type:text/html; charset=gb2312");
+include('../include/charset.php');
 if(file_exists('../config/config.php'))
 {
 	include('../config/config.php');
 }else
 {
-	echo "window.alert('ÇëÏÈ½øĞĞÏµÍ³ÉèÖÃ!')";
+	echo "window.alert('è¯·å…ˆè¿›è¡Œç³»ç»Ÿè®¾ç½®!')";
 	echo" <script>setTimeout('document.location.href=\"../config/index.php\"',0)</script>";  	
 	exit;
 }
  error_reporting(0);
 if (!isset($_SESSION['username'])){	
-	echo "ÇëÏÈ<a href='../user/loginfrm.php'>µÇÂ¼</a> £¡";
+	echo "è¯·å…ˆ<a href='../user/loginfrm.php'>ç™»å½•</a> ï¼";
 	echo" <script>setTimeout('document.location.href=\"../user/loginfrm.php\"',0)</script>";  	
 	exit;
 }
 if (($_SESSION['role'] !='admin')and($_SESSION['role'] !='diradmin'))
 {
-	echo "ÄúÎŞÈ¨½øĞĞ´Ë²Ù×÷£¡";
+	echo "æ‚¨æ— æƒè¿›è¡Œæ­¤æ“ä½œï¼";
 	exit;
 }
 include('../../../config.inc');
@@ -29,16 +29,17 @@ function safe($str)
 	return "'".mysql_real_escape_string($str)."'";
 }
 include('../include/dbconnect.php');
+$is_effected=false;
 if (mysql_select_db(DBNAME))
 {
-	//Ğ£Ñé²ÎÊıÕıÈ·ĞÔ
+	//æ ¡éªŒå‚æ•°æ­£ç¡®æ€§
 	$repos=mysql_real_escape_string($_POST['repos']);
 	$path=mysql_real_escape_string($_POST['path']);
 	$url="./dirpriv.php?d=$repos{$path}";
 	$para=array($repos,$path);
 	if(keygen($para) != $_POST['sig'])
 	{
-		echo "²ÎÊı·Ç·¨£¡ÇëÎğÔ½È¨²Ù×÷£¡";
+		echo "å‚æ•°éæ³•ï¼è¯·å‹¿è¶Šæƒæ“ä½œï¼";
 		exit;
 	}
 	$adminonly=$_POST['adminonly'];
@@ -48,7 +49,9 @@ if (mysql_select_db(DBNAME))
 		$clear=false;
 		foreach($admin_array as $v)
 		{
-			list($user,$uid)=explode(' ',$v);
+			list($user,$uid,$is_c)=explode(' ',$v);
+			$is_c=trim($is_c);
+			if($is_c == 'c')continue;
 			if(! $clear)
 			{
 				$clear=true;
@@ -60,13 +63,14 @@ if (mysql_select_db(DBNAME))
 			$query="insert into svnauth_dir_admin (repository,path,user_id) values('$repos','$path',$uid)";
 			mysql_query($query);
 			$err .= mysql_error();
+			$is_effected=true;
 		}
 
 
 	}else
 		if(!empty($_POST['fromdir']))
 		{
-			//´¦ÀíÄ¿Â¼
+			//å¤„ç†ç›®å½•
 $dir=trim(mysql_real_escape_string($_POST['fromdir']));
 $dir=str_replace($svnurl,'',$dir);
 $dir=($dir{0}=='/')?(substr($dir,1)):($dir);
@@ -86,11 +90,13 @@ if (mysql_num_rows($result) > 0){
 		}
 	$query="insert into svnauth_permission (user_id,repository,path,permission,expire) select user_id,'$repos','$path',permission,expire from svnauth_permission where  repository='$f_repos' and path = '$dir' ";
 	mysql_query($query);
+	$query="insert into svnauth_g_permission (group_id,repository,path,permission,expire) select group_id,'$repos','$path',permission,expire from svnauth_g_permission where  repository='$f_repos' and path = '$dir' ";
+	mysql_query($query);
 //	$err .= mysql_error();
 
 }else
 {
-	$err .= "<strong>Error£º</strong>$f_repos{$dir} ¸ÃÄ¿Â¼»¹Ã»ÓĞÉèÖÃÈ¨ÏŞ,ÎŞ·¨´Ó¸ÃÄ¿Â¼¸´ÖÆÈ¨ÏŞ¡£";
+	$err .= "<strong>Errorï¼š</strong>$f_repos{$dir} è¯¥ç›®å½•è¿˜æ²¡æœ‰è®¾ç½®æƒé™,æ— æ³•ä»è¯¥ç›®å½•å¤åˆ¶æƒé™ã€‚";
 }
 
 	}else{
@@ -132,20 +138,53 @@ if (mysql_num_rows($result) > 0){
 			mysql_query($query);
 			$err .= mysql_error();
 		}
+		$detail_array=array();
+	        $detail_array=$_POST['group_detail'];
+		$clear=false;
+		foreach($detail_array as $v)
+		{
+			list($rights,$group,$t_gid,$type)=explode(' ',$v);
+			if(! $clear)
+			{
+				$clear=true;
+				$query="delete from svnauth_g_permission where repository='$repos' and path='$path'";
+				mysql_query($query);
+				$err=mysql_error();
+			}
+			if(trim($type)=='c')continue;
+			if(empty($t_gid))continue;
+			$t_gid=safe($t_gid);
+			$rights=safe($rights);
+			$query="insert into svnauth_g_permission(group_id,repository,path,permission)values($t_gid,'$repos','$path',$rights)";
+			mysql_query($query);
+			$err .= mysql_error();
+		}
 
 	}
 	if(!empty($err))
-		echo "±£´æÈ¨ÏŞ¹ı³ÌÖĞ·¢Éú´íÎó£¬¿ÉÄÜÈ¨ÏŞÃ»ÓĞÉèÖÃ³É¹¦£¡³ö´íĞÅÏ¢£º<br>$err";
+		echo "ä¿å­˜æƒé™è¿‡ç¨‹ä¸­å‘ç”Ÿé”™è¯¯ï¼Œå¯èƒ½æƒé™æ²¡æœ‰è®¾ç½®æˆåŠŸï¼å‡ºé”™ä¿¡æ¯ï¼š<br>$err";
 	else
+	{
+		if($is_effected)
+		{
 	echo <<<HTML
 <p style='text-align:center;line-height:2;border:solid 1px;background:#ecf0e1;margin-top:100px;'>
-<br>±£´æ³É¹¦£¬µ«ÉĞÎ´ÉúĞ§£¡
-<br>ÄúÒª£º
-<a href="$url">·µ»Ø¼ÌĞø²Ù×÷</a> <br>»¹ÊÇ£º
-<a href="./gen_access.php?fromurl=$url">Á¢¿ÌÉúĞ§£¨Éú³ÉaccessÎÄ¼ş)</a>?
+<br>ä¿å­˜æˆåŠŸï¼
+<br>
+<a href="$url">è¿”å›ç»§ç»­æ“ä½œ</a> 
 </p>
 HTML;
 
+		}else
+	echo <<<HTML
+<p style='text-align:center;line-height:2;border:solid 1px;background:#ecf0e1;margin-top:100px;'>
+<br>ä¿å­˜æˆåŠŸï¼Œä½†å°šæœªç”Ÿæ•ˆï¼
+<br>æ‚¨è¦ï¼š
+<a href="$url">è¿”å›ç»§ç»­æ“ä½œ</a> <br>è¿˜æ˜¯ï¼š
+<a href="./gen_access.php?fromurl=$url">ç«‹åˆ»ç”Ÿæ•ˆï¼ˆç”Ÿæˆaccessæ–‡ä»¶)</a>?
+</p>
+HTML;
+	}
 
 }
 ?>

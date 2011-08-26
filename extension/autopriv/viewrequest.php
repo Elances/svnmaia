@@ -1,9 +1,9 @@
 <?php
 session_start();
  error_reporting(0);
-header("content-type:text/html; charset=gb2312");
+include('../../include/charset.php');
 if (!isset($_SESSION['username'])){	
-	echo "ÇëÏÈ<a href='../user/loginfrm.php'>µÇÂ¼</a> £¡";
+	echo "è¯·å…ˆ<a href='../user/loginfrm.php'>ç™»å½•</a> ï¼";
 	echo" <script>setTimeout('document.location.href=\"../../user/loginfrm.php\"',0)</script>"; 	
 	exit;
 }
@@ -15,7 +15,7 @@ echo <<<HTML
 .trc1{font-size:10pt
 </style>
 HTML;
-echo "<table><tr><th>ÉêÇëÕß</th><th>ÉêÇëÂ·¾¶</th><th>ÉêÇëÈ¨ÏŞ</th><th>ÉêÇëÈÕÆÚ</th><th>´¦ÀíÈË</th><th>´¦Àí½á¹û</th></tr>";
+echo "<table><tr><th>ç”³è¯·è€…</th><th>ç”³è¯·è·¯å¾„</th><th>ç”³è¯·æƒé™</th><th>ç”³è¯·æ—¥æœŸ</th><th>å¤„ç†äºº</th><th>å¤„ç†ç»“æœ</th></tr>";
 $query="select `username`,`repository`,`path`,`permission`,`rtdate`,`ops`, `optype` from rt_svnpriv ORDER BY id DESC limit 200;";
 $result=mysql_query($query);
 while (($result)and($row= mysql_fetch_array($result, MYSQL_BOTH))) {

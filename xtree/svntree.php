@@ -1,5 +1,5 @@
 <?php
-header("Content-Type: text/xml;  charset=gb2312");
+header("Content-Type: text/xml;  charset='utf-8'");
 $d=$_GET['parentId'];
 $path=escapeshellcmd($_GET['d']);
 include('../config/config.php');

@@ -1,4 +1,5 @@
 <?php
+include('../include/charset.php');
 include('../config/config.php');
 include('../../../config.inc');
 include('../include/dbconnect.php');
@@ -10,24 +11,31 @@ include('../include/basefunction.php');
 $pwdpath=$passwdfile;
 $cmdpath=$htpasswd;
 //phpinfo();
-//$authed_username = $_SERVER["PHP_AUTH_USER"]; //¾­¹ı AuthType Basic ÈÏÖ¤µÄÓÃ»§Ãû
-//$authed_pass = $_SERVER["PHP_AUTH_PW"]; //¾­¹ı AuthType Basic ÈÏÖ¤µÄÃÜÂë
+//$authed_username = $_SERVER["PHP_AUTH_USER"]; //ç»è¿‡ AuthType Basic è®¤è¯çš„ç”¨æˆ·å
+//$authed_pass = $_SERVER["PHP_AUTH_PW"]; //ç»è¿‡ AuthType Basic è®¤è¯çš„å¯†ç 
 //echo "username.passwd:".$authed_username.$authed_pass;
 if(($oldpwd == "")||($usr ==""))
 {
-	echo " <script>window.alert(\"Ô­ÃÜÂëºÍÓÃ»§Ãû²»ÄÜÎª¿Õ£¬ÇëÊäÈë!\")</script>";
-  echo " <a href='javascript:history.back()'>µã»÷ÕâÀï·µ»Ø</a>";
+	echo " <script>window.alert(\"åŸå¯†ç å’Œç”¨æˆ·åä¸èƒ½ä¸ºç©ºï¼Œè¯·è¾“å…¥!\")</script>";
+  echo " <a href='javascript:history.back()'>ç‚¹å‡»è¿™é‡Œè¿”å›</a>";
   echo "<script>history.go(-1);</script>";
   exit;
 }
 if ($passwd != $passwd0)  
-{ echo " <script>window.alert(\"Á½´ÎÊäÈëµÄĞÂÃÜÂë²»Ò»ÖÂ£¬ÇëÖØĞÂÊäÈë!\")</script>";
-  echo " <a href='javascript:history.back()'>µã»÷ÕâÀï·µ»Ø</a>";
+{ echo " <script>window.alert(\"ä¸¤æ¬¡è¾“å…¥çš„æ–°å¯†ç ä¸ä¸€è‡´ï¼Œè¯·é‡æ–°è¾“å…¥!\")</script>";
+  echo " <a href='javascript:history.back()'>ç‚¹å‡»è¿™é‡Œè¿”å›</a>";
   echo "<script>history.go(-1);</script>";
   exit;
 }
+if(isSamplePassword($passwd,$usr))
+{
+		echo "<script>window.alert(\"å¯†ç è¿‡äºç®€å•,å¯†ç ç”±è‡³å°‘6ä¸ªè‹±æ–‡å­—æ¯å’Œæ•°å­—/ç¬¦å·ç»„æˆï¼Œä¸”ä¸èƒ½åŒ…å«ç”¨æˆ·åã€‚\")</script>";
+		echo " <a href='javascript:history.back()'>ç‚¹å‡»è¿™é‡Œè¿”å›</a>";
+		echo "<script>history.go(-1);</script>";
+		exit;
+}
 
-//SQL²éÑ¯Óï¾ä;
+//SQLæŸ¥è¯¢è¯­å¥;
 $query = "SELECT user_name,password FROM svnauth_user WHERE user_name ='$usr'"; 
 $result =mysql_query($query);
 if($result)$totalnum=mysql_num_rows($result);
@@ -38,7 +46,7 @@ if($totalnum>0){
 	  {	  
 		$passwd=cryptMD5Pass($passwd);
 		$query = "update svnauth_user set password='$passwd' WHERE user_name ='$usr'";
-// Ö´ĞĞ²éÑ¯
+// æ‰§è¡ŒæŸ¥è¯¢
 		mysql_query($query);
 		$err=mysql_error();
 		if (empty($err)){
@@ -46,20 +54,20 @@ if($totalnum>0){
 			$usr=escapeshellcmd($usr);
 	          exec($cmdpath.' -m -b '. $pwdpath . ' '.$usr.' '.$passwd0);
 	//echo  ($cmdpath.' -m -b '. $pwdpath . ' '.$usr.' '.$passwd);
-  	         echo "<script>window.alert(\"ÃÜÂë¸ü¸Ä³É¹¦£¡¡¡\")</script>"; 
+  	         echo "<script>window.alert(\"å¯†ç æ›´æ”¹æˆåŠŸï¼ã€€\")</script>"; 
 	          echo "    <script>setTimeout('document.location.href=\"javascript:history.back()\"',5)</script>";
 		mysql_close($mlink);
 	        exit;
 		}
 	  }else
 	  {
-		echo "<script>window.alert(\"Ô­ÃÜÂëÊäÈë´íÎó£¡\")</script>"; 
+		echo "<script>window.alert(\"åŸå¯†ç è¾“å…¥é”™è¯¯ï¼\")</script>"; 
 		echo "<script>history.go(-1);</script>";
 	  }
 	}
 }
 else{
-		echo "<script>window.alert(\"ÓÃ»§Ãû²»´æÔÚ£¡\")</script>"; 
+		echo "<script>window.alert(\"ç”¨æˆ·åä¸å­˜åœ¨ï¼\")</script>"; 
 		echo "<script>history.go(-1);</script>";
 		mysql_close($mlink);
 		exit;

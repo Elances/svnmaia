@@ -1,16 +1,16 @@
 <?php
-header("content-type:text/html; charset=gb2312");
+include('../../include/charset.php');
 /*
-   ÎÄ¼þÃû£ºgetusers.php
-   ¹¦ÄÜ£º´¦ÀíÍü¼ÇÃÜÂë
-   ÊäÈë£ºÓÃ»§Ãû
-   Êä³ö£ºurl¡¢·¢ËÍÓÊ¼þ
-   Âß¼­£º¸ù¾ÝÓÃ»§ÃûÕÒµ½ÓÊÏä£¬¸ù¾ÝÓÃ»§ÃûºÍËæ»úÊýÉú³É¼ÓÃÜ×Ö·û´®
-         ½«×Ö·û´®²ÎÊý´æÈëÎÄ¼þpwdurl,Éú³ÉurlÀàËÆ accounts/?u=urlencode(username)&c=×Ö·û´®
-				½«×Ö·û´®·¢¸ø¶ÔÓ¦ÐÅÏä¡£
+   æ–‡ä»¶åï¼šgetusers.php
+   åŠŸèƒ½ï¼šå¤„ç†å¿˜è®°å¯†ç 
+   è¾“å…¥ï¼šç”¨æˆ·å
+   è¾“å‡ºï¼šurlã€å‘é€é‚®ä»¶
+   é€»è¾‘ï¼šæ ¹æ®ç”¨æˆ·åæ‰¾åˆ°é‚®ç®±ï¼Œæ ¹æ®ç”¨æˆ·åå’Œéšæœºæ•°ç”ŸæˆåŠ å¯†å­—ç¬¦ä¸²
+         å°†å­—ç¬¦ä¸²å‚æ•°å­˜å…¥æ–‡ä»¶pwdurl,ç”Ÿæˆurlç±»ä¼¼ accounts/?u=urlencode(username)&c=å­—ç¬¦ä¸²
+				å°†å­—ç¬¦ä¸²å‘ç»™å¯¹åº”ä¿¡ç®±ã€‚
 */
 include('../../../../config.inc');
-$mlink=mysql_connect(SERVER,USERNAME2,PASSWORD2) or die("Êý¾Ý¿âÁ´½ÓÊ§°Ü£¡ÇëÁªÏµ¹ÜÀíÔ±");
+$mlink=mysql_connect(SERVER,USERNAME2,PASSWORD2) or die("æ•°æ®åº“é“¾æŽ¥å¤±è´¥ï¼è¯·è”ç³»ç®¡ç†å‘˜");
 if (!mysql_select_db(DBNAME))
 {
   exit;
@@ -36,5 +36,5 @@ if($totalnum>0){
 	else
 	  echo $row['email'];
 }else
-  echo 'ÓÃ»§²»´æÔÚ£¡';
+  echo 'ç”¨æˆ·ä¸å­˜åœ¨ï¼';
 ?>

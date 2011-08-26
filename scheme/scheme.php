@@ -1,34 +1,34 @@
 <?php
-header("content-type:text/html; charset=gb2312");
+include('../include/charset.php');
 ?>
 <meta http-equiv="Refresh" content="3600">
-<strong>ËµÃ÷£º</strong>µ±Äã´ò¿ª±¾Ò³ÃæÊ±£¬±¾Ò³Ãæ»á°´ÕÕÏµÍ³Éè¶¨µÄÓÃ»§¡¢È¨ÏŞÓĞĞ§ÆÚ¶ÔÈ¨ÏŞ¿ØÖÆÎÄ¼ş½øĞĞ¸üĞÂ¡£
+<strong>è¯´æ˜ï¼š</strong>å½“ä½ æ‰“å¼€æœ¬é¡µé¢æ—¶ï¼Œæœ¬é¡µé¢ä¼šæŒ‰ç…§ç³»ç»Ÿè®¾å®šçš„ç”¨æˆ·ã€æƒé™æœ‰æ•ˆæœŸå¯¹æƒé™æ§åˆ¶æ–‡ä»¶è¿›è¡Œæ›´æ–°ã€‚
 <p>
-±¾Ò³Ãæ½«»á×Ô¶¯Ë¢ĞÂ£¬ÒÔÎ¬»¤ÓÃ»§¡¢È¨ÏŞÎÄ¼şµÄ¸üĞÂ£¬½¨ÒéÄã²»Òª¹Ø±Õ±¾Ò³Ãæ¡£
+æœ¬é¡µé¢å°†ä¼šè‡ªåŠ¨åˆ·æ–°ï¼Œä»¥ç»´æŠ¤ç”¨æˆ·ã€æƒé™æ–‡ä»¶çš„æ›´æ–°ï¼Œå»ºè®®ä½ ä¸è¦å…³é—­æœ¬é¡µé¢ã€‚
 <br>
 <p>
-»òÕßÄú¿ÉÒÔ½«±¾Ò³Ãæ×÷Îª¼Æ»®ÈÎÎñÖ´ĞĞ£¬½¨ÒéÃ¿ÌìÖ´ĞĞÒ»´Î£¬ÒÑ´ïµ½¼°Ê±ÇåÀíÈ¨ÏŞµÄÄ¿µÄ¡£
-<br><br>·½·¨ÈçÏÂ£º
-<br><strong>Ò³Ãæ¼ÓÔØ·½Ê½</strong>£ºÕÒµ½×î³£·ÃÎÊµÄÒ³Ãæ£¬±à¼­¸ÃÒ³ÃæHTML´úÂë£¬ÔÚÆäbody±êÇ©ÄÚ£¬Ìí¼ÓÈçÏÂjs´úÂë£º
+æˆ–è€…æ‚¨å¯ä»¥å°†æœ¬é¡µé¢ä½œä¸ºè®¡åˆ’ä»»åŠ¡æ‰§è¡Œï¼Œå»ºè®®æ¯å¤©æ‰§è¡Œä¸€æ¬¡ï¼Œå·²è¾¾åˆ°åŠæ—¶æ¸…ç†æƒé™çš„ç›®çš„ã€‚
+<br><br>æ–¹æ³•å¦‚ä¸‹ï¼š
+<br><strong>é¡µé¢åŠ è½½æ–¹å¼</strong>ï¼šæ‰¾åˆ°æœ€å¸¸è®¿é—®çš„é¡µé¢ï¼Œç¼–è¾‘è¯¥é¡µé¢HTMLä»£ç ï¼Œåœ¨å…¶bodyæ ‡ç­¾å†…ï¼Œæ·»åŠ å¦‚ä¸‹jsä»£ç ï¼š
 <br>&lt;script src="<?php echo $_SERVER['PHP_SELF'] ?>"&gt;&lt;/script&gt;
-<br> ÆäÖĞsrc="**"Óï¾äÖ¸Ã÷ÁË±¾Ò³ÃæµÄurlÎ»ÖÃ¡£ ÕâÑù£¬µ±ÓĞÈË·ÃÎÊ¸ÃÒ³ÃæÊ±¾Í»á×Ô¶¯ÔËĞĞ±¾ÇåÀí½Å±¾¡£
-<br><strong>LinuxÏµÍ³</strong>£ºÔÚcrontabÖĞÌí¼ÓÒ»ĞĞ£º
-<br>  0 0 * * * "php -f /path/to/thefile/scheme.php"
-<br><strong>WindowsÏµÍ³</strong>:ÔÚ¼Æ»®ÈÎÎñÖĞ£º
-´ò¿ª¡°¿ØÖÆÃæ°å¡±-->Ë«»÷¡°¼Æ»®ÈÎÎñ¡±-->Ìí¼ÓĞÂÈÎÎñ-->Ñ¡ÔñÔËĞĞ³ÌĞòÖĞ£¬µã»÷ä¯ÀÀ£¬ÔÚµ¯³ö¶Ô»°¿òÖĞ£¬ÊäÈë±¾Ò³ÃæµÄurl
-Èç£ºhttp://www.example.com/svnauth/scheme/scheme.php£¬È»ºóÒ»Ö±µãÏÂÒ»²½£¬Ö±µ½Íê³É¡£
+<br> å…¶ä¸­src="**"è¯­å¥æŒ‡æ˜äº†æœ¬é¡µé¢çš„urlä½ç½®ã€‚ è¿™æ ·ï¼Œå½“æœ‰äººè®¿é—®è¯¥é¡µé¢æ—¶å°±ä¼šè‡ªåŠ¨è¿è¡Œæœ¬æ¸…ç†è„šæœ¬ã€‚
+<br><strong>Linuxç³»ç»Ÿ</strong>ï¼šåœ¨crontabä¸­æ·»åŠ ä¸€è¡Œï¼š
+<br>  0 0 * * * "wget --delete-after http://<?php echo $_SERVER['SERVER_NAME'].$_SERVER['PHP_SELF']; ?>"
+<br><strong>Windowsç³»ç»Ÿ</strong>:åœ¨è®¡åˆ’ä»»åŠ¡ä¸­ï¼š
+æ‰“å¼€â€œæ§åˆ¶é¢æ¿â€-->åŒå‡»â€œè®¡åˆ’ä»»åŠ¡â€-->æ·»åŠ æ–°ä»»åŠ¡-->é€‰æ‹©è¿è¡Œç¨‹åºä¸­ï¼Œç‚¹å‡»æµè§ˆï¼Œåœ¨å¼¹å‡ºå¯¹è¯æ¡†ä¸­ï¼Œè¾“å…¥æœ¬é¡µé¢çš„url
+å¦‚ï¼šhttp://www.example.com/svnauth/scheme/scheme.phpï¼Œç„¶åä¸€ç›´ç‚¹ä¸‹ä¸€æ­¥ï¼Œç›´åˆ°å®Œæˆã€‚
 <br>
 <div style="background:#B6C6D6;text-align:center;color:#fe392a;margin:20px 0 20px 0;">
 <?php
 include('../include/basefunction.php');
 include('../../../config.inc');
-$mlink=mysql_connect(SERVER,USERNAME2,PASSWORD2)or die("<br>Êı¾İ¿âÁ´½ÓÊ§°Ü£¡ÇëÁªÏµ<a href='mailto:xuejiang.li@yahoo.com.cn'>¹ÜÀíÔ±</a>");
+$mlink=mysql_connect(SERVER,USERNAME2,PASSWORD2)or die("<br>æ•°æ®åº“é“¾æ¥å¤±è´¥ï¼è¯·è”ç³»<a href='mailto:xuejiang.li@yahoo.com.cn'>ç®¡ç†å‘˜</a>");
 if (mysql_select_db(DBNAME))
 {
-	//ÓÃ»§ÊÇ·ñ¼´½«µ½ÆÚ£¬ÌáÇ°2¸öĞÇÆÚ·¢ĞÅÍ¨Öª½øĞĞ¼¤»î
+	//ç”¨æˆ·æ˜¯å¦å³å°†åˆ°æœŸï¼Œæå‰2ä¸ªæ˜ŸæœŸå‘ä¿¡é€šçŸ¥è¿›è¡Œæ¿€æ´»
 	//
 	//
-	//Èç¹ûÓÃ»§ÒÑ¹ıÆÚ£¬²¢ÇÒÌáĞÑ´ÎÊı³¬¹ı3´Î£¬ÔòÉ¾³ıÓÃ»§£¬²¢Á¢¿ÌÉúĞ§¡£
+	//å¦‚æœç”¨æˆ·å·²è¿‡æœŸï¼Œå¹¶ä¸”æé†’æ¬¡æ•°è¶…è¿‡3æ¬¡ï¼Œåˆ™åˆ é™¤ç”¨æˆ·ï¼Œå¹¶ç«‹åˆ»ç”Ÿæ•ˆã€‚
 	//$expire=mktime(0, 0, 0, date("m")  , date("d")-14, date("Y"));
 	//$expire=strftime("%Y-%m-%d",$expire);
 	$expire=date('Y-m-d' , strtotime('+2 week')); 
@@ -44,7 +44,7 @@ if (mysql_select_db(DBNAME))
 		$d=file_get_contents('./tmp');
 		$tmpd=(strtotime($d)-strtotime(date('Y-m-d')))/86400;
 		if($tmpd==0){
-			echo "½ñÌìÒÑÖ´ĞĞ¹ı±¾³ÌĞò£¡";
+			echo "ä»Šå¤©å·²æ‰§è¡Œè¿‡æœ¬ç¨‹åºï¼";
 			exit;
 		}
 	}
@@ -53,53 +53,63 @@ if (mysql_select_db(DBNAME))
 	fclose($handle);
 	while (($result)and($row= mysql_fetch_array($result, MYSQL_BOTH)))
 	{
-		$infotimes=(empty($row['infotimes']))?0:$row['infotimes'];
+		$infot=trim($row['infotimes']);
+		$infotimes=(empty($infot))?0:$infot;
 		if($infotimes>3)continue;
-		$infotimes++;
 		$expire=$row['expire'];
-		//$expire=strtotime("+7 day",strtotime($expire)");//ºóÍÆ1week
+		//$expire=strtotime("+7 day",strtotime($expire)");//åæ¨1week
 		$user=$row['user_name'];
 		$uid=$row['user_id'];
-		$email=(empty($row['email']))?$user:$row['email'];
+		$email=(empty($row['email']))?($user.$email_ext):$row['email'];
 		$para=array($user,$email,$uid);
 		$sig=keygen($para);
-		//·¢ÓÊ¼şÍ¨Öª¼¤»î
+		//å‘é‚®ä»¶é€šçŸ¥æ¿€æ´»
 		$url="http://".$_SERVER['HTTP_HOST'] . rtrim(dirname($_SERVER['PHP_SELF']))."/activeuser.php";
 	        $url=$url."?sig=$sig&u=$user&uid=$uid&email=$email";
-		$body="Çë×¢Òâ£ºÄúµÄsvnÓÃ»§¼´½«ÓÚ $expire ¹ıÆÚ£¬ÓÃ»§Ãû£º$user\n
-	¹ıÆÚºó£¬ÄúµÄsvnÕË»§½«±»×Ô¶¯É¾³ı¡£\n
-	Èç¹ûÄúĞèÒª¼ÌĞø·ÃÎÊsvn£¬Çëµã»÷ÈçÏÂÁ´½Ó½øĞĞĞÅÏ¢È·ÈÏ£¬²¢¼¤»îĞø¶©£º\n
+		$body="è¯·æ³¨æ„ï¼šæ‚¨çš„svnç”¨æˆ·(http://".$_SERVER['HTTP_HOST']." )å³å°†äº $expire è¿‡æœŸï¼Œç”¨æˆ·åï¼š$user\n
+
+			è¿‡æœŸåï¼Œæ‚¨çš„svnè´¦æˆ·å°†è¢«è‡ªåŠ¨åˆ é™¤ã€‚\n
+
+å¦‚æœæ‚¨éœ€è¦ç»§ç»­è®¿é—®æœ¬svnï¼Œè¯·ç‚¹å‡»å¦‚ä¸‹é“¾æ¥è¿›è¡Œä¿¡æ¯ç¡®è®¤ï¼Œå¹¶æ¿€æ´»ç»­è®¢ï¼š\n
 			$url
 
-	Èç¹ûÄúÒÑ²»ĞèÒª£¬ÇëºöÂÔ±¾ÓÊ¼ş£¡";
-		$subject="Í¨Öª£ºÄúµÄsvnÕË»§¼´½«¹ıÆÚ£¡";
-		$mail_err=send_mail($email,$subject,$body);
-		//¼ÇÂ¼±¾´Î·¢ÓÊ¼şÊÂ¼ş
+			å¦‚æœæ‚¨å·²ä¸éœ€è¦ï¼Œè¯·å¿½ç•¥æœ¬é‚®ä»¶ï¼
+			
+æœ¬é‚®ä»¶ç³»ç»Ÿè‡ªåŠ¨å‘å‡ºï¼Œå›å¤æ— æ•ˆã€‚æœ‰ç–‘é—®è¯·æ‰¾é…ç®¡ç»„ã€‚
+---";
+		$subject="é€šçŸ¥ï¼šæ‚¨çš„svnè´¦æˆ·å³å°†è¿‡æœŸï¼";
+		$mail_info=send_mail($email,$subject,$body);
+		//è®°å½•æœ¬æ¬¡å‘é‚®ä»¶äº‹ä»¶
+		if($mail_info === true)
+		{
+			echo "<br>$user ç”¨æˆ·å³å°†è¿‡æœŸï¼Œå·²å‘é‚®ä»¶é€šçŸ¥å…¶æ¿€æ´»ç»­è®¢ï¼";
+			$infotimes++;
+		}
+		else{
+			echo "<br>$user ç”¨æˆ·å³å°†è¿‡æœŸï¼Œä½†å‘é€šçŸ¥é‚®ä»¶æ—¶é‡åˆ°é”™è¯¯ï¼Œå¯èƒ½è¯¥ç”¨æˆ·æ²¡æœ‰æ”¶åˆ°ã€‚<br>$mail_info";
+			openlog("svnMaiaLog", LOG_PID | LOG_PERROR, LOG_LOCAL0);
+			$access = date("Y/m/d H:i:s");
+			syslog(LOG_ERR, "$user: this svn username is being expired. But we counld't not mail to him/her which Error: $mail_info. $access");
+		}
 		$query="update svnauth_user set infotimes=$infotimes where user_id=$uid";
 		mysql_query($query);
 		echo mysql_error();
-		if(empty($mail_err))
-		{
-			echo "<br>$user ÓÃ»§¼´½«¹ıÆÚ£¬ÒÑ·¢ÓÊ¼şÍ¨ÖªÆä¼¤»îĞø¶©£¡";
-		}
-		else
-			echo "<br>$user ÓÃ»§¼´½«¹ıÆÚ£¬µ«·¢Í¨ÖªÓÊ¼şÊ±Óöµ½´íÎó£¬¿ÉÄÜ¸ÃÓÃ»§Ã»ÓĞÊÕµ½¡£<br>$mail_err";
 
 	}
 
 
-	//ÅĞ¶ÏĞ´È¨ÏŞÊÇ·ñ¹ıÆÚ£¬Èç¹ûÒÑ¹ıÆÚ£¬Ôò¸ÄÎªÖ»¶ÁÈ¨ÏŞ¡£
+	//åˆ¤æ–­å†™æƒé™æ˜¯å¦è¿‡æœŸï¼Œå¦‚æœå·²è¿‡æœŸï¼Œåˆ™æ”¹ä¸ºåªè¯»æƒé™ã€‚
 	$expire=date('Y-m-d' , strtotime('+20 week'));
 	$query="update svnauth_permission set permission='r', expire=\"$expire\" where expire <= NOW() and permission='w' ";
 	mysql_query($query);
 	if(mysql_affected_rows()>0)$valuechanged=true;
 
 
-	//ÅĞ¶Ï¶ÁÈ¨ÏŞÊÇ·ñ¹ıÆÚ£¬Èç¹ûÒÑ¹ıÆÚ£¬Ôò¸ÄÎªÎŞÈ¨ÏŞ¡£
+	//åˆ¤æ–­è¯»æƒé™æ˜¯å¦è¿‡æœŸï¼Œå¦‚æœå·²è¿‡æœŸï¼Œåˆ™æ”¹ä¸ºæ— æƒé™ã€‚
 	$query="update svnauth_permission set  permission='n', expire=\"$expire\" where expire <= NOW() and permission='r' ";
 	mysql_query($query);
 	if(mysql_affected_rows()>0)$valuechanged=true;
-	//ÉúĞ§
+	//ç”Ÿæ•ˆ
 	if($valuechanged)
 	{
 		$scheme=true;
