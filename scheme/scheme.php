@@ -113,6 +113,7 @@ if (mysql_select_db(DBNAME))
 	if($valuechanged)
 	{
 		$scheme=true;
+		$serverid='*';
 		@include('../priv/gen_access.php');
 	}
 }

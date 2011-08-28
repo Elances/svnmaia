@@ -104,7 +104,7 @@ if (mysql_select_db(DBNAME))
 		}
 	}
 	//*****列出para参数
-	$query="select para,value from svnauth_para";
+	$query="select server_id,para,value from svnauth_para";
 	$result = mysql_query($query);	
 	$para_array=array();
 	$para_array['accessfile']="/home/svn/repos/authz";
@@ -120,10 +120,10 @@ if (mysql_select_db(DBNAME))
 	$para_array['svnparentpath']='/home/svn/repos/';
 	$para_array['smtp_port']='25';
 	while (($result)and($row= mysql_fetch_array($result, MYSQL_BOTH))) {
-		$para_array[$row['para']]=$row['value'];
+		$para_array[$row['server_id']][$row['para']]=$row['value'];
 		if($row['para']=='smtp_passwd')
 		{
-			$para_array[$row['para']]=base64_decode($row['value']);
+			$para_array[$row['server_id']][$row['para']]=base64_decode($row['value']);
 		}
 		if(($row['para']=='use_smtp_authz')and($row['value']=='true'))
 		{
@@ -176,17 +176,21 @@ function showadvance(myid)
 <h2>设置</h2>
 <form method='post' action=''>
 <fieldset>
-<h3>系统参数设置</h3>
+<h3>服务器参数设置</h3>
 <div class='st'>
+  <div class='subdiv'><br>服务器简称:<br>服务器节点（远程节点请指定url）:</div>
+  <div class='subdiv'>
 <br>1、权限控制文件路径：<input type='text' class='ipt' readonly name='accessfile' id='accessfile' value="<?php echo $para_array['accessfile'];?>"> <span class='rt'> <a href="#" onclick="modify('accessfile')">修改</a>&nbsp;&nbsp;<font class=sf onclick="showreadme('readmetip')"><img src='../img/help.gif'></font> <?php echo $err_acc ?></span><span id='readmetip' class='sf' style='display:none'><p><br><b>说明：</b>【必填项】指定svn的权限控制文件access file的系统路径。</p>
  </span>
 <br>2、用户文件passwd路径：<input type='text' class='ipt'  readonly name='passwdfile' id='passwdfile'  value="<?php echo $para_array['passwdfile'];?>"> <span class='rt'> <a href="#" onclick="modify('passwdfile')">修改</a>&nbsp;&nbsp;<font class=sf onclick="showreadme('readmetip2')"><img src='../img/help.gif'></font> <?php echo $err_pass ?></span><span id='readmetip2' class='sf' style='display:none'><p><br><b>说明：</b>【必填项】指定svn的用户密码文件passwd file的系统路径。</p>
  </span>
-<br>3、htpasswd路径:<input type='text' class='ipt'  readonly name='htpasswd' id='htpasswd'  value="<?php echo $para_array['htpasswd'];?>"> <span class='rt'> <a href="#" onclick="modify('htpasswd')">修改</a> &nbsp;&nbsp;<font class=sf onclick="showreadme('readmetip3')"><img src='../img/help.gif'></font><?php echo $err_htpa ?></span><span id='readmetip3' class='sf' style='display:none'><p><br><b>说明：</b>如果服务器系统变量无法识别htpasswd，则须指定htpasswd所在的具体路径。如:/usr/bin/htpasswd，或:D:/apache2/bin/htpasswd。如果系统能识别，则只需要填写"htpasswd"即可。如果填写错误，则增删用户和用户修改密码时需要管理员使用【生成用户文件】工具后才能生效。</p>
+
+<br>3、svn父目录url:<input type='text' class='ipt'  readonly name='svnurl' id='svnurl'  value="<?php echo $para_array['svnurl'];?>"> <span class='rt'> <a href="#" onclick="modify('svnurl')">修改</a>&nbsp;&nbsp;<font class=sf onclick="showreadme('readmetip4')"><img src='../img/help.gif'></font></span><span id='readmetip4' class='sf' style='display:none'><p><br><b>说明：</b>【必填项】指定通过web访问具体svn库的URL的父级目录。如：http://svnmaia.scmbbs.com/repos_parent/</p>
  </span>
-<br>4、svn父目录url:<input type='text' class='ipt'  readonly name='svnurl' id='svnurl'  value="<?php echo $para_array['svnurl'];?>"> <span class='rt'> <a href="#" onclick="modify('svnurl')">修改</a>&nbsp;&nbsp;<font class=sf onclick="showreadme('readmetip4')"><img src='../img/help.gif'></font></span><span id='readmetip4' class='sf' style='display:none'><p><br><b>说明：</b>【必填项】指定通过web访问具体svn库的URL的父级目录。如：http://svnmaia.scmbbs.com/repos_parent/</p>
+<br>4、svn仓库父路径：<input type='text' class='ipt'  readonly name='svnparentpath' id='svnparentpath'  value="<?php echo $para_array['svnparentpath'];?>">  <span class='rt'><a href="#" onclick="modify('svnparentpath')">修改</a> &nbsp;&nbsp;<font class=sf onclick="showreadme('readmetip6')"><img src='../img/help.gif'></font> <?php echo $err_svnpath ?></span><span id='readmetip6' class='sf' style='display:none'><p><br><b>说明：</b>【必填项】指定svn仓库群所在的系统路径，要与apache的SVNParentPath参数所指定一致。如：D:/svnroot/，对于windows系统请注意路径要用"/"做路径分割符而不是反斜线。</p>
  </span>
-<br>5、svn仓库父路径：<input type='text' class='ipt'  readonly name='svnparentpath' id='svnparentpath'  value="<?php echo $para_array['svnparentpath'];?>">  <span class='rt'><a href="#" onclick="modify('svnparentpath')">修改</a> &nbsp;&nbsp;<font class=sf onclick="showreadme('readmetip6')"><img src='../img/help.gif'></font> <?php echo $err_svnpath ?></span><span id='readmetip6' class='sf' style='display:none'><p><br><b>说明：</b>【必填项】指定svn仓库群所在的系统路径，要与apache的SVNParentPath参数所指定一致。如：D:/svnroot/，对于windows系统请注意路径要用"/"做路径分割符而不是反斜线。</p>
+</div>
+<br>5、htpasswd路径:<input type='text' class='ipt'  readonly name='htpasswd' id='htpasswd'  value="<?php echo $para_array['htpasswd'];?>"> <span class='rt'> <a href="#" onclick="modify('htpasswd')">修改</a> &nbsp;&nbsp;<font class=sf onclick="showreadme('readmetip3')"><img src='../img/help.gif'></font><?php echo $err_htpa ?></span><span id='readmetip3' class='sf' style='display:none'><p><br><b>说明：</b>如果服务器系统变量无法识别htpasswd，则须指定htpasswd所在的具体路径。如:/usr/bin/htpasswd，或:D:/apache2/bin/htpasswd。如果系统能识别，则只需要填写"htpasswd"即可。如果填写错误，则增删用户和用户修改密码时需要管理员使用【生成用户文件】工具后才能生效。</p>
  </span>
 <br>6、svnlook路径：<input type='text' class='ipt'  readonly name='svn' id='svn'  value="<?php echo $para_array['svn'];?>">  <span class='rt'><a href="#" onclick="modify('svn')">修改</a> &nbsp;&nbsp;<font class=sf onclick="showreadme('readmetip5')"><img src='../img/help.gif'></font><?php echo $err_svn ?></span><span id='readmetip5' class='sf' style='display:none'><p><br><b>说明：</b>如果服务器无法识别svn命令，应指定svn命令所在具体系统路径，否则请留空。如果是windows系统，本栏应留空，并使环境变量包含svn命令路径。</p>
  </span>

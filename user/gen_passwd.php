@@ -32,13 +32,22 @@ include('../include/dbconnect.php');
 	//write the file
 	$query="select name  from svnauth_server ";
 	$result=mysql_query($query);
+	$record_pw='';
 	while($result and ($row= mysql_fetch_array($result, MYSQL_BOTH))) {	
 		$name=trim($row['name']);
+		if($record_pw == $name$passwdfile)
+		{
+			continue;
+		}
 		$handle = fopen($name$passwdfile, "w+");
 		if (fwrite($handle, $filestr) === FALSE) {
        			 echo "<strong>Error:</strong>不能写入到文件 $name$passwdfile ! 保存失败！";
 		}else
+		{
 			echo "$name 用户已生效！";
+			$record_pw=$name$passwdfile;
+		}
+
 		fclose($handle);
 	}
 

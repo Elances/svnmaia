@@ -25,6 +25,7 @@ function pri_modify()
 	$action=$_GET['action'];
 	$repos=mysql_real_escape_string($_GET['repos']);
 	$path=mysql_real_escape_string($_GET['path']);
+	$serverid=mysql_real_escape_string($_GET['serverid']);	
 	if(empty($user_id)or empty($repos) or empty($path))return 1;
 	if($action=='degrade')
 	{
@@ -40,13 +41,13 @@ function pri_modify()
 		return 0;
 		break;
 		}
-		$query="update svnauth_permission set permission='$right' where user_id=$user_id and repository='$repos' and path='$path'";
+		$query="update svnauth_permission set permission='$right' where user_id=$user_id and repository='$repos' and path='$path' and server_id=$serverid";
 		mysql_query($query);
 		echo mysql_error();
 	}
 	if($action=='del')
 	{
-		$query="delete from svnauth_permission where user_id=$user_id and repository='$repos' and path='$path' ";
+		$query="delete from svnauth_permission where user_id=$user_id and repository='$repos' and path='$path' and server_id=$serverid";
 		mysql_query($query);
 	}
 	$uinfo="变更已保存，但尚未生效，请点击<a href='./gen_access.php?fromurl=./viewpriv.php?$querystr'>【立刻生效】</a>";

@@ -201,7 +201,7 @@ if($action == 'copygroup')
 			$query="delete from svnauth_g_permission where group_id=$togroupid";
 			mysql_query($query);
 		}
-		$query="insert into svnauth_g_permission (group_id,repository,path,permission) select '$togroupid',repository,path,permission from svnauth_g_permission where group_id=$gid";
+		$query="insert into svnauth_g_permission (group_id,server_id,repository,path,permission) select '$togroupid',server_id,repository,path,permission from svnauth_g_permission where group_id=$gid";
 		mysql_query($query);
 		echo mysql_error();
 	}

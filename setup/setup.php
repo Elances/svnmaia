@@ -128,7 +128,7 @@ CREATE TABLE IF NOT EXISTS `svnauth_groupuser` (
 		$query="CREATE TABLE IF NOT EXISTS `svnauth_para` (
 			`para_id` int(11) NOT NULL auto_increment,PRIMARY KEY (para_id),
   `server_id` int(11),
-  `para` varchar(250) NOT NULL UNIQUE,
+  `para` varchar(250) NOT NULL ,
   `value` varchar(255)
   )ENGINE=MyISAM $encode;";
 		mysql_query($query);

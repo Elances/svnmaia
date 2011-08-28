@@ -34,15 +34,21 @@ if((empty($reg_usr))or(empty($wpriv))or(empty($wurl))or(empty($comment)))
 }
 function checkurl($t_url)
 {
-	global $svnparentpath,$svn;
+	global $svnparentpath,$svn,$islocal,$svnuser,$svnpasswd,$svnurl;
 	if($t_url=='')return true;
 	if(strpos($t_url,':'))return false;
 //中文目录判断有问题
 //	if(isset($_GET['from_d']))
 	{
-	  $t_url=escapeshellcmd($t_url);
- 	  $localurl=($svnparentpath{0}=='/')?("file://$svnparentpath/$t_url"):("file:///$svnparentpath/$t_url");
-	  exec("{$svn}svn info \"$localurl\"",$dirs_arr);
+		$t_url=escapeshellcmd($t_url);
+		if('0'==$islocal)
+		{
+			 exec("{$svn}svn info \"$svnurl/$t_url\" --username=$svnuser --password=$svnpasswd",$dirs_arr);
+		}else
+		{
+	 	  $localurl=($svnparentpath{0}=='/')?("file://$svnparentpath/$t_url"):("file:///$svnparentpath/$t_url");
+		  exec("{$svn}svn info \"$localurl\"",$dirs_arr);
+		}
 	  if(count($dirs_arr)>1)
 	  {
 		return true;
@@ -52,7 +58,40 @@ function checkurl($t_url)
 	return true;
 }
 $dir=trim($wurl);
-$dir=str_replace($svnurl,'',$dir);
+$query="select value,server_id from svnauth_para where para='svnurl'";
+$result=mysql_query($query);
+while (($result)and($row= mysql_fetch_array($result, MYSQL_BOTH))) {
+{
+	$svnurl=$row['value'];
+	if(strpos($dir,$svnurl))
+	{
+		$serverid=$row['server_id'];
+		$dir=str_replace($svnurl,'',$dir);
+		$sql="select para,value from svnauth_para where server_id=$serverid";
+		$res=mysql_query($sql);
+		while(($res) and($row2=mysql_fetch_array($res,MYSQL_BOTH))) {
+			$para=$row['para'];
+			$value=$row['value'];
+			switch($para)
+			{
+			case 'svnuser':
+				$svnuser=$value;
+				break;
+			case 'islocal':
+				$islocal=$value;
+				break;
+			case 'svnpasswd':
+				$svnpasswd=$value;
+				break;
+			case 'svnparentpath':
+				$svnparentpath=$value;
+				break;
+			}
+			
+		}
+
+	}
+}
 if(preg_match("/^http:/i",$dir)){
 	$dir=str_replace("http://",'',$dir);
 	list($tmp1,$tmp2,$dir)=explode('/',$dir,3);
@@ -79,7 +118,7 @@ $maillist=array();
 if(($dir_admin_op=='checked')or($thenlist_op=='checked'))
  for($ii=0;$ii<20;$ii++)
 {
-	$query="select user_name,email from svnauth_dir_admin,svnauth_user where svnauth_dir_admin.user_id=svnauth_user.user_id and repository='$repos' and path='$subdir' order by user_name";
+	$query="select user_name,email from svnauth_dir_admin,svnauth_user where svnauth_dir_admin.user_id=svnauth_user.user_id and repository='$repos' and path='$subdir' and server_id=$serverid order by user_name";
 	//echo $query;exit;
 	$result = mysql_query($query);
 	$t_found=false;
@@ -135,6 +174,7 @@ if(count($maillist)==0)
 $createtb = "create table IF NOT EXISTS rt_svnpriv(
 		`id` INT NOT NULL AUTO_INCREMENT, PRIMARY KEY (`id`),		
 		`username` varchar(40) NOT NULL,
+  `server_id` int(11),		
   `repository` varchar(50) NOT NULL,
   `path` varchar(255) NOT NULL,
   `email` varchar(80) default NULL,
@@ -162,7 +202,7 @@ if($totalnum>0){
 		$full_name="(".$row['full_name'].")";
 	}
 }
-$query="insert into rt_svnpriv (`id`,`username`,`repository`,`path`,`permission`,`email`,`rtdate`) values($id,'$reg_usr','$repos','$dir','$wpriv','$b_email',NOW())";
+$query="insert into rt_svnpriv (`id`,`username`,`server_id`,`repository`,`path`,`permission`,`email`,`rtdate`) values($id,'$reg_usr',$serverid,'$repos','$dir','$wpriv','$b_email',NOW())";
 mysql_query($query);
 $rc_error=mysql_error();
 //******生成处理链接*******

@@ -19,15 +19,21 @@ include('../include/basefunction.php');
 include('../include/dbconnect.php');
 function checkurl($t_url)
 {
-	global $svnparentpath,$svn;
+	global $svnparentpath,$svn,$islocal,$svnuser,$svnpasswd,$svnurl;
 	if($t_url=='')return true;
 	if(strpos($t_url,':'))return false;
 //中文目录判断有问题
 	if(isset($_GET['from_d']))
 	{
-	  $t_url=escapeshellcmd($t_url);
- 	  $localurl=($svnparentpath{0}=='/')?("file://$svnparentpath/$t_url"):("file:///$svnparentpath/$t_url");
-	  exec("{$svn}svn info \"$localurl\"",$dirs_arr);
+		$t_url=escapeshellcmd($t_url);
+		if('0'==$islocal)
+		{
+			 exec("{$svn}svn info \"$svnurl/$t_url\" --username=$svnuser --password=$svnpasswd",$dirs_arr);
+		}else
+		{
+	 	  $localurl=($svnparentpath{0}=='/')?("file://$svnparentpath/$t_url"):("file:///$svnparentpath/$t_url");
+		  exec("{$svn}svn info \"$localurl\"",$dirs_arr);
+		}
 	  if(count($dirs_arr)>1)
 	  {
 		return true;
@@ -37,7 +43,40 @@ function checkurl($t_url)
 	return true;
 }
 $dir=trim(mysql_real_escape_string($_GET['d']));
-$dir=str_replace($svnurl,'',$dir);
+$query="select value,server_id from svnauth_para where para='svnurl'";
+$result=mysql_query($query);
+while (($result)and($row= mysql_fetch_array($result, MYSQL_BOTH))) {
+{
+	$svnurl=$row['value'];
+	if(strpos($dir,$svnurl))
+	{
+		$serverid=$row['server_id'];
+		$dir=str_replace($svnurl,'',$dir);
+		$sql="select para,value from svnauth_para where server_id=$serverid";
+		$res=mysql_query($sql);
+		while(($res) and($row2=mysql_fetch_array($res,MYSQL_BOTH))) {
+			$para=$row['para'];
+			$value=$row['value'];
+			switch($para)
+			{
+			case 'svnuser':
+				$svnuser=$value;
+				break;
+			case 'islocal':
+				$islocal=$value;
+				break;
+			case 'svnpasswd':
+				$svnpasswd=$value;
+				break;
+			case 'svnparentpath':
+				$svnparentpath=$value;
+				break;
+			}
+			
+		}
+
+	}
+}
 if(preg_match("/^http:/i",$dir)){
 	$dir=str_replace("http://",'',$dir);
 	list($tmp1,$tmp2,$dir)=explode('/',$dir,3);
@@ -117,7 +156,7 @@ $is_c='';
 $c_flag='';
 for($ii=0;$ii<20;$ii++)
 {
-	$query="select user_name,full_name,svnauth_user.user_id  from svnauth_dir_admin,svnauth_user where svnauth_dir_admin.user_id=svnauth_user.user_id and repository='$repos' and path='$subdir' order by user_name";
+	$query="select user_name,full_name,svnauth_user.user_id,server_id  from svnauth_dir_admin,svnauth_user where svnauth_dir_admin.user_id=svnauth_user.user_id and server_id=$serverid and repository='$repos' and path='$subdir' order by user_name";
 	//echo $query;exit;
 	$result = mysql_query($query);
 	while (($result)and($row= mysql_fetch_array($result, MYSQL_BOTH))) {
@@ -154,7 +193,7 @@ if($authz)
 //读取目录权限的用户列表详情
 //********************************
 
-$query="select user_name,permission,svnauth_permission.expire from svnauth_permission,svnauth_user where svnauth_user.user_id=svnauth_permission.user_id and repository='$repos' and path='$dir' order by user_name";
+$query="select user_name,permission,svnauth_permission.expire from svnauth_permission,svnauth_user where svnauth_user.user_id=svnauth_permission.user_id and server_id=$serverid and repository='$repos' and path='$dir' order by user_name";
 //echo $query;exit;
 $result = mysql_query($query);
 if(! $result)
@@ -205,7 +244,7 @@ while($result and (! $allflag))
 {
 	$subdir=dirname($subdir);
 	if($subdir=='\\')$subdir='/';
-	$query="select user_name,permission from svnauth_permission,svnauth_user where svnauth_user.user_id=svnauth_permission.user_id and   repository='$repos' and path='$subdir' order by user_name";
+	$query="select user_name,permission from svnauth_permission,svnauth_user where svnauth_user.user_id=svnauth_permission.user_id and  server_id=$serverid and  repository='$repos' and path='$subdir' order by user_name";
 	//echo $query;exit;
 	$s_user=array();
 	$result = mysql_query($query);
@@ -260,7 +299,7 @@ foreach($candidate_array as $user => $v)
 //*********************
 //读取用户组权限
 //**********************
-$query="select group_name,permission from svnauth_g_permission,svnauth_group where svnauth_group.group_id=svnauth_g_permission.group_id and repository='$repos' and path='$dir' order by group_name";
+$query="select group_name,permission from svnauth_g_permission,svnauth_group where svnauth_group.group_id=svnauth_g_permission.group_id and server_id=$serverid and repository='$repos' and path='$dir' order by group_name";
 //echo $query;exit;
 $result = mysql_query($query);
 while($result and($row= mysql_fetch_array($result, MYSQL_BOTH))) {	
@@ -306,7 +345,7 @@ while($result and ($subdir != $br_dir))
 {
 	$subdir=dirname($subdir);
 	if($subdir=='\\')$subdir='/';
-	$query="select group_name,permission from svnauth_g_permission,svnauth_group where svnauth_group.group_id=svnauth_g_permission.group_id and   repository='$repos' and path='$subdir' order by group_name";
+	$query="select group_name,permission from svnauth_g_permission,svnauth_group where svnauth_group.group_id=svnauth_g_permission.group_id and server_id=$serverid and   repository='$repos' and path='$subdir' order by group_name";
 	//echo $query;exit;
 	$s_group=array();
 	$result = mysql_query($query);
@@ -356,7 +395,7 @@ foreach($g_candidate_array as $group => $v)
 //显示目录描述
 //*********************
 $des='';
-$query="select des from dir_des where repository='$repos' and path='$dir'";
+$query="select des from dir_des where server_id=$serverid and repository='$repos' and path='$dir'";
 $result = mysql_query($query);
 if($result and($row= mysql_fetch_array($result, MYSQL_BOTH))) {
 	$des=$row['des'];
@@ -376,7 +415,7 @@ if(! $authz)
 	$candidate='';
 	$dexpire='';
 }
-$vars=array('dir' => $firstdir,'dirprive' => $userright,'g_dirprive' => $groupright,'g_candidate' => $g_candidate,'candidate' => $candidate,'diradmin' => $diradmin,'repos' => $repos,'path' => $dir,'sig' => $sig,'authz' => $showbutton,'dexpire' => $dexpire,'fromurl' => $fromurl,'description' => $des);  
+$vars=array('dir' => $firstdir,'serverid' => $serverid,'dirprive' => $userright,'g_dirprive' => $groupright,'g_candidate' => $g_candidate,'candidate' => $candidate,'diradmin' => $diradmin,'repos' => $repos,'path' => $dir,'sig' => $sig,'authz' => $showbutton,'dexpire' => $dexpire,'fromurl' => $fromurl,'description' => $des);  
 while (!feof($handle))
 {
       $line = fgets($handle);

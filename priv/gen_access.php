@@ -1,28 +1,14 @@
 <?php
  error_reporting(0);
+function gen_access($serverid)
+{
 include('../include/charset.php');
 include('../include/requireAuth.php');
 include('../../../config.inc');
 include('../include/dbconnect.php');
-$query="select group_name,group_id from svnauth_group order by group_name";
-$result = mysql_query($query);
-$access_g='';
-while (($result)and($row= mysql_fetch_array($result, MYSQL_BOTH))) {	
-	$gid=$row['group_id'];
-	$gname=$row['group_name'];
-	$sql="select user_name from svnauth_groupuser,svnauth_user where svnauth_user.user_id=svnauth_groupuser.user_id and group_id=$gid and svnauth_user.fresh!=1 group by user_name";
-	$result_u=mysql_query($sql);
-	$user_array=array();
-	while(($result_u)and($row2=mysql_fetch_array($result_u,MYSQL_BOTH))) {	
-		$user=$row2['user_name'];
-		$user_array[]= "$user";
-	}
-	$usr_str=implode(',',$user_array);
-	$access_g .= "$gname=$usr_str\n";
 
-}
 
-$query="select svnauth_user.user_name,repository,path,permission from svnauth_permission,svnauth_user where svnauth_permission.user_id=svnauth_user.user_id and svnauth_user.fresh!=1 order by repository,path";
+$query="select svnauth_user.user_name,repository,path,permission from svnauth_permission,svnauth_user where svnauth_permission.user_id=svnauth_user.user_id and svnauth_user.fresh!=1 and server_id=$serverid order by repository,path";
 $result = mysql_query($query);
 $i=0;
 $repos='';
@@ -167,7 +153,7 @@ $wg=$repos.'_w';
       }
      $groups[$ng.$i]=$temp;
     }
-$access="[groups]\n".$access_g;
+#$access="[groups]\n".$access_g;
 foreach($groups as $key => $value)
 {
   if( empty($value))continue;  
@@ -194,10 +180,13 @@ foreach($dirs as $key => $value)
     if(!empty($groups[$rg]))$access .= "@{$rg} = r \n";
   }
 }
-$query="select svnauth_group.group_name,repository,path,permission from svnauth_g_permission,svnauth_group where svnauth_g_permission.group_id=svnauth_group.group_id order by repository,path";
+$gname_arr=array();
+$query="select svnauth_group.group_name,svnauth_group.group_id,repository,path,permission from svnauth_g_permission,svnauth_group where svnauth_g_permission.group_id=svnauth_group.group_id and server_id=$serverid  order by repository,path";
 $result = mysql_query($query);
 while (($result)and($row= mysql_fetch_array($result, MYSQL_BOTH))) {	
 	$gname=$row['group_name'];
+	$gid=$row['group_id'];
+	$gname_arr[$gid]=$gname;
 	$priv=$row['permission'];
 	$repos=$row['repository'];
 	$path=$row['path'];
@@ -224,22 +213,41 @@ while (($result)and($row= mysql_fetch_array($result, MYSQL_BOTH))) {
 
 	
 }
+//get group detail
+$access_g='';
+foreach($gname_arr as $gid => $gname){
+	$sql="select user_name from svnauth_groupuser,svnauth_user where svnauth_user.user_id=svnauth_groupuser.user_id and group_id=$gid and svnauth_user.fresh!=1 group by user_name";
+	$result_u=mysql_query($sql);
+	$user_array=array();
+	while(($result_u)and($row2=mysql_fetch_array($result_u,MYSQL_BOTH))) {	
+		$user=$row2['user_name'];
+		$user_array[]= "$user";
+	}
+	$usr_str=implode(',',$user_array);
+	$access_g .= "$gname=$usr_str\n";
+
+}
+$access="[groups]\n".$access_g.$access;
 //echo str_replace("\n","<br>",$access);
 		if("[groups]\n" == $access)
 		{
 			echo "权限信息为空！";
 			exit;
 		}
-
-		$handle=fopen($accessfile,'w+');
+	$query="select name  from svnauth_server where server_id=$serverid";
+	$result=mysql_query($query);
+	while($result and ($row= mysql_fetch_array($result, MYSQL_BOTH))) {	
+		$name=trim($row['name']);
+		$handle=fopen($name$accessfile,'w+');
 		if (fwrite($handle, $access) === FALSE) {
-       			 echo "<strong>Error:</strong>不能写入到文件 $accessfile ! 保存失败！";
+       			 echo "<strong>Error:</strong>不能写入到文件 $name$accessfile ! 保存失败！";
 		}else
-			echo "权限生效成功！";
+			echo "$name 权限生效成功！";
 		fclose($handle);
 		$fromurl=$_GET['fromurl'];
 		if(empty($fromurl))$fromurl='dirpriv.php';	
 		echo "&nbsp;&nbsp;&nbsp;&nbsp;<a href=$fromurl>返回</a>";		
 		
-
-
+	}
+}
+gen_access($serverid);

@@ -38,7 +38,7 @@ if(isset($_POST['flag']))
   //*****记录过程
   $query="update rt_svnpriv set ops='$ops',optype='$optype' where id=$id";
   $result=mysql_query($query);
-  $query="select username,repository,path,permission,email,ops from  rt_svnpriv where id=$id";
+  $query="select username,server_id,repository,path,permission,email,ops from  rt_svnpriv where id=$id";
   $result=mysql_query($query);
   include("../../include/email.php");
   if($result)
@@ -46,11 +46,19 @@ if(isset($_POST['flag']))
 	$row= mysql_fetch_array($result, MYSQL_BOTH);
 	$b_email=$row['email'];
 	$us=$row['username'];
+	$serverid=$row['server_id'];
 	$repos=$row['repository'];
 	$path=$row['path'];
 	$wpriv=$row['permission'];
 	('w'==$wpriv)?($priv='读写'):($priv='只读');
 	$ops=$row['ops'];
+  }
+  $query="select name from svnauth_server where server_id=$serverid";
+  $result=mysql_query($query);
+  if($result)
+  {
+	  $row= mysql_fetch_array($result, MYSQL_BOTH);
+	  $servername=$row['name'];
   }
   $subject="您的svn权限申请已处理";
   $windid="svn-rt";
@@ -59,7 +67,7 @@ if(isset($_POST['flag']))
 	  echo "处理成功！<a href='' onclick=\"javascript:self.close();\">关闭</a>";
 	  //发邮件通知
 	  $body="Hi,$us\n
-		  你对$svnurl/$repos/$path 的svn($priv)权限申请已被 $ops 拒绝，回执如下：$mail_back
+		  你对${$servername.'svnurl'}/$repos/$path 的svn($priv)权限申请已被 $ops 拒绝，回执如下：$mail_back
 
 这只是一封系统自动发出的邮件，请勿回复。
 --------------------
@@ -73,7 +81,7 @@ if(isset($_POST['flag']))
 	  echo "<script>alert('已给申请者发送回执，请登录权限系统进行处理！');</script>";
 	  echo "<script>setTimeout('document.location.href=\"../../default.htm\"',5)</script>";//跳转
 	  $body="Hi,$us\n
-		  你对$svnurl/$repos/$path 的svn($priv)权限申请已被 $ops 手工处理，回执如下：$mail_back
+		  你对${$servername.'svnurl'}/$repos/$path 的svn($priv)权限申请已被 $ops 手工处理，回执如下：$mail_back
 
  这只是一封系统自动发出的邮件，请勿回复。
 --------------------
@@ -123,12 +131,13 @@ if(isset($_POST['flag']))
 	  }
 
   $expire=strftime("%Y-%m-%d",$expire);	
-  $query="update svnauth_permission set permission='$wpriv',expire='$expire' where  repository='$repos' and path = '$path' and user_id=$uid";
+  $query="update svnauth_permission set permission='$wpriv',expire='$expire' where  repository='$repos' and path = '$path' and user_id=$uid and server_id=$serverid";
   mysql_query($query);
   if (mysql_affected_rows() == 0){
-     	$query="insert into svnauth_permission (user_id,repository,path,permission,expire) values($uid,'$repos','$path','$wpriv','$expire'); ";
+     	$query="insert into svnauth_permission (user_id,server_id,repository,path,permission,expire) values($uid,$serverid,'$repos','$path','$wpriv','$expire'); ";
 	mysql_query($query);
   }
+  $backpath="${$servername.'svnurl'}/$repos/$path";
   $scheme=true;
   echo "处理成功！<a href='' onclick=\"javascript:self.close();\">关闭</a>";
 	  //发邮件通知
@@ -139,7 +148,6 @@ if(isset($_POST['flag']))
 --------------------
 配置管理组
 ";
-  $backpath="$svnurl/$repos/$path";
   @include('../../priv/gen_access.php');
   $sendinfo =send_mail($b_email,$subject,$body);
   exit;
@@ -179,17 +187,25 @@ if (!$trueurl)
 	echo "<p><IMG  src='../../img/waiting.gif'>";
 	exit;
 }
-$query="select username,repository,path,permission from  rt_svnpriv where id=$id";
+$query="select username,server_id,repository,path,permission from  rt_svnpriv where id=$id";
 $result=mysql_query($query);
 if($result)
 {
 	$row= mysql_fetch_array($result, MYSQL_BOTH);
 	$us=$row['username'];
 	$repos=$row['repository'];
+	$serverid=$row['server_id'];
 	$path=$row['path'];
 	$wpriv=$row['permission'];
+	$query="select name from svnauth_server where server_id=$serverid";
+	$result2=mysql_query($query);
+	if($result2)
+	{
+		  $row= mysql_fetch_array($result, MYSQL_BOTH);
+		  $servername=$row['name'];
+	}
 	('w'==$wpriv)?($priv='读写'):($priv='只读');
-	$tip="&nbsp;&nbsp;&nbsp;Hi,$us 申请了<font color=red>$svnurl/$repos/$path</font>的<font color=red>$priv</font>权限，请审慎处理：";
+	$tip="&nbsp;&nbsp;&nbsp;Hi,$us 申请了<font color=red>${$name.svnurl}/$repos/$path</font>的<font color=red>$priv</font>权限，请审慎处理：";
 }
 ?>
 <style type='text/css'>

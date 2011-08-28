@@ -112,11 +112,11 @@ function isadmin($gid)
  $t_isowner=trim($row['isowner']);
  if(!empty($t_isowner))return true;
  if ($_SESSION['role']=="diradmin"){ 
-	$query="select repository,path from svnauth_g_permission where group_id=$gid";
+	$query="select server_id,repository,path from svnauth_g_permission where group_id=$gid";
 	$result=mysql_query($query);
 	$t_allmatch=true;
 	while (($result)and($row= mysql_fetch_array($result, MYSQL_BOTH))) {
-		$path=$row['repository'].$row['path'];
+		$path=$row['server_id'].$row['repository'].$row['path'];
 		$t_match=false;
 		foreach($_SESSION['s_admindir'] as $v)
 		{
@@ -189,6 +189,7 @@ if(isset($_POST['guact']))
 			mysql_query($query);
 		}
 		$_GET['gid']=$gid;
+		$serverid=$_POST['serverid'];
 		if($data_c)@include('../priv/gen_access.php');
 
 	}else
@@ -220,6 +221,7 @@ if(isset($_POST['guact']))
 				}else unset($unknow_usr);
 			}
 			$_GET['gid']=$gid;
+			$serverid=$_POST['serverid'];
 			if($data_c)@include('../priv/gen_access.php');
 		}
 		if(isset($_POST['groupowner']))
@@ -337,23 +339,24 @@ SCMBBS;
 	echo "<a id='grouppriv'></a><h4>组权限</h4><table>";
 	if($isadmin)$st='操作';
 	echo "<tr><td>目录</td><td></td><td>权限</td><td>$st</td></tr>";
-	$query="select id,repository,path,permission from svnauth_g_permission where group_id=$gid";
+	$query="select id,server_id,repository,path,permission from svnauth_g_permission where group_id=$gid";
 	$result=mysql_query($query);
 	while (($result)and($row= mysql_fetch_array($result, MYSQL_BOTH))) {
-	if ($tr_class=="trc1"){
+	  if ($tr_class=="trc1"){
 		$tr_class="trc2";
-	}else
-	{			
+	  }else
+	  {			
 		$tr_class="trc1";
+	  }
+	  $id=$row['id'];
+	  $repos=$row['repository'];
+	  $serverid=$row['server_id'];
+	  $path=$row['path'];
+	  $permission=$row['permission'];
+	  if($isadmin)$st="<a href='?d_gid=$gid&rowid=$id&serverid=$serverid'   onclick=\"return confirm('确实要删除吗?')\">删除</a>";
+	  echo "<tr class=$tr_class><td>$repos{$path}</td><td width=100>&nbsp;</td><td>$permission</td><td>$st</td></tr>";
 	}
-	$id=$row['id'];
-	$repos=$row['repository'];
-	$path=$row['path'];
-	$permission=$row['permission'];
-	if($isadmin)$st="<a href='?d_gid=$gid&rowid=$id'   onclick=\"return confirm('确实要删除吗?')\">删除</a>";
-	echo "<tr class=$tr_class><td>$repos{$path}</td><td width=100>&nbsp;</td><td>$permission</td><td>$st</td></tr>";
-	}
-	echo "</table>";
+	echo "<input type=hidden name='serverid' value='$serverid' /></table>";
 	echo "<hr>导航：<a href='$fromurl'>返回</a>";
 	if($isadmin)echo "</form>";
 }

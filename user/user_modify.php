@@ -67,6 +67,7 @@ if (mysql_select_db(DBNAME))
 		//echo $query;exit;
 		$result=mysql_query($query);	
 		@include('./gen_passwd.php');
+		$serverid='%';
 		@include('../priv/gen_access.php');
 		echo " <script>setTimeout('top.location.href=\"../default.htm\"',0)</script>";
 		//header("Cache-Control: no-cache");
@@ -85,6 +86,7 @@ if (mysql_select_db(DBNAME))
 		//echo $query;exit;
 		$result=mysql_query($query);	
 		@include('./gen_passwd.php');
+		$serverid='%';
 		@include('../priv/gen_access.php');
 		echo " <script>setTimeout('top.location.href=\"../default.htm\"',0)</script>";
 		//header("Cache-Control: no-cache");
@@ -263,7 +265,7 @@ HTML;
 		if($_POST['copym'] == 'cpm')
 		{
 		
-			$query="insert into svnauth_permission (user_id,repository,path,permission) select '$togroupid',repository,path,permission from svnauth_permission where user_id=$gid";
+			$query="insert into svnauth_permission (user_id,server_id,repository,path,permission) select '$togroupid',server_id,repository,path,permission from svnauth_permission where user_id=$gid";
 			mysql_query($query);
 			$data_c=true;
 			echo mysql_error();
@@ -273,13 +275,14 @@ HTML;
 		
 			$query="delete from svnauth_permission where user_id=$togroupid";
 			mysql_query($query);
-			$query="insert into svnauth_permission (user_id,repository,path,permission) select '$togroupid',repository,path,permission from svnauth_permission where user_id=$gid";
+			$query="insert into svnauth_permission (user_id,server_id,repository,path,permission) select '$togroupid',server_id,repository,path,permission from svnauth_permission where user_id=$gid";
 			mysql_query($query);
 			$data_c=true;
 			echo mysql_error();
 		}
 		if($data_c)
 		{
+			$serverid='%';
 			@include('../priv/gen_access.php');
 		}
 		
@@ -313,6 +316,7 @@ HTML;
 			if($data_c)
 			{
 				@include('./gen_passwd.php');
+				$serverid='%';
 				@include('../priv/gen_access.php');
 			}
 		}else if($_SESSION['username']==$username[0])
