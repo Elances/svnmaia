@@ -34,14 +34,14 @@ if((empty($reg_usr))or(empty($wpriv))or(empty($wurl))or(empty($comment)))
 }
 function checkurl($t_url)
 {
-	global $svnparentpath,$svn,$islocal,$svnuser,$svnpasswd,$svnurl;
+	global $svnparentpath,$svn,$isremote,$svnuser,$svnpasswd,$svnurl;
 	if($t_url=='')return true;
 	if(strpos($t_url,':'))return false;
 //中文目录判断有问题
 //	if(isset($_GET['from_d']))
 	{
 		$t_url=escapeshellcmd($t_url);
-		if('0'==$islocal)
+		if('1'==$isremote)
 		{
 			 exec("{$svn}svn info \"$svnurl/$t_url\" --username=$svnuser --password=$svnpasswd",$dirs_arr);
 		}else
@@ -77,8 +77,8 @@ while (($result)and($row= mysql_fetch_array($result, MYSQL_BOTH))) {
 			case 'svnuser':
 				$svnuser=$value;
 				break;
-			case 'islocal':
-				$islocal=$value;
+			case 'isremote':
+				$isremote=$value;
 				break;
 			case 'svnpasswd':
 				$svnpasswd=$value;
