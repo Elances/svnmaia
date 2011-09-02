@@ -120,46 +120,9 @@ if (mysql_select_db(DBNAME))
 }else{
 	echo "Error:不能选择数据库!".DBNAME;
 }
+include('./css.html');
 ?>
-<style type='text/css'>
-.ipt{position:absolute;left:220px;clear:both;float:left;background:#ece9d8;width:250px;}
-br{clear:both;}
-.st{margin-left:10px;}
-.st p{border:solid 1px;}
-.ft{background:#B6C6D6;text-align:center;margin:20px 0 20px 0;}
-.rt{position:absolute;left:480px;}
-.rt2{position:absolute;left:520px;}
-.sf{color:blue;font-size:10pt;CURSOR:pointer;background:#FFFFCC;}
-.err{color:red;}
-.subdiv {border:solid 1px;margin:0 0 10 0 ;}
-</style>
-<link rel="stylesheet" href="../css/base.css" type="text/css">
-<script language="javascript">
-<!--
-	var valueChanged=0;
-function modify(myid)
-{
-	var myObj=document.getElementById(myid);
-	myObj.style.background='white';
-	myObj.readOnly=false;
-	myObj.focus();
-}
-function showreadme(myid)
-{
-	if(document.getElementById(myid).style.display=="none")
-	  document.getElementById(myid).style.display ='inline'
-	else
-	  document.getElementById(myid).style.display = "none";
-}
-function showadvance(myid)
-{
-	if(document.getElementById(myid).style.display=="none")
-	  document.getElementById(myid).style.display =''
-	else
-	  document.getElementById(myid).style.display = "none";
-}
--->
-</script>
+
 <h2>设置</h2>
 <form method='post' action=''>
 <fieldset>
