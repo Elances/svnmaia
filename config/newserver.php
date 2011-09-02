@@ -48,6 +48,7 @@ if (mysql_select_db(DBNAME))
 	}
 	if(($_POST['t'] == 'n')or(is_numeric($_POST['serverid'])))
 	{
+		$founderr=false;
 	    foreach($_POST as $para=>$v)
  	    {	
 			$v=trim($v);
@@ -58,6 +59,18 @@ if (mysql_select_db(DBNAME))
                              $_POST['isremote']=1;
                              break;
                         }
+			if(!file_exists($v))
+			 switch($para)
+                         {
+                                case 'accessfile':
+					$err_acc="<span class='err'><strong>Error:</strong>$v file not found!</span>";
+					$founderr=true;
+                                   break;
+                                case 'passwdfile':
+					$err_pass="<span class='err'><strong>Error:</strong>$v file not found!</span>";
+					$founderr=true;
+                                    break;
+			}
 			if($para=='svnparentpath')
 			{
 				$v=str_replace('\\','/',$v);
@@ -76,7 +89,10 @@ if (mysql_select_db(DBNAME))
 						   break; 
 					   }
 					}
-					if($nodb)$err_svnpath="<span class='err'><strong>Error:</strong>$v 该目录下没找到任何svn库!试试填写上一级目录？</span>";
+					if($nodb){
+						$err_svnpath="<span class='err'><strong>Error:</strong>$v 该目录下没找到任何svn库!试试填写上一级目录？</span>";
+						$founderr=true;
+					}
 				}
 			}
 			if(($para =='svnuser')and ($_POST['isremote']==1))
@@ -110,7 +126,7 @@ if (mysql_select_db(DBNAME))
 					echo mysql_error();
 			}
 		}
-		echo "<script>self.close();</script>";
+		if (($_POST['isremote']==1)or(!$founderr))echo "<script>self.close();</script>";
 	}
 	
 	//------------修改节点
