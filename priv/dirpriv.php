@@ -66,7 +66,7 @@ while (($result)and($row= mysql_fetch_array($result, MYSQL_BOTH))) {
 				$isremote=$value;
 				break;
 			case 'svnpasswd':
-				$svnpasswd=$value;
+				$svnpasswd=base64_decode($value);
 				break;
 			case 'svnparentpath':
 				$svnparentpath=$value;

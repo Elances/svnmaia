@@ -34,6 +34,7 @@ if (mysql_select_db(DBNAME))
 			$serverid=$row['server_id'];
 		}
 	}
+	//-------修改节点
 	if(is_numeric($_POST['serverid']))
 	{
 		$serverid=$_POST['serverid'];
@@ -43,8 +44,9 @@ if (mysql_select_db(DBNAME))
 		mysql_query($query);
 	}
 	if(($_POST['t'] == 'n')or(is_numeric($_POST['serverid'])))
-	foreach($_POST as $para=>$v)
-	{	
+	{
+	    foreach($_POST as $para=>$v)
+ 	    {	
 			$v=trim($v);
 			if($para == 'servername')continue;
 			if($para == 'server')continue;
@@ -79,6 +81,18 @@ if (mysql_select_db(DBNAME))
 				$query="delete from svnauth_para where server_id=$serverid";	
 				mysql_query($query);
 			}
+			if(($para =='svnuser')and ($_POST['isremote']==1))
+			{
+				$random=rand();
+				$rand64=substr("./0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",$random  %  64,2);
+				$k1=rand().rand().$rand64;
+				$passwd=md5($k1);
+				$passwd=base64_encode($passwd);
+				$query="insert into svnauth_para(server_id,para,value) values($serverid,'svnpasswd','$passwd')";
+				mysql_query($query);
+				//how to make it effect?
+			}
+
 			if($para=='svnurl')
 			{
 				foreach($para as $k => $v)
