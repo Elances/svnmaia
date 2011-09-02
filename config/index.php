@@ -103,14 +103,14 @@ if (mysql_select_db(DBNAME))
 	}
 	$query="select server_id,name,locate from svnauth_server";
 	$result = mysql_query($query);	
-	$svnserver="<table class='tb'>";
+	$svnserver="<table class='tb' rules='all'><tr><th>name</th><th>server</th><th>action</th></tr>";
 	$isseted=false;
 	while (($result)and($row= mysql_fetch_array($result, MYSQL_BOTH))) {
 		$isseted=true;
 		$serverid=$row['server_id'];
 		$name=$row['name'];
 		$locate=$row['locate'];
-		$svnserver.="<tr><td>$name</td><td>$locate</td><td> <a href='./newserver.php?t=m&id=$serverid'>修改</a></td></tr>";
+		$svnserver.="<tr><td>$name</td><td>$locate</td><td> <a href='' onclick=\"window.open('./newserver.php?t=m&id=$serverid','','height=400, width=900, top=200,left=150, toolbar=no,menubar=no, scrollbars=yes, resizable=yes,location=no')\">修改</a></td></tr>";
 	}
 	$svnserver=$svnserver."</table>";
 	if(!$isseted){
@@ -128,7 +128,7 @@ include('./css.html');
 <fieldset>
 <h3>服务器参数设置</h3>
 <div class='st'>
-	<h4>svn节点  <a href='./newserver.php?t=n'>新增节点</a></h4>
+	<h4>svn节点  <a href='' onclick="window.open('./newserver.php?t=n','','height=400, width=900, top=200,left=150, toolbar=no, menubar=no, scrollbars=yes, resizable=yes,location=no')">新增节点</a></h4>
 <?php echo $svnserver ?>
 
 <h4>中心设置</h4>
