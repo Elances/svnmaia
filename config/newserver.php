@@ -129,6 +129,7 @@ if (mysql_select_db(DBNAME))
 			$servername=$row['name'];
 			$server=$row['locate'];
 		}
+		$inputstat=" readonly ";
 		$query="select para,value from svnauth_para where server_id=$serverid";
 		while (($result)and($row= mysql_fetch_array($result, MYSQL_BOTH))) {
 			$para_array[$row['para']]=$row['value'];
@@ -147,23 +148,23 @@ if (mysql_select_db(DBNAME))
 <form method='post' action=''>
 <fieldset>
  <legend>svn服务器节点</legend>
-<div class='subdiv'><br>节点名:<input type='text' class='ipt' readonly name='servername' id='servername' value=<?php echo $servername ?>> <span class='rt'> <a href="#" onclick="modify('servername')">修改</a>&nbsp;&nbsp;<font class=sf onclick="showreadme('readmetip00')"><img src='../img/help.gif'></font></span><span id='readmetip00' class='sf' style='display:none'><p><br><b>说明：</b>【必填项】指定svn服务器节点简称，由英文组成。</p>
+<div class='st'><br>节点名:<input type='text' class='ipt'  name='servername' id='servername' value=<?php echo $servername$inputstat ?>> <span class='rt'> <a href="#" onclick="modify('servername')">修改</a>&nbsp;&nbsp;<font class=sf onclick="showreadme('readmetip00')"><img src='../img/help.gif'></font></span><span id='readmetip00' class='sf' style='display:none'><p><br><b>说明：</b>【必填项】指定svn服务器节点简称，由英文组成。</p>
  </span>
- <br>svn服务器:<input type='text' class='ipt' readonly name='server' id='server' value=<?php echo $server ?>> <span class='rt'> <a href="#" onclick="modify('server')">修改</a>&nbsp;&nbsp;<font class=sf onclick="showreadme('readmetip0')"><img src='../img/help.gif'></font></span><span id='readmetip0' class='sf' style='display:none'><p><br><b>说明：</b>【必填项】指定svn服务器显示名称，如果是远程svn服务器，请指定访问的url。</p>
+ <br>svn服务器:<input type='text' class='ipt'  name='server' id='server' value=<?php echo $server$inputstat ?>> <span class='rt'> <a href="#" onclick="modify('server')">修改</a>&nbsp;&nbsp;<font class=sf onclick="showreadme('readmetip0')"><img src='../img/help.gif'></font></span><span id='readmetip0' class='sf' style='display:none'><p><br><b>说明：</b>【必填项】指定svn服务器显示名称，如果是远程svn服务器，请指定访问的url。</p>
  </span>
  <br><input type='checkbox' name='isremote[]' value='true'  id='isremote' onclick="showreadme('svnuserdiv')" <?php echo $isremote ?>><label for='isremote'>这是远程服务器</label>
- <span id='svnuserdiv'  style='display:none'><br>svn中心用户名:<input type='text' class='ipt'  name='svnuser' id='svnuser' value=<?php echo $svnuser ?>>(密码将自动创建)</span>
+ <span id='svnuserdiv'  style='display:none'><br>svn用户名:<input type='text' class='ipt'  name='svnuser' id='svnuser' value=<?php echo $svnuser ?>>(将自动创建)</span>
 	<hr>
-<br>1、权限控制文件路径：<input type='text' class='ipt' readonly name='accessfile' id='accessfile' value="<?php echo $para_array['accessfile'];?>"> <span class='rt'> <a href="#" onclick="modify('accessfile')">修改</a>&nbsp;&nbsp;<font class=sf onclick="showreadme('readmetip')"><img src='../img/help.gif'></font> <?php echo $err_acc ?></span><span id='readmetip' class='sf' style='display:none'><p><br><b>说明：</b>【必填项】指定svn的权限控制文件access file的系统路径。</p>
+<br>1、权限控制文件路径：<input type='text' class='ipt'  name='accessfile' id='accessfile' value=<?php echo $para_array['accessfile']$inputstat;?>> <span class='rt'> <a href="#" onclick="modify('accessfile')">修改</a>&nbsp;&nbsp;<font class=sf onclick="showreadme('readmetip')"><img src='../img/help.gif'></font> <?php echo $err_acc ?></span><span id='readmetip' class='sf' style='display:none'><p><br><b>说明：</b>【必填项】指定svn的权限控制文件access file的系统路径。</p>
  </span>
-<br>2、用户文件passwd路径：<input type='text' class='ipt'  readonly name='passwdfile' id='passwdfile'  value="<?php echo $para_array['passwdfile'];?>"> <span class='rt'> <a href="#" onclick="modify('passwdfile')">修改</a>&nbsp;&nbsp;<font class=sf onclick="showreadme('readmetip2')"><img src='../img/help.gif'></font> <?php echo $err_pass ?></span><span id='readmetip2' class='sf' style='display:none'><p><br><b>说明：</b>【必填项】指定svn的用户密码文件passwd file的系统路径。</p>
+<br>2、用户文件passwd路径：<input type='text' class='ipt'   name='passwdfile' id='passwdfile'  value=<?php echo $para_array['passwdfile']$inputstat;?>> <span class='rt'> <a href="#" onclick="modify('passwdfile')">修改</a>&nbsp;&nbsp;<font class=sf onclick="showreadme('readmetip2')"><img src='../img/help.gif'></font> <?php echo $err_pass ?></span><span id='readmetip2' class='sf' style='display:none'><p><br><b>说明：</b>【必填项】指定svn的用户密码文件passwd file的系统路径。</p>
  </span>
 
- <br>3、svn父目录url:<input type='text' class='ipt'  readonly name='svnurl[]' id='svnurl'  value="<?php echo $para_array['svnurl'];?>"> <span class='rt'><a href='' onclick=''>add</a> <a href="#" onclick="modify('svnurl')">修改</a>&nbsp;&nbsp;<font class=sf onclick="showreadme('readmetip4')"><img src='../img/help.gif'></font></span><span id='readmetip4' class='sf' style='display:none'><p><br><b>说明：</b>【必填项】指定通过web访问具体svn库的URL的父级目录。如：http://svnmaia.scmbbs.com/repos_parent/</p>
+ <br>3、svn父目录url:<input type='text' class='ipt'   name='svnurl[]' id='svnurl'  value=<?php echo $para_array['svnurl']$inputstat;?>> <span class='rt'><a href='' onclick=''>add</a> <a href="#" onclick="modify('svnurl')">修改</a>&nbsp;&nbsp;<font class=sf onclick="showreadme('readmetip4')"><img src='../img/help.gif'></font></span><span id='readmetip4' class='sf' style='display:none'><p><br><b>说明：</b>【必填项】指定通过web访问具体svn库的URL的父级目录。如：http://svnmaia.scmbbs.com/repos_parent/</p>
  </span>
 
 	
-<br>4、svn仓库父路径：<input type='text' class='ipt'  readonly name='svnparentpath' id='svnparentpath'  value="<?php echo $para_array['svnparentpath'];?>">  <span class='rt'><a href="#" onclick="modify('svnparentpath')">修改</a> &nbsp;&nbsp;<font class=sf onclick="showreadme('readmetip6')"><img src='../img/help.gif'></font> <?php echo $err_svnpath ?></span><span id='readmetip6' class='sf' style='display:none'><p><br><b>说明：</b>【必填项】指定svn仓库群所在的系统路径，要与apache的SVNParentPath参数所指定一致。如：D:/svnroot/，对于windows系统请注意路径要用"/"做路径分割符而不是反斜线。</p>
+<br>4、svn仓库父路径：<input type='text' class='ipt'   name='svnparentpath' id='svnparentpath'  value=<?php echo $para_array['svnparentpath']$inputstat;?>>  <span class='rt'><a href="#" onclick="modify('svnparentpath')">修改</a> &nbsp;&nbsp;<font class=sf onclick="showreadme('readmetip6')"><img src='../img/help.gif'></font> <?php echo $err_svnpath ?></span><span id='readmetip6' class='sf' style='display:none'><p><br><b>说明：</b>【必填项】指定svn仓库群所在的系统路径，要与apache的SVNParentPath参数所指定一致。如：D:/svnroot/，对于windows系统请注意路径要用"/"做路径分割符而不是反斜线。</p>
  </span>
 </div>
 <div class='ft'>
