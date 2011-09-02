@@ -146,11 +146,11 @@ if (mysql_select_db(DBNAME))
 ?>
 <form method='post' action=''>
 <fieldset>
-<div class='subdiv'><br>节点名:<input type='text' class='ipt' readonly name='servername' id='servername' value=<?php echo $servername ?>> <span class='rt'> <a href="#" onclick="modify('servername')">修改</a>&nbsp;&nbsp;<font class=sf onclick="showreadme('readmetip00')"><img src='../img/help.gif'></font><span id='readmetip00' class='sf' style='display:none'><p><br><b>说明：</b>【必填项】指定svn服务器节点简称，由英文组成。</p>
+<div class='subdiv'><br>节点名:<input type='text' class='ipt' readonly name='servername' id='servername' value=<?php echo $servername ?>> <span class='rt'> <a href="#" onclick="modify('servername')">修改</a>&nbsp;&nbsp;<font class=sf onclick="showreadme('readmetip00')"><img src='../img/help.gif'></font></span><span id='readmetip00' class='sf' style='display:none'><p><br><b>说明：</b>【必填项】指定svn服务器节点简称，由英文组成。</p>
  </span>
  <br>svn服务器:<input type='text' class='ipt' readonly name='server' id='server' value=<?php echo $server ?>> <span class='rt'> <a href="#" onclick="modify('server')">修改</a>&nbsp;&nbsp;<font class=sf onclick="showreadme('readmetip0')"><img src='../img/help.gif'></font></span><span id='readmetip0' class='sf' style='display:none'><p><br><b>说明：</b>【必填项】指定svn服务器显示名称，如果是远程svn服务器，请指定访问的url。</p>
  </span>
- <br><input type='checkbox' name='isremote[]' value='true'  id='isremote' onclick='showsvnuser()' <?php echo $isremote ?>><label for='isremote'>这是远程服务器</label>
+ <br><input type='checkbox' name='isremote[]' value='true'  id='isremote' onclick="showsreadme('svnuserdiv')" <?php echo $isremote ?>><label for='isremote'>这是远程服务器</label>
  <span id='svnuserdiv'><br>svn中心用户名:<input type='text' class='ipt'  name='svnuser' id='svnuser' value=<?php echo $svnuser ?>>(密码将自动创建)</span>
 	<hr>
 <br>1、权限控制文件路径：<input type='text' class='ipt' readonly name='accessfile' id='accessfile' value="<?php echo $para_array['accessfile'];?>"> <span class='rt'> <a href="#" onclick="modify('accessfile')">修改</a>&nbsp;&nbsp;<font class=sf onclick="showreadme('readmetip')"><img src='../img/help.gif'></font> <?php echo $err_acc ?></span><span id='readmetip' class='sf' style='display:none'><p><br><b>说明：</b>【必填项】指定svn的权限控制文件access file的系统路径。</p>
