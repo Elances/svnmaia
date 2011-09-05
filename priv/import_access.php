@@ -11,6 +11,14 @@ if ($_SESSION['role'] !='admin')
 	echo "您无权进行此操作！";
 	exit;
 }
+$query="select server_id from svnauth_server where server_id=$serverid";
+$result=mysql_query($query);
+$num=mysql_num_rows($result);
+if($num<1)
+{
+	echo "找不到该svn服务节点！请确认。";
+	exit;
+}
 ?>
 <div id='info'>
  正在导入！
@@ -152,14 +160,14 @@ if ($handle) {
     fclose($handle);
     if(count($p_info)>1)
     {
-    	$query="delete from svnauth_permission";
+    	$query="delete from svnauth_permission where server_id=$serverid";
     	mysql_query($query);
-	$query="delete from svnauth_g_permission";
+	$query="delete from svnauth_g_permission where server_id=$serverid";
     	mysql_query($query);
-	$query="delete from svnauth_group";
-	mysql_query($query);
-	$query="delete from svnauth_groupuser";
-	mysql_query($query);
+#	$query="delete from svnauth_group";
+#	mysql_query($query);
+#	$query="delete from svnauth_groupuser";
+#	mysql_query($query);
 	foreach($groupinfo as $group => $v)
 	{
 		$g1=str_replace('@','',$group);
@@ -244,7 +252,7 @@ if ($handle) {
 							$notfounduser .= "$user <br>";
 							continue;
 						}
-						$query="insert into svnauth_permission (repository,path,user_id,permission,expire) values (\"$repos\",\"$path\",$uid_array[$user],\"$pm\",\"$expire\")";
+						$query="insert into svnauth_permission (server_id,repository,path,user_id,permission,expire) values ($serverid,\"$repos\",\"$path\",$uid_array[$user],\"$pm\",\"$expire\")";
 						mysql_query($query);
 					}else{
 						$query="insert into svnauth_groupuser(group_id,user_id) values ($gid_array[$g1],$uid_array[$user])";
@@ -274,7 +282,7 @@ if ($handle) {
 						$notfounduser .= "$user <br>";
 						continue;
 					}
-					$query="insert into svnauth_permission (repository,path,user_id,permission,expire) values (\"$repos\",\"$path\",$uid_array[$user],\"$pm\",\"$expire\")";
+					$query="insert into svnauth_permission (server_id,repository,path,user_id,permission,expire) values ($server_id,\"$repos\",\"$path\",$uid_array[$user],\"$pm\",\"$expire\")";
 					mysql_query($query);
 					continue;
 				}
@@ -284,7 +292,7 @@ if ($handle) {
       	    		}
 		     }
 	$g1=str_replace('@','',$goru);
-	$query="insert into svnauth_g_permission (repository,path,group_id,permission,expire) values (\"$repos\",\"$path\",$gid_array[$g1],\"$pm\",\"$expire\")";
+	$query="insert into svnauth_g_permission (server_id,repository,path,group_id,permission,expire) values ($serverid,\"$repos\",\"$path\",$gid_array[$g1],\"$pm\",\"$expire\")";
       	    	       //  echo "<br>$query";
       	    	        mysql_query($query);
       	    	   }else
@@ -295,7 +303,7 @@ if ($handle) {
 				$notfounduser .= "$goru <br>";
 				continue;
 			}
-      	    	      $query="insert into svnauth_permission (repository,path,user_id,permission,expire) values (\"$repos\",\"$path\",$uid_array[$goru],\"$pm\",\"$expire\")";
+      	    	      $query="insert into svnauth_permission (server_id,repository,path,user_id,permission,expire) values ($serverid,\"$repos\",\"$path\",$uid_array[$goru],\"$pm\",\"$expire\")";
       	    	     mysql_query($query);
       	    	   }
        	       }

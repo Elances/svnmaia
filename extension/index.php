@@ -37,7 +37,7 @@ br{clear:both;}
  <h3>初始化</h3>
  <div class='st'>
  <a href='../user/import_user.php' onclick="">从passwd文件导入用户密码</a>
- <br><a href='../priv/import_access.php' onclick="">重新导入access权限配置</a>
+ <br><a href='../priv/import_guide.php' onclick="">重新导入access权限配置</a>
  </div>
  </div>
 <div class='right'>
