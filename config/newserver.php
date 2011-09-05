@@ -49,16 +49,15 @@ if (mysql_select_db(DBNAME))
 	if(($_POST['t'] == 'n')or(is_numeric($_POST['serverid'])))
 	{
 		$founderr=false;
+		if($_POST['isremote'] == 'true')
+                {
+                             $_POST['isremote']=1;
+                }
 	    foreach($_POST as $para=>$v)
  	    {	
 			$v=trim($v);
 			if($para == 'servername')continue;
 			if($para == 'server')continue;
-			if($_POST['isremote'] == 'true')
-                        {
-                             $_POST['isremote']=1;
-                             break;
-                        }
 			if(!file_exists($v))
 			 switch($para)
                          {
@@ -128,7 +127,10 @@ if (mysql_select_db(DBNAME))
 		}
 		if (($_POST['isremote']==1)or(!$founderr))echo "<script>self.close();</script>";
 	}
-	
+	$divstyle='none';
+	$sha=rand().rand();
+	$sha=md5($sha);
+	$para_array['remotesha']=$sha;
 	//------------修改节点
 	if($_GET['t'] == 'm')
 	{
@@ -153,6 +155,7 @@ if (mysql_select_db(DBNAME))
 			if(($row['para']=='isremote')and($row['value']=='1'))
 			{
 				$isremote='checked';
+				$divstyle='block';
 			}
 		}
 	}
@@ -169,7 +172,9 @@ if (mysql_select_db(DBNAME))
  <br>svn服务器:<input type='text' class='ipt'  name='server' id='server' value=<?php echo $server.$inputstat ?>> <span class='rt'> <a href="#" onclick="modify('server')">修改</a>&nbsp;&nbsp;<font class=sf onclick="showreadme('readmetip0')"><img src='../img/help.gif'></font></span><span id='readmetip0' class='sf' style='display:none'><p><br><b>说明：</b>【必填项】指定svn服务器显示名称，如果是远程svn服务器，请指定访问的url。</p>
  </span>
  <br><input type='checkbox' name='isremote' value='true'  id='isremote' onclick="showreadme('svnuserdiv')" <?php echo $isremote ?>><label for='isremote'>这是远程服务器</label>
- <span id='svnuserdiv'  style='display:none'><br>svn用户名:<input type='text' class='ipt'  name='svnuser' id='svnuser' value=<?php echo $para_array['svnuser'] ?>>(将自动创建)</span>
+ <span id='svnuserdiv'  style='display:<?php echo $divstyle; ?>'><br>svn用户名:<input type='text' class='ipt'  name='svnuser' id='svnuser' value=<?php echo $para_array['svnuser'] ?>>(将自动创建)
+<br>远程授权码::<input type='text' class='ipt'  name='remotesha' id='remotesha' value=<?php echo $para_array['remotesha'] ?>>
+</span>
 	<hr>
 <br>1、权限控制文件路径：<input type='text' class='ipt'  name='accessfile' id='accessfile' value=<?php echo $para_array['accessfile'].$inputstat;?>> <span class='rt'> <a href="#" onclick="modify('accessfile')">修改</a>&nbsp;&nbsp;<font class=sf onclick="showreadme('readmetip')"><img src='../img/help.gif'></font> <?php echo $err_acc ?></span><span id='readmetip' class='sf' style='display:none'><p><br><b>说明：</b>【必填项】指定svn的权限控制文件access file的系统路径。</p>
  </span>

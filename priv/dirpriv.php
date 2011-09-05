@@ -46,7 +46,6 @@ $dir=trim(mysql_real_escape_string($_GET['d']));
 $query="select value,server_id from svnauth_para where para='svnurl'";
 $result=mysql_query($query);
 while (($result)and($row= mysql_fetch_array($result, MYSQL_BOTH))) {
-{
 	$svnurl=$row['value'];
 	if(strpos($dir,$svnurl))
 	{

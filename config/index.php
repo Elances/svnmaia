@@ -16,7 +16,7 @@ if (mysql_select_db(DBNAME))
 {
 	$flag=false;
 	$display='none';
-	if(!empty($_POST['accessfile']))
+	if(!empty($_POST['write_t']))
 	{
 		$file_str="<?php \n";
 		foreach($_POST as $para=>$v)
@@ -59,9 +59,16 @@ if (mysql_select_db(DBNAME))
 				$query="insert into svnauth_para (para,value) values('$para',$v)";
 				mysql_query($query);
 			}
-			$file_str .= "\${$para}=$v;\n";
 		}
 		//生成配置文件
+		$query="select name,para,svnauth_para.value from svnauth_para,svnauth_server where svnauth_server.server_id=svnauth_para.server_id";
+		$result=mysql_query($query);
+		while($result and ($row= mysql_fetch_array($result, MYSQL_BOTH))) {
+			$name=$row['name'];
+			$para=$row['para'];
+			$v=$row['value'];
+			$file_str .= "\$$name$para='$v';\n";
+		}
 		$file_str .="?>\n";
 		$handle=fopen('./config.php','w+');
 		if (fwrite($handle, $file_str) === FALSE) {
