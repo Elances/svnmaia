@@ -1,7 +1,7 @@
 <?php
 session_start();
 // error_reporting(0);
-include('../include/charset.php');
+include_once('../include/charset.php');
 if (!isset($_SESSION['username'])){	
 	echo "请先登录!";
 	exit;
@@ -11,14 +11,7 @@ if ($_SESSION['role'] !='admin')
 	echo "您无权进行此操作！";
 	exit;
 }
-$query="select server_id from svnauth_server where server_id=$serverid";
-$result=mysql_query($query);
-$num=mysql_num_rows($result);
-if($num<1)
-{
-	echo "找不到该svn服务节点！请确认。";
-	exit;
-}
+
 ?>
 <div id='info'>
  正在导入！
@@ -28,20 +21,33 @@ if($num<1)
 <?php
 if(file_exists('../config/config.php'))
 {
-	include('../config/config.php');
+	include_once('../config/config.php');
 }else
 {
 	echo "window.alert('请先进行系统设置!')";
 	echo" <script>setTimeout('document.location.href=\"../config/index.php\"',0)</script>";  	
 	exit;
 }
+
+include_once('../../../config.inc');
+include_once('../include/dbconnect.php'); 
+$query="select server_id,name from svnauth_server where server_id=$serverid";
+$result=mysql_query($query);
+$num=mysql_num_rows($result);
+if($num<1)
+{
+	echo "找不到该svn服务节点！请确认。";
+	exit;
+}
+if ($row= mysql_fetch_row($result)) {
+	$name=$row[1];
+}
+$accessfile=${${name}accessfile};
 if(! file_exists($accessfile))
 {
   echo "file not found! Please check your input!";
   exit;
 }
-include('../../../config.inc');
-include('../include/dbconnect.php'); 
 //import前备份
 $today = date("Ymd_His");
 $backupfile=$accessfile.$today;

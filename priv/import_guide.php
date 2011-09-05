@@ -11,6 +11,17 @@ if ($_SESSION['role'] !='admin')
 	echo "您无权进行此操作！";
 	exit;
 }
+if(file_exists('../config/config.php'))
+{
+	include_once('../config/config.php');
+}else
+{
+	echo "window.alert('请先进行系统设置!')";
+	echo" <script>setTimeout('document.location.href=\"../config/index.php\"',0)</script>";  	
+	exit;
+}
+include_once('../../../config.inc');
+include_once('../include/dbconnect.php'); 
 //import the accessfile
 if(!empty($_POST['svnserver']))
 {
@@ -25,7 +36,7 @@ if(!empty($_POST['svnserver']))
 $query="select server_id,locate from svnauth_server";
 $result=mysql_query($query);
 $serverlist='';
-while($result and (row= mysql_fetch_row($result))) {
+while($result and ($row= mysql_fetch_row($result))) {
 	$serverid=$row[0];
 	$server=$row[1];
 	$serverlist .= "<option value='$serverid'>$server</option>";
@@ -33,7 +44,7 @@ while($result and (row= mysql_fetch_row($result))) {
 //get the location of accessfile
 $accesslist='<div style=\'display:none\'>';
 $query="select server_id,value from svnauth_para where para='accessfile";
-while($result and (row= mysql_fetch_row($result))) {
+while($result and ($row= mysql_fetch_row($result))) {
 	$serverid=$row[0];
 	$filelocate=$row[1];
 	$accesslist.= "<span id=acc[$serverid]>$filelocate</span>";
