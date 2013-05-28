@@ -1,5 +1,5 @@
 <?php
- error_reporting(0);
+ error_reporting(E_ERROR);
 include('../include/charset.php');
 include('../include/requireAuth.php');
 include('../../../config.inc');
@@ -230,6 +230,13 @@ while (($result)and($row= mysql_fetch_array($result, MYSQL_BOTH))) {
 			echo "权限信息为空！";
 			exit;
 		}
+ // backup befor gen_access
+                $today = date("Ymd_His");
+                $backupfile=$accessfile.$today;
+                if (!copy($accessfile, $backupfile)) {
+                    echo "failed to backup $accessfile...\n";
+                }
+                $fs_o=filesize($backupfile);
 
 		$handle=fopen($accessfile,'w+');
 		if (fwrite($handle, $access) === FALSE) {
@@ -237,9 +244,21 @@ while (($result)and($row= mysql_fetch_array($result, MYSQL_BOTH))) {
 		}else
 			echo "权限生效成功！";
 		fclose($handle);
+  // only backup the file which filesize is reduced
+                $fs_n=filesize($accessfile);
+                if($fs_n > $fs_o)unlink($backupfile);
+
 		$fromurl=$_GET['fromurl'];
 		if(empty($fromurl))$fromurl='dirpriv.php';	
 		echo "&nbsp;&nbsp;&nbsp;&nbsp;<a href=$fromurl>返回</a>";		
+ // record info
+		 openlog("svnMaiaLog", LOG_PID | LOG_PERROR, LOG_LOCAL0);
+                 $time = date("Y/m/d H:i:s");
+		if(isset($_SESSION['username'])){
+			$t_user=$_SESSION['username'];
+		}else
+			$t_user='auto priv';
+                 syslog(LOG_ERR, "$accessfile changed by $t_user,$fromurl, $time");
 		
 
 
