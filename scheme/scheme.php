@@ -144,13 +144,13 @@ if (mysql_select_db(DBNAME))
 
 	//判断写权限是否过期，如果已过期，则改为只读权限。
 	$expire=date('Y-m-d' , strtotime('+20 week'));
-	$query="update svnauth_permission set permission='r', expire=\"$expire\" where expire <= NOW() and permission='w' and svnauth_user.isrobot != 'y' and svnauth_permission.user_id=svnauth_user.user_id";
+	$query="update svnauth_permission,svnauth_user  set permission='r', svnauth_permission.expire=\"$expire\" where svnauth_permission.expire <= NOW() and permission='w' and svnauth_user.isrobot != 'y' and svnauth_permission.user_id=svnauth_user.user_id";
 	mysql_query($query);
 	if(mysql_affected_rows()>0)$valuechanged=true;
 
 
 	//判断读权限是否过期，如果已过期，则改为无权限。
-	$query="delete from svnauth_permission set   where expire <= NOW() and permission='r' and svnauth_user.isrobot != 'y' and svnauth_permission.user_id=svnauth_user.user_id ";
+	$query="delete svnauth_permission from svnauth_permission,svnauth_user    where svnauth_permission.expire <= NOW() and permission='r' and svnauth_user.isrobot != 'y'  and svnauth_permission.user_id=svnauth_user.user_id ";
 	mysql_query($query);
 	if(mysql_affected_rows()>0)$valuechanged=true;
 	//生效
