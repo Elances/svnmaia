@@ -1,9 +1,9 @@
 <?php
 session_start();
  error_reporting(0);
-header("content-type:text/html; charset=gb2312");
+include('../include/charset.php');
 if (!isset($_SESSION['username'])){	
-	echo "ÇëÏÈ<a href='../user/loginfrm.php'>µÇÂ¼</a> £¡";
+	echo "è¯·å…ˆ<a href='../user/loginfrm.php'>ç™»å½•</a> ï¼";
 	echo" <script>setTimeout('document.location.href=\"../user/loginfrm.php\"',0)</script>"; 	
 	exit;
 }
@@ -17,7 +17,7 @@ echo <<<HTML
 HTML;
 //--------
 ('d'==$_GET['o'])?($od=" order by repository,path"):($od=" order by user_name,repository");
-$query="select user_name,full_name,repository,path from svnauth_dir_admin,svnauth_user where svnauth_user.user_id=svnauth_dir_admin.user_id $od";
+$query="select user_name,full_name,repository,path,email from svnauth_dir_admin,svnauth_user where svnauth_user.user_id=svnauth_dir_admin.user_id $od";
 $result =mysql_query($query);
 $adminpath='';
 $oun='';
@@ -26,13 +26,14 @@ while (($result)and($row= mysql_fetch_array($result, MYSQL_BOTH))) {
 	$path=$row['repository'].$row['path'];
 	$un=$row['user_name'];
 	$fn=$row['full_name'];
+	$email=$row['email'];
 	if(!empty($fn))$un="$un($fn)";
 	if(empty($path))continue;
-	$ustr=$un;
+	$ustr=$un."($email)";
 	$pstr=$path;
 	if('n'==$_GET['o'])
 	{
-		$ustr=$un;
+		$ustr=$un."($email)";
 	        ($oun != $un)?($oun=$un):($ustr='');
 		(empty($ustr))?(true):(($ud_cls=="trc1")?($ud_cls="trc2"):($ud_cls="trc1"));
 		$cls=$ud_cls;
@@ -45,7 +46,7 @@ while (($result)and($row= mysql_fetch_array($result, MYSQL_BOTH))) {
 	}
         $adminpath .= "<tr class=$cls><td>$ustr</td><td>&nbsp;$pstr</td></tr>";
 }
-echo "<h4>Ä¿Â¼¹ÜÀíÔ±: <a href='?o=n'>°´ĞÕÃû</a>   <a href='?o=d'>°´Ä¿Â¼</a></h4>";
+echo "<h4>ç›®å½•ç®¡ç†å‘˜: <a href='?o=n'>æŒ‰å§“å</a>   <a href='?o=d'>æŒ‰ç›®å½•</a></h4>";
 echo "<table border=0 cellspacing=0>";
 echo $adminpath."</table>";
 

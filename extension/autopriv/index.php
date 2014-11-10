@@ -1,12 +1,12 @@
 <?php header("Cache-Control: no-cache"); 
-header("content-type:text/html; charset=gb2312");
+include('../../include/charset.php');
 error_reporting(0);
 /*
-   ÎÄ¼şÃû£ºindex.php
-   ¹¦ÄÜ£ºÉóÅú¡¢´¦ÀíÈ¨ÏŞ½çÃæ
-   ÊäÈë£º¼ÓÃÜurl×Ö·û´®
-   Êä³ö£ºÈ¨ÏŞ
-   Âß¼­£º
+   æ–‡ä»¶åï¼šindex.php
+   åŠŸèƒ½ï¼šå®¡æ‰¹ã€å¤„ç†æƒé™ç•Œé¢
+   è¾“å…¥ï¼šåŠ å¯†urlå­—ç¬¦ä¸²
+   è¾“å‡ºï¼šæƒé™
+   é€»è¾‘ï¼š
 */
 include('../../../../config.inc');
 include('../../config/config.php');
@@ -18,23 +18,24 @@ if(isset($_POST['flag']))
   $salt=stripslashes(trim($_POST["ss"]));
   $id=stripslashes(trim($_POST["id"]));
   $mail_back=$_POST['email_back'];
-  if(empty($mail_back))$mail_back='ÎŞ';
+  if(empty($mail_back))$mail_back='æ— ';
   $optype=mysql_real_escape_string(stripslashes(trim($_POST["optype"])));
-//ÑéÖ¤urlÊÇ·ñ±»ĞŞ¸Ä
+  $expire_t=stripslashes(trim($_POST["expire_t"]));
+//éªŒè¯urlæ˜¯å¦è¢«ä¿®æ”¹
   $sig=urldecode(md5($salt.SECRET_KEY.$id));
   if($sig != $para_str)
   {
-    echo "url²ÎÊı·Ç·¨£¡";
+    echo "urlå‚æ•°éæ³•ï¼";
     exit;
   }
   $para_str=mysql_real_escape_string($para_str,$mlink);
   $query="delete from svn_hex where id=$id and hexkey='$para_str';";
   $result =mysql_query($query);  
   if (mysql_affected_rows($mlink) == 0){
-	  echo "ÇëÇóÒÑ±»ËûÈË´¦ÀíÍê±Ï";
+	  echo "è¯·æ±‚å·²è¢«ä»–äººå¤„ç†å®Œæ¯•";
 	  exit;
   }
-  //*****¼ÇÂ¼¹ı³Ì
+  //*****è®°å½•è¿‡ç¨‹
   $query="update rt_svnpriv set ops='$ops',optype='$optype' where id=$id";
   $result=mysql_query($query);
   $query="select username,repository,path,permission,email,ops from  rt_svnpriv where id=$id";
@@ -48,39 +49,40 @@ if(isset($_POST['flag']))
 	$repos=$row['repository'];
 	$path=$row['path'];
 	$wpriv=$row['permission'];
+	('w'==$wpriv)?($priv='è¯»å†™'):($priv='åªè¯»');
 	$ops=$row['ops'];
   }
-  $subject="ÄúµÄsvnÈ¨ÏŞÉêÇëÒÑ´¦Àí";
+  $subject="æ‚¨çš„svnæƒé™ç”³è¯·å·²å¤„ç†";
   $windid="svn-rt";
   if('denied'==$optype)
   {
-	  echo "´¦Àí³É¹¦£¡<a href='' onclick=\"javascript:self.close();\">¹Ø±Õ</a>";
-	  //·¢ÓÊ¼şÍ¨Öª
+	  echo "å¤„ç†æˆåŠŸï¼<a href='' onclick=\"javascript:self.close();\">å…³é—­</a>";
+	  //å‘é‚®ä»¶é€šçŸ¥
 	  $body="Hi,$us\n
-		  Äã¶Ô$svnurl/$repos/$path µÄsvnÈ¨ÏŞÉêÇëÒÑ±» $ops ¾Ü¾ø£¬»ØÖ´ÈçÏÂ£º$mail_back
+		  ä½ å¯¹$svnurl/$repos/$path çš„svn($priv)æƒé™ç”³è¯·å·²è¢« $ops æ‹’ç»ï¼Œå›æ‰§å¦‚ä¸‹ï¼š$mail_back
 
-ÕâÖ»ÊÇÒ»·âÏµÍ³×Ô¶¯·¢³öµÄÓÊ¼ş£¬ÇëÎğ»Ø¸´¡£
+è¿™åªæ˜¯ä¸€å°ç³»ç»Ÿè‡ªåŠ¨å‘å‡ºçš„é‚®ä»¶ï¼Œè¯·å‹¿å›å¤ã€‚
 --------------------
-ÅäÖÃ¹ÜÀí×é
+é…ç½®ç®¡ç†ç»„
 		  ";
           $sendinfo =send_mail($b_email,$subject,$body);
 	  exit;
   }
   if('other'==$optype)
   {
-	  echo "<script>alert('ÒÑ¸øÉêÇëÕß·¢ËÍ»ØÖ´£¬ÇëµÇÂ¼È¨ÏŞÏµÍ³½øĞĞ´¦Àí£¡');</script>";
-	  echo "<script>setTimeout('document.location.href=\"../../default.htm\"',5)</script>";//Ìø×ª
+	  echo "<script>alert('å·²ç»™ç”³è¯·è€…å‘é€å›æ‰§ï¼Œè¯·ç™»å½•æƒé™ç³»ç»Ÿè¿›è¡Œå¤„ç†ï¼');</script>";
+	  echo "<script>setTimeout('document.location.href=\"../../default.htm\"',5)</script>";//è·³è½¬
 	  $body="Hi,$us\n
-		  Äã¶Ô$svnurl/$repos/$path µÄsvnÈ¨ÏŞÉêÇëÒÑ±» $ops ÊÖ¹¤´¦Àí£¬»ØÖ´ÈçÏÂ£º$mail_back
+		  ä½ å¯¹$svnurl/$repos/$path çš„svn($priv)æƒé™ç”³è¯·å·²è¢« $ops æ‰‹å·¥å¤„ç†ï¼Œå›æ‰§å¦‚ä¸‹ï¼š$mail_back
 
- ÕâÖ»ÊÇÒ»·âÏµÍ³×Ô¶¯·¢³öµÄÓÊ¼ş£¬ÇëÎğ»Ø¸´¡£
+ è¿™åªæ˜¯ä¸€å°ç³»ç»Ÿè‡ªåŠ¨å‘å‡ºçš„é‚®ä»¶ï¼Œè¯·å‹¿å›å¤ã€‚
 --------------------
-ÅäÖÃ¹ÜÀí×é
+é…ç½®ç®¡ç†ç»„
 ";
           $sendinfo =send_mail($b_email,$subject,$body);
 	  exit;
   }
-  //*****¿ªÊ¼´¦ÀíÈ¨ÏŞ
+  //*****å¼€å§‹å¤„ç†æƒé™
   $query="select user_id from svnauth_user where user_name='$us'";
   $result=mysql_query($query);
   if($result)
@@ -88,8 +90,10 @@ if(isset($_POST['flag']))
 	  $row= mysql_fetch_array($result, MYSQL_BOTH);
 	  $uid=$row['user_id'];
   }
-  switch($wpriv)
+  if('none'==$expire_t)
   {
+   switch($wpriv)
+   {
      case 'r':
       	 $expire=mktime(0, 0, 0, date("m")  , date("d")+$read_t, date("Y"));
       	 break;
@@ -98,7 +102,26 @@ if(isset($_POST['flag']))
        	break;
      default:
        	$expire=mktime(0, 0, 0, date("m")  , date("d"), date("Y")+2);
-  }
+   }
+  }else if('other'==$expire_t)
+  {
+	  $my_t=trim($_POST['expire_o']);
+	  if(! is_numeric($my_t))
+	  {
+		  echo "æœ‰æ•ˆæœŸè¾“å…¥é”™è¯¯ï¼Œå¿…é¡»è¾“å…¥æ•°å­—ï¼";
+		  exit;
+	  }
+	  $expire=mktime(0, 0, 0, date("m")  , date("d")+$my_t, date("Y"));
+  }else
+	  {
+		  if(! is_numeric($expire_t))
+		  {
+			  echo "æœ‰æ•ˆæœŸä¸æ˜¯æ•°å­—ï¼Œå‚æ•°è·å–é”™è¯¯ï¼è¯·é‡è¯•ï¼";
+			  exit;
+		  }
+		$expire=mktime(0, 0, 0, date("m")  , date("d")+$expire_t, date("Y"));
+	  }
+
   $expire=strftime("%Y-%m-%d",$expire);	
   $query="update svnauth_permission set permission='$wpriv',expire='$expire' where  repository='$repos' and path = '$path' and user_id=$uid";
   mysql_query($query);
@@ -107,17 +130,17 @@ if(isset($_POST['flag']))
 	mysql_query($query);
   }
   $scheme=true;
+  echo "å¤„ç†æˆåŠŸï¼<a href='' onclick=\"javascript:self.close();\">å…³é—­</a>";
+	  //å‘é‚®ä»¶é€šçŸ¥
+  $body="Hi,$us\n
+	  ä½ å¯¹ $backpath çš„svn($priv)æƒé™ç”³è¯·å·²è¢« $ops æ‰¹å‡†ï¼Œå›æ‰§å¦‚ä¸‹ï¼š$mail_back
+
+ è¿™åªæ˜¯ä¸€å°ç³»ç»Ÿè‡ªåŠ¨å‘å‡ºçš„é‚®ä»¶ï¼Œè¯·å‹¿å›å¤ã€‚
+--------------------
+é…ç½®ç®¡ç†ç»„
+";
   $backpath="$svnurl/$repos/$path";
   @include('../../priv/gen_access.php');
-  echo "´¦Àí³É¹¦£¡<a href='' onclick=\"javascript:self.close();\">¹Ø±Õ</a>";
-	  //·¢ÓÊ¼şÍ¨Öª
-  $body="Hi,$us\n
-	  Äã¶Ô $backpath µÄsvnÈ¨ÏŞÉêÇëÒÑ±» $ops Åú×¼£¬»ØÖ´ÈçÏÂ£º$mail_back
-
- ÕâÖ»ÊÇÒ»·âÏµÍ³×Ô¶¯·¢³öµÄÓÊ¼ş£¬ÇëÎğ»Ø¸´¡£
---------------------
-ÅäÖÃ¹ÜÀí×é
-";
   $sendinfo =send_mail($b_email,$subject,$body);
   exit;
 }
@@ -125,14 +148,14 @@ $ops=base64_decode(urldecode(trim($_GET["u"])));
 $para_str=stripslashes(trim($_GET["c"]));
 $salt=stripslashes(trim($_GET["ss"]));
 $id=stripslashes(trim($_GET["s"]));
-//ÑéÖ¤urlÊÇ·ñ±»ĞŞ¸Ä
+//éªŒè¯urlæ˜¯å¦è¢«ä¿®æ”¹
 $sig=urldecode(md5($salt.SECRET_KEY.$id));
 if($sig != $para_str)
 {
-  echo "url²ÎÊı·Ç·¨£¡";
+  echo "urlå‚æ•°éæ³•ï¼";
   exit;
 }
-//ÑéÖ¤ÊÇ·ñÒÑ±»´¦Àí:
+//éªŒè¯æ˜¯å¦å·²è¢«å¤„ç†:
 $trueurl=false;
 $para_str=mysql_real_escape_string($para_str,$mlink);
 $query="select id from svn_hex where id=$id and hexkey='$para_str';";
@@ -141,17 +164,18 @@ if (mysql_num_rows($result) == 0){
 	$trueurl=false;
 }else
   $trueurl=true;
-//Ã»ÓĞÕÒµ½£¬ÕâÏÔÊ¾ÎŞĞ§Á´½Ó
+//æ²¡æœ‰æ‰¾åˆ°ï¼Œè¿™æ˜¾ç¤ºæ— æ•ˆé“¾æ¥
 if (!$trueurl)
 {
-	$query="select ops from  rt_svnpriv where id=$id";
+	$query="select ops,optype from  rt_svnpriv where id=$id";
 	$result=mysql_query($query);
         if(($result)and($row= mysql_fetch_array($result, MYSQL_BOTH)))
 	{
 		$ops=$row['ops'];
+		$optype=$row['optype'];
 	}
-	echo "<font color=red><h2>´ËurlÒÑ²»´æÔÚ£¬¸ÃÇëÇóÒÑ±» $ops ´¦Àí£¡</h2></font>";
-	echo "<p>µã»÷<a href=/>·µ»ØÖ÷Ò³</a>";
+	echo "<font color=red><h2>æ­¤urlå·²ä¸å­˜åœ¨ï¼Œè¯¥è¯·æ±‚å·²è¢« $ops å¤„ç†ï¼å¤„ç†ç»“æœ: $optype.</h2></font>";
+	echo "<p>ç‚¹å‡»<a href=/>è¿”å›ä¸»é¡µ</a>";
 	echo "<p><IMG  src='../../img/waiting.gif'>";
 	exit;
 }
@@ -164,8 +188,8 @@ if($result)
 	$repos=$row['repository'];
 	$path=$row['path'];
 	$wpriv=$row['permission'];
-	('w'==$wpriv)?($priv='¶ÁĞ´'):($priv='Ö»¶Á');
-	$tip="&nbsp;&nbsp;&nbsp;Hi,$us ÉêÇëÁË<font color=red>$svnurl/$repos/$path</font>µÄ<font color=red>$priv</font>È¨ÏŞ£¬ÇëÉóÉ÷´¦Àí£º";
+	('w'==$wpriv)?($priv='è¯»å†™'):($priv='åªè¯»');
+	$tip="&nbsp;&nbsp;&nbsp;Hi,$us ç”³è¯·äº†<font color=red>$svnurl/$repos/$path</font>çš„<font color=red>$priv</font>æƒé™ï¼Œè¯·å®¡æ…å¤„ç†ï¼š";
 }
 ?>
 <style type='text/css'>
@@ -173,11 +197,27 @@ if($result)
  legend{color:#1E7ACE;padding:3px 20px;border:1px solid #A4CDF2;background:#FFFFFF;}
 .st{margin-left:10px;line-height:30px;}
 .ft{background:#B6C6D6;text-align:center;margin:20px 0 20px 0;}
+#myexpire{display:none;border:1px solid #A2cd22;}
 </style>
-<h1>´¦ÀísvnÈ¨ÏŞÇëÇó</h1>
+<script language="javascript">
+<!--
+function showexpire(sw)
+{
+	if(sw==1)
+	{
+		document.getElementById('myexpire').style.display='block';
+	}else
+	{
+		document.getElementById('myexpire').style.display='none';
+	}
+}
+
+	-->
+</script>
+<h1>å¤„ç†svnæƒé™è¯·æ±‚</h1>
 <form name=regform action="" method="post">
 <fieldset>
-<legend>È¨ÏŞ×Ô¶¯´¦Àí</legend>
+<legend>æƒé™è‡ªåŠ¨å¤„ç†</legend>
 <div class='st'>
 <?php echo $tip ?>
 <br>&nbsp;
@@ -186,13 +226,15 @@ if($result)
 <input type='hidden' name='id' value="<?php echo $id ?>">
 <input type='hidden' name='c' value="<?php echo $para_str ?>">
 <input type='hidden' name='flag' value='1'>
-<br><input type='radio' name='optype' value='agreed' id='diradmin'><label for='diradmin'>Í¬Òâ(ÍêÈ«Í¬ÒâËùÉêÇëµÄurlºÍÈ¨ÏŞ£¬½«×Ô¶¯´¦Àí)</label>
-<br><input type='radio' name='optype' value='denied'  id='superadmin'><label for='superadmin'>¾Ü¾ø</label>
-<br><input type='radio' name='optype' value='other' id='tolist'><label for='tolist'>ÊÖ¶¯´¦Àí£¨½øÈëÈ¨ÏŞ¹ÜÀíÏµÍ³´¦Àí£©</label>
-<br>»ØÖ´¸øÉêÇëÈË:<input type=text name='email_back'  size='40'>
+<br><input type='radio' name='optype' value='agreed' id='diradmin'  onclick='showexpire(1)'><label for='diradmin'>åŒæ„(å®Œå…¨åŒæ„æ‰€ç”³è¯·çš„urlå’Œæƒé™ï¼Œå°†è‡ªåŠ¨å¤„ç†)</label>
+<div id='myexpire'>&nbsp;æœ‰æ•ˆæœŸ:<input type='radio' name='expire_t' value='none' checked>ä¸è®¾ç½®  <input type='radio' name='expire_t' value='7'>ä¸€å‘¨ <input type='radio' name='expire_t' value='30'>ä¸€ä¸ªæœˆ <input type='radio' name='expire_t' value='90'>ä¸‰ä¸ªæœˆ <input type='radio' name='expire_t' value='other'>æŒ‡å®š:<input type=text name='expire_o'  size='3'>å¤©</div>
+<br><input type='radio' name='optype' value='denied'  id='superadmin' onclick='showexpire(0)'><label for='superadmin'>æ‹’ç»</label>
+<br><input type='radio' name='optype' value='other' id='tolist' onclick='showexpire(0)'><label for='tolist'>æ‰‹åŠ¨å¤„ç†ï¼ˆè¿›å…¥æƒé™ç®¡ç†ç³»ç»Ÿå¤„ç†ï¼‰</label>
+<hr/>
+<br>å›æ‰§ç»™ç”³è¯·äºº:<input type=text name='email_back'  size='40'>
 </div>
 <div class='ft'>
-<input type='submit' value='È·¶¨Ìá½»'>
+<input type='submit' value='ç¡®å®šæäº¤'>
 </div>
 </fieldset>
 </form>

@@ -1,13 +1,13 @@
 <?php
-header("content-type:text/html; charset=gb2312");
+include('../../include/charset.php');
 /*
-   ÎÄ¼şÃû£ºchpasswd.php
-   ¹¦ÄÜ£ºĞŞ¸ÄÃÜÂë
-   ÊäÈë£ºÓÃ»§Ãû¡¢Ç©Ãû¡¢ĞÂÃÜÂë
-   Êä³ö£ºÎŞ
-   Âß¼­£º ÑéÖ¤Ç©ÃûÊÇ·ñÕıÈ·
-					ĞŞ¸ÄÃÜÂë
-					É¾³ıpwdurlµÄÓÃ»§ÃûºÍ²ÎÊı
+   æ–‡ä»¶åï¼šchpasswd.php
+   åŠŸèƒ½ï¼šä¿®æ”¹å¯†ç 
+   è¾“å…¥ï¼šç”¨æˆ·åã€ç­¾åã€æ–°å¯†ç 
+   è¾“å‡ºï¼šæ— 
+   é€»è¾‘ï¼š éªŒè¯ç­¾åæ˜¯å¦æ­£ç¡®
+					ä¿®æ”¹å¯†ç 
+					åˆ é™¤pwdurlçš„ç”¨æˆ·åå’Œå‚æ•°
 */
 $user=stripslashes(trim($_POST["user"]));
 $sig=stripslashes($_POST["sig"]);
@@ -19,21 +19,28 @@ include('../../include/basefunction.php');
 $sig0=md5($para_str.$user.SECRET_KEY);
 if(strcasecmp(urlencode($sig0),trim($sig))!=0)
 {
-	echo "<font color=red><h2>ÎŞĞ§ÇëÇó</h2></font>";
+	echo "<font color=red><h2>æ— æ•ˆè¯·æ±‚</h2></font>";
 	echo "<meta http-equiv=\"Refresh\" content=\"2;url=/\">";
 	exit;
 };
 
-$mlink=mysql_connect(SERVER,USERNAME2,PASSWORD2) or die("Êı¾İ¿âÁ´½ÓÊ§°Ü£¡ÇëÁªÏµ¹ÜÀíÔ±");
-mysql_select_db(DBNAME) or die("²»ÄÜÑ¡ÔñÊı¾İ¿â£¡");
+$mlink=mysql_connect(SERVER,USERNAME2,PASSWORD2) or die("æ•°æ®åº“é“¾æ¥å¤±è´¥ï¼è¯·è”ç³»ç®¡ç†å‘˜");
+mysql_select_db(DBNAME) or die("ä¸èƒ½é€‰æ‹©æ•°æ®åº“ï¼");
 
-if (($newpasswd != $newpasswd1)or(strlen($newpasswd)<6))  
-{ echo " <script>window.alert(\"Á½´ÎÊäÈëµÄÃÜÂë²»Ò»ÖÂ£¬ÇëÖØĞÂÊäÈë!\")</script>";
-   echo " <a href='javascript:history.back()'>µã»÷ÕâÀï·µ»Ø</a>";
+if ($newpasswd != $newpasswd1)  
+{ echo " <script>window.alert(\"ä¸¤æ¬¡è¾“å…¥çš„å¯†ç ä¸ä¸€è‡´ï¼Œè¯·é‡æ–°è¾“å…¥!\")</script>";
+   echo " <a href='javascript:history.back()'>ç‚¹å‡»è¿™é‡Œè¿”å›</a>";
    echo " <script>setTimeout('document.location.href=\"javascript:history.go(-1)\"',5)</script>
       ";
    exit;
 } 
+if(isSamplePassword($newpasswd,$user))
+{
+		echo "<script>window.alert(\"å¯†ç è¿‡äºç®€å•,å¯†ç ç”±è‡³å°‘6ä¸ªè‹±æ–‡å­—æ¯å’Œæ•°å­—/ç¬¦å·ç»„æˆï¼Œä¸”ä¸èƒ½åŒ…å«ç”¨æˆ·åã€‚\")</script>";
+		echo " <a href='javascript:history.back()'>ç‚¹å‡»è¿™é‡Œè¿”å›</a>";
+		echo " <script>setTimeout('document.location.href=\"javascript:history.go(-1)\"',5)</script>";
+		exit;
+}
 include('../../config/config.php');
 $pwdpath=$passwdfile;
 $cmdpath=$htpasswd;
@@ -43,20 +50,20 @@ $passwd1= mysql_real_escape_string($newpasswd,$mlink);
 $passwd1=cryptMD5Pass($passwd1);
 if(($passwd1 == "")||($usr ==""))
 {
-	echo " <script>window.alert(\"ÃÜÂëºÍÓÃ»§Ãû²»ÄÜÎª¿Õ£¬ÇëÊäÈë!\")</script>";
-  echo " <a href='javascript:history.back()'>µã»÷ÕâÀï·µ»Ø</a>";
+	echo " <script>window.alert(\"å¯†ç å’Œç”¨æˆ·åä¸èƒ½ä¸ºç©ºï¼Œè¯·è¾“å…¥!\")</script>";
+  echo " <a href='javascript:history.back()'>ç‚¹å‡»è¿™é‡Œè¿”å›</a>";
   echo "<script>history.go(-1);</script>";
   exit;
 }
 
 
-//SQL²éÑ¯Óï¾ä;
+//SQLæŸ¥è¯¢è¯­å¥;
 //$query = "SELECT user_name,password FROM svnauth_user WHERE user_name =\"$usr\""; 
 $query = "update svnauth_user set password=\"$passwd1\" WHERE user_name =\"$usr\";";
-// Ö´ĞĞ²éÑ¯
+// æ‰§è¡ŒæŸ¥è¯¢
 $result =mysql_query($query);
 if (mysql_affected_rows($mlink) == 0){
-		echo "<script>window.alert(\"ÓÃ»§Ãû²»´æÔÚ£¡»òĞÂÃÜÂëÓëÔ­ÃÜÂëÏàÍ¬£¡\")</script>"; 
+		echo "<script>window.alert(\"ç”¨æˆ·åä¸å­˜åœ¨ï¼æˆ–æ–°å¯†ç ä¸åŸå¯†ç ç›¸åŒï¼\")</script>"; 
 		echo "<script>history.go(-1);</script>";
 		mysql_close($mlink);
 		exit;
@@ -65,7 +72,7 @@ if (mysql_affected_rows($mlink) == 0){
 	exec($cmdpath.' -m -b '. $pwdpath . ' '.$usr.' '.$newpasswd);
  $query="delete from svn_chpwd  where username=\"$usr\";";
 	mysql_query($query);
-  echo "<script>window.alert(\"ÃÜÂëÖØÖÃ³É¹¦£¡¡¡\")</script>"; 
+  echo "<script>window.alert(\"å¯†ç é‡ç½®æˆåŠŸï¼ã€€\")</script>"; 
 	 echo "    <script>setTimeout('document.location.href=\"/\"',5)</script>
     ";
 		mysql_close($mlink);

@@ -1,9 +1,9 @@
 <?php
 session_start();
-header("content-type:text/html; charset=gb2312");
+include('../include/charset.php');
 error_reporting(0);
 if (!isset($_SESSION['username'])){	
-	echo "ÇëÏÈ<a href='../user/loginfrm.php'>µÇÂ¼</a> £¡";
+	echo "è¯·å…ˆ<a href='../user/loginfrm.php'>ç™»å½•</a> ï¼";
 	echo" <script>setTimeout('document.location.href=\"../user/loginfrm.php\"',0)</script>"; 	
 	exit;
 }
@@ -12,7 +12,7 @@ if(file_exists('../config/config.php'))
 	include('../config/config.php');
 }else
 {
-	echo "window.alert('ÇëÏÈ½øĞĞÏµÍ³ÉèÖÃ!')";
+	echo "window.alert('è¯·å…ˆè¿›è¡Œç³»ç»Ÿè®¾ç½®!')";
 }
 include('../../../config.inc');
 include('../include/basefunction.php');
@@ -22,7 +22,7 @@ function checkurl($t_url)
 	global $svnparentpath,$svn;
 	if($t_url=='')return true;
 	if(strpos($t_url,':'))return false;
-//ÖĞÎÄÄ¿Â¼ÅĞ¶ÏÓĞÎÊÌâ
+//ä¸­æ–‡ç›®å½•åˆ¤æ–­æœ‰é—®é¢˜
 	if(isset($_GET['from_d']))
 	{
 	  $t_url=escapeshellcmd($t_url);
@@ -38,6 +38,10 @@ function checkurl($t_url)
 }
 $dir=trim(mysql_real_escape_string($_GET['d']));
 $dir=str_replace($svnurl,'',$dir);
+if(preg_match("/^http:/i",$dir)){
+	$dir=str_replace("http://",'',$dir);
+	list($tmp1,$tmp2,$dir)=explode('/',$dir,3);
+}
 $dir=($dir{0}=='/')?(substr($dir,1)):($dir);
 $dir=str_replace('//','/',$dir);
 if(!checkurl($dir))
@@ -55,7 +59,7 @@ if(empty($repos) and ($dir=='/'))
 	$dir='';
 }
 
-//½«$lineÖĞµÄËùÓĞ[Maiasvn:variable]µÄÄÚÈİÓÃ$varÌæ»»
+//å°†$lineä¸­çš„æ‰€æœ‰[Maiasvn:variable]çš„å†…å®¹ç”¨$varæ›¿æ¢
 function parseTags($line, $vars)
 {
  
@@ -86,10 +90,12 @@ function parseTags($line, $vars)
    return $line;
 }
 $cur_user=array();
+$cur_group=array();
 $d_user=array();
 $fullname=array();
 $allflag=false;
-//ËùÓĞÓÃ»§
+$br_dir='';
+//æ‰€æœ‰ç”¨æˆ·
 $query="select user_id,user_name,full_name from svnauth_user";
 $result = mysql_query($query);
 $candidate_array=array();
@@ -102,11 +108,13 @@ while (($result)and($row= mysql_fetch_array($result, MYSQL_BOTH))) {
 	$uid_array[$user]=$row['user_id'];
 }
 //*********************
-//¸ø³öÄ¿Â¼¹ÜÀíÔ±
+//ç»™å‡ºç›®å½•ç®¡ç†å‘˜
 //*********************
 $subdir=$dir;
 $admin_array=array();
 $diradmin='';
+$is_c='';
+$c_flag='';
 for($ii=0;$ii<20;$ii++)
 {
 	$query="select user_name,full_name,svnauth_user.user_id  from svnauth_dir_admin,svnauth_user where svnauth_dir_admin.user_id=svnauth_user.user_id and repository='$repos' and path='$subdir' order by user_name";
@@ -119,7 +127,12 @@ for($ii=0;$ii<20;$ii++)
 		$admin_array[$uid]=$uname;
 		$fn='';
 		if(!empty($fulln))$fn="($fulln)";
-		$diradmin .="<option value='$uname $uid'>$uname{$fn}</option>";
+		if($ii!=0)
+		{
+			$is_c=' c';
+			$c_flag='(ç»§æ‰¿)';
+		}
+		$diradmin .="<option value='$uname $uid$is_c'>$uname{$fn}{$c_flag}</option>";
 	}
 	if(($subdir=='/') or (empty($subdir)))break;
 	if(strlen($subdir)>1)$subdir=dirname($subdir);
@@ -127,8 +140,8 @@ for($ii=0;$ii<20;$ii++)
 }
 
 //*******************************
-//ÅĞ¶Ïµ±Ç°ÓÃ»§ÊÇ·ñ³¬¼¶¹ÜÀíÔ±
-// »òµ±Ç°Ä¿Â¼¹ÜÀíÔ±
+//åˆ¤æ–­å½“å‰ç”¨æˆ·æ˜¯å¦è¶…çº§ç®¡ç†å‘˜
+// æˆ–å½“å‰ç›®å½•ç®¡ç†å‘˜
 // ******************************
 if(($_SESSION['role']=='admin')or(in_array($_SESSION['username'],$admin_array)))
 	$authz=true;
@@ -138,7 +151,7 @@ if($authz)
  $sig=keygen($para);
 }
 //********************************
-//¶ÁÈ¡Ä¿Â¼È¨ÏŞµÄÓÃ»§ÁĞ±íÏêÇé
+//è¯»å–ç›®å½•æƒé™çš„ç”¨æˆ·åˆ—è¡¨è¯¦æƒ…
 //********************************
 
 $query="select user_name,permission,svnauth_permission.expire from svnauth_permission,svnauth_user where svnauth_user.user_id=svnauth_permission.user_id and repository='$repos' and path='$dir' order by user_name";
@@ -146,12 +159,12 @@ $query="select user_name,permission,svnauth_permission.expire from svnauth_permi
 $result = mysql_query($query);
 if(! $result)
 {
-	echo "¸ÃÄ¿Â¼Ã»ÓĞÈ¨ÏŞ£¡";
+	echo "è¯¥ç›®å½•æ²¡æœ‰æƒé™ï¼";
 	exit;
 }
 $expire_arr=array();
 while($result and($row= mysql_fetch_array($result, MYSQL_BOTH))) {	
-	//ÓÃ»§ÏûÖØÎÊÌâ½â¾ö£¬È¨ÏŞ¸²¸Ç£¿
+	//ç”¨æˆ·æ¶ˆé‡é—®é¢˜è§£å†³ï¼Œæƒé™è¦†ç›–ï¼Ÿ
 	//-------
 	$user=$row['user_name'];
 	$permission=$row['permission'];
@@ -161,7 +174,7 @@ while($result and($row= mysql_fetch_array($result, MYSQL_BOTH))) {
 	if(array_key_exists($user,$cur_user))
 	   if($cur_user[$user]> $permission)continue;
 	$cur_user[$user]=$permission;
-	if($user=='*')$allflag=true;
+	if($user=='*'){$allflag=true;$br_dir=$dir;}
 }
 $userright='';
 $dexpire='';
@@ -181,7 +194,7 @@ foreach($cur_user as $user => $permission){
     	  $userright.= "<option value='n $user $uid'>none &nbsp; &nbsp; $user{$fn}</option>";
     	  break;
 	}
-	//¸ø³öÓĞĞ§ÆÚ	
+	//ç»™å‡ºæœ‰æ•ˆæœŸ	
 	if(!isset($expire_arr[$user]))continue;
 	$s='d_'.$uid;
 	$d=$expire_arr[$user];
@@ -203,7 +216,7 @@ while($result and (! $allflag))
 	        if(array_key_exists($user,$s_user))	
 	  		if($permission < $s_user[$user])continue;
 		$s_user[$user]=$permission;
-		if($user=='*')$allflag=true;
+		if($user=='*'){$allflag=true;$br_dir=$subdir;}
 	}
 	foreach($s_user as $user=>$permission )
 	{
@@ -233,7 +246,7 @@ foreach($d_user as $user=>$permission)
     		}
 	
 }
-//if(!$allflag)$candidate="<option value='n *'>none &nbsp; &nbsp; *(ËùÓĞÓÃ»§)</option>";
+//if(!$allflag)$candidate="<option value='n *'>none &nbsp; &nbsp; *(æ‰€æœ‰ç”¨æˆ·)</option>";
 $candidate_array=array_diff_key($candidate_array,$d_user,$cur_user);
 foreach($candidate_array as $user => $v)
 {
@@ -243,8 +256,104 @@ foreach($candidate_array as $user => $v)
 	if(empty($uid))continue;
 	$candidate .="<option value='n $user $uid'>none &nbsp; &nbsp; $user{$fn}</option>";
 }
+
 //*********************
-//ÏÔÊ¾Ä¿Â¼ÃèÊö
+//è¯»å–ç”¨æˆ·ç»„æƒé™
+//**********************
+$query="select group_name,permission from svnauth_g_permission,svnauth_group where svnauth_group.group_id=svnauth_g_permission.group_id and repository='$repos' and path='$dir' order by group_name";
+//echo $query;exit;
+$result = mysql_query($query);
+while($result and($row= mysql_fetch_array($result, MYSQL_BOTH))) {	
+	//æ¶ˆé‡é—®é¢˜è§£å†³ï¼Œæƒé™è¦†ç›–ï¼Ÿ
+	//-------
+	$group=$row['group_name'];
+	$permission=$row['permission'];
+	if(array_key_exists($group,$cur_group))
+	   if($cur_group[$group]> $permission)continue;
+	$cur_group[$group]=$permission;
+}
+//æ‰€æœ‰ç»„
+$query="select group_id,group_name from svnauth_group";
+$result = mysql_query($query);
+$g_candidate_array=array();
+$g_candidate='';
+$gid_array=array();
+while (($result)and($row= mysql_fetch_array($result, MYSQL_BOTH))) {
+	$group=$row['group_name'];
+	$g_candidate_array[$group]='n';
+	$gid_array[$group]=$row['group_id'];
+}
+//æ‰“å°ç»„æƒé™
+foreach($cur_group as $group => $permission){
+	$gid=$gid_array[$group];
+	if(empty($gid))continue;
+	switch(strtolower($permission)){
+    	case 'w':
+    	  $groupright.= "<option value='w $group $gid'>R W &nbsp;&nbsp; &nbsp; $group </option>";
+    	  break;
+    	case 'r':
+    	  $groupright.= "<option value='r $group $gid'>R&nbsp; &nbsp; &nbsp; &nbsp; $group</option>";
+    	  break;
+    	default:
+    	  $groupright.= "<option value='n $group $gid'>none &nbsp; &nbsp; $group</option>";
+    	  break;
+	}
+}
+//æ‰“å°ç»§æ‰¿æƒé™
+$subdir=$dir;
+$d_group=array();
+while($result and ($subdir != $br_dir))
+{
+	$subdir=dirname($subdir);
+	if($subdir=='\\')$subdir='/';
+	$query="select group_name,permission from svnauth_g_permission,svnauth_group where svnauth_group.group_id=svnauth_g_permission.group_id and   repository='$repos' and path='$subdir' order by group_name";
+	//echo $query;exit;
+	$s_group=array();
+	$result = mysql_query($query);
+	while (($result)and($row= mysql_fetch_array($result, MYSQL_BOTH))) {
+		$group=$row['group_name'];
+		if(array_key_exists($group,$cur_group))continue;		
+	        $permission=$row['permission'];
+	        if(array_key_exists($group,$s_group))	
+	  		if($permission < $s_group[$group])continue;
+		$s_group[$group]=$permission;
+	}
+	foreach($s_group as $group=>$permission )
+	{
+		if(array_key_exists($group,$d_group))continue;
+	        $d_group[$group]=$permission;
+	}
+	if(($subdir=='/') or (empty($subdir)))break;
+}
+ksort($d_group);
+foreach($d_group as $group=>$permission)
+{
+	$gid=$gid_array[$group];
+	if(empty($gid))continue;
+	        switch(strtolower($permission)){
+    		case 'w':
+    		  $groupright.= "<option value='w $group $gid c'>R W &nbsp;&nbsp; &nbsp; $group(ç»§æ‰¿) </option>";
+    		  break;
+    		case 'r':
+    		  $groupright.= "<option value='r $group $gid c'>R&nbsp; &nbsp; &nbsp; &nbsp; $group(ç»§æ‰¿)</option>";
+    		  break;
+    		default:
+    		  $groupright.= "<option value='n $group $gid c'>none &nbsp; &nbsp; $group(ç»§æ‰¿)</option>";
+    		  break;
+    		}
+	
+}
+$g_candidate_array=array_diff_key($g_candidate_array,$d_group,$cur_group);
+foreach($g_candidate_array as $group => $v)
+{
+	$gid=$gid_array[$group];
+	if(empty($gid))continue;
+	$g_candidate .="<option value='n $group $gid'>none &nbsp; &nbsp; $group</option>";
+}
+
+
+//*********************
+//æ˜¾ç¤ºç›®å½•æè¿°
 //*********************
 $des='';
 $query="select des from dir_des where repository='$repos' and path='$dir'";
@@ -253,10 +362,11 @@ if($result and($row= mysql_fetch_array($result, MYSQL_BOTH))) {
 	$des=$row['des'];
 }
 //*********************
-//ÏÔÊ¾³öÄÚÈİ
+//æ˜¾ç¤ºå‡ºå†…å®¹
 //*********************
 $newtopf=array();
 $handle = fopen("../template/showdir.htm", "r");
+$fromurl="../priv/dirpriv.php?d=$repos{$dir}";
 if(! $authz)
 {
 	$repos='scmbbs.com';
@@ -266,7 +376,7 @@ if(! $authz)
 	$candidate='';
 	$dexpire='';
 }
-$vars=array('dir' => $firstdir,'dirprive' => $userright,'candidate' => $candidate,'diradmin' => $diradmin,'repos' => $repos,'path' => $dir,'sig' => $sig,'authz' => $showbutton,'dexpire' => $dexpire,'description' => $des);  
+$vars=array('dir' => $firstdir,'dirprive' => $userright,'g_dirprive' => $groupright,'g_candidate' => $g_candidate,'candidate' => $candidate,'diradmin' => $diradmin,'repos' => $repos,'path' => $dir,'sig' => $sig,'authz' => $showbutton,'dexpire' => $dexpire,'fromurl' => $fromurl,'description' => $des);  
 while (!feof($handle))
 {
       $line = fgets($handle);

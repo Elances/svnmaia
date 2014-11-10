@@ -1,11 +1,11 @@
 <?php
-header("content-type:text/html; charset=gb2312");
-//±¾µ¥ÔªµÄ×÷ÓÃ£º¼¤»îÓÃ»§£¬²¢ÖØÖÃÓÃ»§ÓĞĞ§ÆÚ\ÌáĞÑ´ÎÊıÖØÖÃÎª0£»
-//´¦Àí£ºÑéÖ¤ÓÃ»§ÊäÈëÁ¬½ÓÊÇ·ñÕıÈ·£¬Èç¹ûÕıÈ·£¬Ôò´¦ÀíÖ®¡£
+include('../include/charset.php');
+//æœ¬å•å…ƒçš„ä½œç”¨ï¼šæ¿€æ´»ç”¨æˆ·ï¼Œå¹¶é‡ç½®ç”¨æˆ·æœ‰æ•ˆæœŸ\æé†’æ¬¡æ•°é‡ç½®ä¸º0ï¼›
+//å¤„ç†ï¼šéªŒè¯ç”¨æˆ·è¾“å…¥è¿æ¥æ˜¯å¦æ­£ç¡®ï¼Œå¦‚æœæ­£ç¡®ï¼Œåˆ™å¤„ç†ä¹‹ã€‚
 include('../include/basefunction.php');
 include('../../../config.inc');
 include('../config/config.php');
-echo "<h3>ÓÃ»§ĞÅÏ¢È·ÈÏÓëĞø¶©</h3>";
+echo "<h3>ç”¨æˆ·ä¿¡æ¯ç¡®è®¤ä¸ç»­è®¢</h3>";
 	$user=$_GET['u'];
 	$email=$_GET['email'];
 	$uid=$_GET['uid'];
@@ -15,7 +15,7 @@ echo "<h3>ÓÃ»§ĞÅÏ¢È·ÈÏÓëĞø¶©</h3>";
 	$sig=keygen($para);
 	if($sig != $sig0)
 	{
-		echo "<h3>´Ë¼¤»îÁ¬½Ó²»´æÔÚ£¡ÇëÈ·ÈÏ¡£</h3>";
+		echo "<h3>æ­¤æ¿€æ´»è¿æ¥ä¸å­˜åœ¨ï¼è¯·ç¡®è®¤ã€‚</h3>";
 		exit;
 	}
 	$hidden_str="<input type=hidden name='email' value='$email'><input type=hidden name='sig' value='$sig'>";
@@ -23,25 +23,25 @@ include('../include/dbconnect.php');
 if (mysql_select_db(DBNAME))
 {
 	if($action == 'actived'){
-		if($_GET['sure']=='È·ÈÏĞø¶©')
+		if($_GET['sure']=='ç¡®è®¤ç»­è®¢')
 		{
 		$fullname=mysql_real_escape_string($_GET['fullname'],$mlink);
 		$email_n=mysql_real_escape_string($_GET['email_n'],$mlink);
 		$staff_no=mysql_real_escape_string($_GET['staff_no'],$mlink);
 		$department=mysql_real_escape_string($_GET['department'],$mlink);
 		$expire=date("Y-m-d" , strtotime("+$user_t day"));
-		$query="update svnauth_user set full_name=\"$fullname\",email=\"$email_n\",staff_no=\"$staff_no\",department=\"$department\",expire=\"$expire\",infotimes=0 where user_id=$uid";
-		mysql_query($query) or die('<strong>¼¤»îÊ§°Ü:</strong>'.mysql_error());
-		echo " <script>window.alert(\"¼¤»î³É¹¦£¡\")</script>";
-		echo "<h3>¼¤»î³É¹¦£¡·µ»Ø<a href='/'>svn</a></h3>";
+		$query="update svnauth_user set  fresh=0,full_name=\"$fullname\",email=\"$email_n\",staff_no=\"$staff_no\",department=\"$department\",expire=\"$expire\",infotimes=0 where user_id=$uid";
+		mysql_query($query) or die('<strong>æ¿€æ´»å¤±è´¥:</strong>'.mysql_error());
+		echo " <script>window.alert(\"æ¿€æ´»æˆåŠŸï¼\")</script>";
+		echo "<h3>æ¿€æ´»æˆåŠŸï¼è¿”å›<a href='/'>svn</a></h3>";
 		echo " <script>self.close();</script>";
 		exit;
 		}else
-			if($_GET['sure']=='ÎÒÒÑ²»ĞèÒª£¬É¾°É')
+			if($_GET['sure']=='æˆ‘å·²ä¸éœ€è¦ï¼Œåˆ å§')
 			{
 				$query="delete from svnauth_user where user_id=$uid";
 				mysql_query($query);
-				echo "<h3>É¾³ı³É¹¦£¡Çë¹Ø±Õ±¾Ò³¡£</h3>";
+				echo "<h3>åˆ é™¤æˆåŠŸï¼è¯·å…³é—­æœ¬é¡µã€‚</h3>";
 				exit;
 			}
 		
@@ -61,49 +61,49 @@ if (mysql_select_db(DBNAME))
 				$expire=$row['expire'];
 				$tb_str="
 			<tr><td><input type=hidden name='uid' value=$user_id>	
-				 <input type=text readonly name='u' value=$user_name ></td>			 			 <td><input type=text name='fullname' value=$full_name></td>
+				 <input type=text readonly style='background:#ece9d8;' name='u' value=$user_name ></td>			 			 <td><input type=text name='fullname' value=$full_name></td>
 				 <td><input type=text name='staff_no' value=$staff_no></td>
 				  <td><input type=text name='department' value=$department></td>
-				 <td><input type=text  readonly name='email_n' value=$email_n></td></tr>
+				 <td><input type=text  name='email_n' value=$email_n></td></tr>
 
 ";
 	}
-	if(!$exist)$tb_str='<tr><td>¸ÃÓÃ»§ÒÑ±»É¾³ı£¡</td></tr>';
+	if(!$exist)$tb_str='<tr><td>è¯¥ç”¨æˆ·å·²è¢«åˆ é™¤ï¼</td></tr>';
 
 			
 
 }
-$exp=date('Y-m-d' , strtotime('+2 week')); 
+$exp=date('Y-m-d' , strtotime('+3 week')); 
 if($expire>$exp)
 {
-		echo " <script>window.alert(\"ÄãÒÑ¼¤»î¹ı£¡ÄãµÄÓÃ»§ÎŞĞèÔÙ´Î¼¤»î£¡\")</script>";
-		echo "<h3>ÄãÒÑ¼¤»î¹ı£¡·µ»Ø<a href='/'>svn</a></h3>";
+		echo " <script>window.alert(\"ä½ å·²æ¿€æ´»è¿‡ï¼ä½ çš„ç”¨æˆ·æ— éœ€å†æ¬¡æ¿€æ´»ï¼\")</script>";
+		echo "<h3>ä½ å·²æ¿€æ´»è¿‡ï¼è¿”å›<a href='/'>svn</a></h3>";
 		echo " <script>self.close();</script>";
 		exit;
 }
 ?>
 <p>
-<strong>ËµÃ÷£º</strong>ÄúµÄsvnÓÃ»§ÓĞĞ§ÆÚÖÁ£º<?php echo $expire ?>£¬¹ıÆÚÓÃ»§Ãû½«±»×Ô¶¯É¾³ı£¬Èç¹ûÄúĞèÒª¼ÌĞøÊ¹ÓÃsvn£¬ÇëÈ·ÈÏÈçÏÂĞÅÏ¢£¬²¢µã»÷È·ÈÏĞø¶©£»
-<br>Èç¹ûÄúÒÑ²»ĞèÒªÊ¹ÓÃsvn£¬Çë¹Ø±Õ±¾´°¿Ú¡£
+<strong>è¯´æ˜ï¼š</strong>æ‚¨çš„svnç”¨æˆ·æœ‰æ•ˆæœŸè‡³ï¼š<?php echo $expire ?>ï¼Œè¿‡æœŸç”¨æˆ·åå°†è¢«è‡ªåŠ¨åˆ é™¤ï¼Œå¦‚æœæ‚¨éœ€è¦ç»§ç»­ä½¿ç”¨svnï¼Œè¯·ç¡®è®¤å¦‚ä¸‹ä¿¡æ¯ï¼Œå¹¶ç‚¹å‡»ç¡®è®¤ç»­è®¢ï¼›
+<br>å¦‚æœæ‚¨å·²ä¸éœ€è¦ä½¿ç”¨svnï¼Œè¯·å…³é—­æœ¬çª—å£ã€‚
 <div style='text-align:center';>
 <form method="get" action="">
 
 		<fieldset>
 
-		<legend>È·ÈÏÓÃ»§ĞÅÏ¢</legend>
+		<legend>ç¡®è®¤ç”¨æˆ·ä¿¡æ¯</legend>
 
 		<input type=hidden name='action' value='actived'>
 
 		<table  cellspacing='1' cellpadding='0' width='70%' border='0' >
 
-		<tr><th>ÓÃ»§Ãû</th><th>ĞÕÃû</th><th>¹¤ºÅ</th><th>²¿ÃÅ</th><th>ÓÊ¼ş</th></tr>
+		<tr><th>ç”¨æˆ·å</th><th>çœŸå®å§“å</th><th>å·¥å·</th><th>éƒ¨é—¨</th><th>é‚®ä»¶</th></tr>
 
 <?php echo $tb_str.$hidden_str;?>
 	</table>
 
 		<table style="position:relative;top:20px" >
 
-		<tr><td><input name='sure' title='birth' style="width:80" type=submit value="È·ÈÏĞø¶©"/></td><td><input  name='sure'  type=submit value='ÎÒÒÑ²»ĞèÒª£¬É¾°É' onclick="return confirm('ÄãÑ¡ÔñÁËÉ¾³ı´ËÓÃ»§Ãû£¬È·ÈÏÃ´£¿'); "/></td></tr>
+		<tr><td><input name='sure' title='birth' style="width:80" type=submit value="ç¡®è®¤ç»­è®¢"/></td><td><input  name='sure'  type=submit value='æˆ‘å·²ä¸éœ€è¦ï¼Œåˆ å§' onclick="return confirm('ä½ é€‰æ‹©äº†åˆ é™¤æ­¤ç”¨æˆ·åï¼Œç¡®è®¤ä¹ˆï¼Ÿ'); "/></td></tr>
 
 	</table>
 

@@ -1,15 +1,15 @@
 <?php
 session_start();
-header("content-type:text/html; charset=gb2312");
+include('../include/charset.php');
 $_SESSION['role']='admin';
 error_reporting(0);
 $succ='disabled';
-//¼ì²âÏµÍ³ÅäÖÃ
+//æ£€æµ‹ç³»ç»Ÿé…ç½®
 if(!function_exists('mysql_connect'))
-	$sys='<strong>Error</strong>:¼ì²âµ½php²»Ö§³Ömysql£¬ÇëÔÚ°²×°±àÒëphpÊ±¿ªÆô--with-mysql²ÎÊı£»²¢È·ÈÏphp.ini¼ÓÔØÁËphp_mysqlÄ£¿é<br>';
+	$sys='<strong>Error</strong>:æ£€æµ‹åˆ°phpä¸æ”¯æŒmysqlï¼Œè¯·åœ¨å®‰è£…ç¼–è¯‘phpæ—¶å¼€å¯--with-mysqlå‚æ•°ï¼›å¹¶ç¡®è®¤php.iniåŠ è½½äº†php_mysqlæ¨¡å—<br>';
 $php_v=phpversion();
 if(($php_v{0})<5)
-	$sys .= "<strong>Error</strong>:php°æ±¾Ì«µÍ($php_v)£¬³ÌĞòÎŞ·¨Õı³£ÔËĞĞ<br>";
+	$sys .= "<strong>Error</strong>:phpç‰ˆæœ¬å¤ªä½($php_v)ï¼Œç¨‹åºæ— æ³•æ­£å¸¸è¿è¡Œ<br>";
 if(!empty($_POST['dbname']))
 {
 	$server=$_POST['server'];
@@ -20,7 +20,7 @@ if(!empty($_POST['dbname']))
 	$svnpasswd0=$_POST['svnpasswd0'];
 	if($svnpasswd != $svnpasswd0)
 	{
-		echo " <script>window.alert(\"svn³¬¼¶ÓÃ»§ÃÜÂë²»Ò»ÖÂ£¡ÇëÈ·ÈÏ²¢ÀÎ¼Ç£¡\")</script>";
+		echo " <script>window.alert(\"svnè¶…çº§ç”¨æˆ·å¯†ç ä¸ä¸€è‡´ï¼è¯·ç¡®è®¤å¹¶ç‰¢è®°ï¼\")</script>";
 		echo "<script>setTimeout('document.location.href=\"./setup.php\"',3)</script>";
 		exit;
 	}
@@ -59,28 +59,56 @@ CREATE TABLE IF NOT EXISTS `svnauth_user` (
   `supervisor` bit(1) NOT NULL,
   `fresh` bit(1) default 0,
   `expire` date NOT NULL,
-  `infotimes` bit(1) default 0,
+  `infotimes` int(1) default 0,
   PRIMARY KEY  (`user_id`),
-  UNIQUE KEY `user_name` (`user_name`),
-  KEY `password` (`password`)
+  UNIQUE KEY `user_name` (`user_name`)
 ) ENGINE=MyISAM $encode ;";
 	mysql_query($query);
 		$usertb_err=mysql_error();
+	//create group table
+	$query="
+CREATE TABLE IF NOT EXISTS `svnauth_group` (
+  `group_id` int(11) NOT NULL auto_increment,
+  `group_name` varchar(40) NOT NULL UNIQUE,
+  PRIMARY KEY  (`group_id`)
+) ENGINE=MyISAM $encode ;";
+	mysql_query($query);
+		//create group_user table;
+		$query="
+CREATE TABLE IF NOT EXISTS `svnauth_groupuser` (
+  `group_id` int(11) NOT NULL auto_increment,
+  `user_id` int(11) default NULL,
+ `isowner` bit(1) default 0,
+  PRIMARY KEY  (`group_id`,`user_id`)
+) ENGINE=MyISAM $encode ;";
+	mysql_query($query);
 		//create permission table
 		$query="CREATE TABLE IF NOT EXISTS `svnauth_permission` (
-  `user_id` varchar(40) NOT NULL,
-  `repository` varchar(200) NOT NULL,
+  `user_id` varchar(11) NOT NULL,
+  `repository` varchar(50) NOT NULL,
   `path` varchar(255) NOT NULL,
   `permission` varchar(1) NOT NULL,
   `expire` date,
   PRIMARY KEY  (`user_id`,`repository`,`path`,`permission`)
 ) ENGINE=MyISAM $encode ;";
 		mysql_query($query);
+	//create group_permission table
+		$query="CREATE TABLE IF NOT EXISTS `svnauth_g_permission` (
+  `id` int(11) NOT NULL auto_increment,
+ `group_id` varchar(11) NOT NULL, 
+  `repository` varchar(50) NOT NULL,
+  `path` varchar(255) NOT NULL,
+  `permission` varchar(1) NOT NULL,
+  `expire` date,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY  (`group_id`,`repository`,`path`)
+) ENGINE=MyISAM $encode ;";
+		mysql_query($query);
 		$perstb_err=mysql_error();
 		//create dir admin table
 		$query="CREATE TABLE IF NOT EXISTS `svnauth_dir_admin` (
   `user_id` int(11) NOT NULL,
-  `repository` varchar(200) NOT NULL,
+  `repository` varchar(50) NOT NULL,
   `path` varchar(255) NOT NULL,
   PRIMARY KEY  (`user_id`,`repository`,`path`)
 ) ENGINE=MyISAM $encode;";
@@ -99,13 +127,15 @@ CREATE TABLE IF NOT EXISTS `svnauth_user` (
 		mysql_query($query);
 		$query = "insert into svnauth_user (user_name,password,full_name,email,staff_no,department,supervisor,expire) values (\"root\",\"$svnpasswd\",\"super admin\",\" \",\"0\",\" \",1,'2110-01-01')";
 		mysql_query($query);
+
+                include('../db/dbmigrate.php');
 	}
 	if(empty($conn_error) and empty($db_error) and empty($usertb_err) and empty($perstb_err) and empty($admintb_err) and empty($paratb_err))
 	{
-		$succinfo="<br>&nbsp;Êı¾İ¿â´´½¨³É¹¦£¡Çëµ¥»÷ÏÂÒ»²½½øĞĞÅäÖÃ£¡<br>&nbsp;";
+		$succinfo="<br>&nbsp;æ•°æ®åº“åˆ›å»ºæˆåŠŸï¼è¯·å•å‡»ä¸‹ä¸€æ­¥è¿›è¡Œé…ç½®ï¼<br>&nbsp;";
 		$succ='';
 		$notsucc='disabled';
-		//±£´æÅäÖÃÎÄ¼ş
+		//ä¿å­˜é…ç½®æ–‡ä»¶
 		$file_str="<?php \n";
 		$file_str .="define(\"SERVER\",\"$server\");\n";
 		$file_str .="define(\"USERNAME2\",\"$dbuser\");\n";
@@ -118,15 +148,15 @@ CREATE TABLE IF NOT EXISTS `svnauth_user` (
 		$confpath=realpath('../../../').'/config.inc';
 		$allsecc=true;
 		if (fwrite($handle, $file_str) === FALSE) {
-			$err_str= "<strong>Fatal Error:</strong>²»ÄÜĞ´Èëµ½ÎÄ¼ş $confpath ! ±£´æÊ§°Ü£¡Ô­Òò¿ÉÄÜÊÇ´Ë³ÌĞòownerÃ»ÓĞ×ã¹»È¨ÏŞĞŞ¸Ä´ËÄ¿Â¼ÎÄ¼ş£¬ÇëĞŞ¸´£¡<br>
-				ÕâÊÇ¸öÖÂÃü´íÎó£¬½¨ÒéÄúÊÖ¹¤´´½¨´ËÎÄ¼ş£¬²¢°üº¬ÈçÏÂÄÚÈİ£º<br>&lt;?php <br>".str_replace("\n",'<br>',$file_str);
-			$succinfo=$succinfo.'µã»÷ÏÂÒ»²½Ç°£¬ÇëÈ·±£'.$confpath.'ÎÄ¼şÒÑ´´½¨¡£<br>&nbsp;';
+			$err_str= "<strong>Fatal Error:</strong>ä¸èƒ½å†™å…¥åˆ°æ–‡ä»¶ $confpath ! ä¿å­˜å¤±è´¥ï¼åŸå› å¯èƒ½æ˜¯æ­¤ç¨‹åºowneræ²¡æœ‰è¶³å¤Ÿæƒé™ä¿®æ”¹æ­¤ç›®å½•æ–‡ä»¶ï¼Œè¯·ä¿®å¤ï¼<br>
+				è¿™æ˜¯ä¸ªè‡´å‘½é”™è¯¯ï¼Œå»ºè®®æ‚¨æ‰‹å·¥åˆ›å»ºæ­¤æ–‡ä»¶ï¼Œå¹¶åŒ…å«å¦‚ä¸‹å†…å®¹ï¼š<br>&lt;?php <br>".str_replace("\n",'<br>',$file_str);
+			$succinfo=$succinfo.'ç‚¹å‡»ä¸‹ä¸€æ­¥å‰ï¼Œè¯·ç¡®ä¿'.$confpath.'æ–‡ä»¶å·²åˆ›å»ºã€‚<br>&nbsp;';
 			$allsecc=false;
     		}
 		fclose($handle);
 		//*****
-		// ´´½¨²¢ÖØĞ´ ../index.php;
-		// É¾³ı±¾°²×°ÎÄ¼şsetup.php
+		// åˆ›å»ºå¹¶é‡å†™ ../index.php;
+		// åˆ é™¤æœ¬å®‰è£…æ–‡ä»¶setup.php
 		if($allsecc){
 			$indexf=file_get_contents('../default.htm');
 			$handle=fopen('../index.php','w');
@@ -139,14 +169,14 @@ CREATE TABLE IF NOT EXISTS `svnauth_user` (
 	}else{
 		$succ='disabled';
 		$notsucc='';
-		if(!empty($conn_error))$conn_error ="Á´½ÓÊı¾İ¿âÊ§°Ü£¬ÇëÈ·ÈÏÄúµÄmysqlÊÇ·ñÔÚÔËĞĞ£º".$conn_error;
-		$err_str="´´½¨Êı¾İ¿âÊ±Óöµ½ÈçÏÂÖÂÃü´íÎó£º<br>".$conn_error.'<br>'.$db_error.'<br>'.$usertb_err.'<br>'.$perstb_err.'<br>'.$admintb_err.$paratb_err;
+		if(!empty($conn_error))$conn_error ="é“¾æ¥æ•°æ®åº“å¤±è´¥ï¼Œè¯·ç¡®è®¤æ‚¨çš„mysqlæ˜¯å¦åœ¨è¿è¡Œï¼š".$conn_error;
+		$err_str="åˆ›å»ºæ•°æ®åº“æ—¶é‡åˆ°å¦‚ä¸‹è‡´å‘½é”™è¯¯ï¼š<br>".$conn_error.'<br>'.$db_error.'<br>'.$usertb_err.'<br>'.$perstb_err.'<br>'.$admintb_err.$paratb_err;
 	}
 	
 }
 
 ?>
-<h1>Maia svnÓÃ»§¹ÜÀíÏµÍ³°²×°Ïòµ¼</h1>
+<h1>Maia svnç”¨æˆ·ç®¡ç†ç³»ç»Ÿå®‰è£…å‘å¯¼</h1>
 <script language="javascript">
 <!--
 	function submit()
@@ -168,36 +198,36 @@ legend{color:#1E7ACE;padding:3px 20px;border:2px solid #A4CDF2;background:#FFFFF
 .tip{text-decoration:none;color:green;font-size:11pt;background:#FFFFCC; }
 </style>
 <div class='tip'>
-<strong>ËµÃ÷£º</strong>½øĞĞ±¾³ÌĞò°²×°Ç°£¬ÇëÈ·ÈÏÄúµÄapacheÒÑ¾­ÕıÈ·ÅäÖÃ²¢ÆôÓÃ£¬ÒÔ¼°ÒÑ¾­°²×°ºÃÁËmysql-4.0ÒÔÉÏ°æ±¾£»²¢È·ÈÏÄúµÄmysql·şÎñ´¦ÓÚÔËĞĞ×´Ì¬¡£
-<br>±¾³ÌĞòÒªÇóÅä»·¾³£º
-<br>&nbsp;  php£º5.1ÒÔÉÏ
-<br>&nbsp;  mysql£º4.0ÒÔÉÏ£¨ÍÆ¼ö5.*£©
-<br>&nbsp;  apache2ÒÔÉÏ
-<br>&nbsp;  svn1.2ÒÔÉÏ
-<br>ÏêÇé²ÎÔÄ<a href='http://www.scmbbs.com/cn/maia/2009/5/maia001.php'>Maia SVN ¹ÜÀíÏµÍ³°²×°ËµÃ÷</a>
+<strong>è¯´æ˜ï¼š</strong>è¿›è¡Œæœ¬ç¨‹åºå®‰è£…å‰ï¼Œè¯·ç¡®è®¤æ‚¨çš„apacheå·²ç»æ­£ç¡®é…ç½®å¹¶å¯ç”¨ï¼Œä»¥åŠå·²ç»å®‰è£…å¥½äº†mysql-4.0ä»¥ä¸Šç‰ˆæœ¬ï¼›å¹¶ç¡®è®¤æ‚¨çš„mysqlæœåŠ¡å¤„äºè¿è¡ŒçŠ¶æ€ã€‚
+<br>æœ¬ç¨‹åºè¦æ±‚é…ç¯å¢ƒï¼š
+<br>&nbsp;  phpï¼š5.1ä»¥ä¸Š
+<br>&nbsp;  mysqlï¼š4.0ä»¥ä¸Šï¼ˆæ¨è5.*ï¼‰
+<br>&nbsp;  apache2ä»¥ä¸Š
+<br>&nbsp;  svn1.2ä»¥ä¸Š
+<br>è¯¦æƒ…å‚é˜…<a href='http://www.scmbbs.com/cn/maia/2009/5/maia001.php'>Maia SVN ç®¡ç†ç³»ç»Ÿå®‰è£…è¯´æ˜</a>
 <br>&nbsp;
 </div>
 <?php
 if(!empty($sys))
 {
 	$notsucc='disabled';	
-	echo "<div style='color:red;'>ÏµÍ³¼ì²âµ½ÈçÏÂ´íÎó£¬ÇëÏÈĞŞÕı£º<br>".$sys.'</div>';
+	echo "<div style='color:red;'>ç³»ç»Ÿæ£€æµ‹åˆ°å¦‚ä¸‹é”™è¯¯ï¼Œè¯·å…ˆä¿®æ­£ï¼š<br>".$sys.'</div>';
 }
 ?>
 <div id='step1'>
 <form method='post' action='' name='formconf'>
 <fieldset>
-<legend>Êı¾İ¿âÉèÖÃ</legend>
+<legend>æ•°æ®åº“è®¾ç½®</legend>
 <div id='errdiv' style='color:red;'>
 <?php echo $err_str;?>
 </div>
-<br>ÇëÊäÈëÊı¾İ¿âµØÖ·£º<input type='text' name='server' value='localhost:3306'>
-<p><br>ÇëÊäÈëÊı¾İ¿âÃû×Ö£º<input type='text' name='dbname'>
-<p><br>ÇëÊäÈëÊı¾İ¿âÁ´½ÓÓÃ»§Ãû£º<input type='text' name='dbuser'> 
-<p><br>ÇëÊäÈë¸ÃÓÃ»§ÃÜÂë£º<input type='password' name='dbpasswd'>
+<br>è¯·è¾“å…¥æ•°æ®åº“åœ°å€ï¼š<input type='text' name='server' value='localhost:3306'>
+<p><br>è¯·è¾“å…¥æ•°æ®åº“åå­—ï¼š<input type='text' name='dbname'>
+<p><br>è¯·è¾“å…¥æ•°æ®åº“é“¾æ¥ç”¨æˆ·åï¼š<input type='text' name='dbuser'> 
+<p><br>è¯·è¾“å…¥è¯¥ç”¨æˆ·å¯†ç ï¼š<input type='password' name='dbpasswd'>
 <hr>
-<br>ÇëÖ¸¶¨svn³¬¼¶ÓÃ»§rootÃÜÂë£º<input type='password' name='svnpasswd'>
-<p><br>ÇëÈ·ÈÏsvn³¬¼¶ÓÃ»§rootÃÜÂë£º<input type='password' name='svnpasswd0'>
+<br>è¯·æŒ‡å®šsvnè¶…çº§ç”¨æˆ·rootå¯†ç ï¼š<input type='password' name='svnpasswd'>
+<p><br>è¯·ç¡®è®¤svnè¶…çº§ç”¨æˆ·rootå¯†ç ï¼š<input type='password' name='svnpasswd0'>
 <br>&nbsp;
 </fieldset>
 </form>
@@ -205,8 +235,8 @@ if(!empty($sys))
 <?php echo $succinfo;?>
 </div>
 <div style='text-align:center;margin-top:30px;'>
-<button <?php echo $notsucc;?> onclick="submit()">È·¶¨</button> 
-&nbsp; <button <?php echo $succ;?> onclick="next()">ÏÂÒ»²½</button>
+<button <?php echo $notsucc;?> onclick="submit()">ç¡®å®š</button> 
+&nbsp; <button <?php echo $succ;?> onclick="next()">ä¸‹ä¸€æ­¥</button>
 </div>
 </div>
 

@@ -1,9 +1,28 @@
 <?php
-header("content-type:text/html; charset=gb2312");
+ error_reporting(E_ERROR);
+include('../include/charset.php');
 include('../include/requireAuth.php');
 include('../../../config.inc');
 include('../include/dbconnect.php');
-$query="select svnauth_user.user_name,repository,path,permission from svnauth_permission,svnauth_user where svnauth_permission.user_id=svnauth_user.user_id order by repository,path";
+$query="select group_name,group_id from svnauth_group order by group_name";
+$result = mysql_query($query);
+$access_g='';
+while (($result)and($row= mysql_fetch_array($result, MYSQL_BOTH))) {	
+	$gid=$row['group_id'];
+	$gname=$row['group_name'];
+	$sql="select user_name from svnauth_groupuser,svnauth_user where svnauth_user.user_id=svnauth_groupuser.user_id and group_id=$gid and svnauth_user.fresh!=1 group by user_name";
+	$result_u=mysql_query($sql);
+	$user_array=array();
+	while(($result_u)and($row2=mysql_fetch_array($result_u,MYSQL_BOTH))) {	
+		$user=$row2['user_name'];
+		$user_array[]= "$user";
+	}
+	$usr_str=implode(',',$user_array);
+	$access_g .= "$gname=$usr_str\n";
+
+}
+
+$query="select svnauth_user.user_name,repository,path,permission from svnauth_permission,svnauth_user where svnauth_permission.user_id=svnauth_user.user_id and svnauth_user.fresh!=1 order by repository,path";
 $result = mysql_query($query);
 $i=0;
 $repos='';
@@ -148,7 +167,7 @@ $wg=$repos.'_w';
       }
      $groups[$ng.$i]=$temp;
     }
-$access="\n[groups]\n";
+$access="[groups]\n".$access_g;
 foreach($groups as $key => $value)
 {
   if( empty($value))continue;  
@@ -175,17 +194,71 @@ foreach($dirs as $key => $value)
     if(!empty($groups[$rg]))$access .= "@{$rg} = r \n";
   }
 }
+$query="select svnauth_group.group_name,repository,path,permission from svnauth_g_permission,svnauth_group where svnauth_g_permission.group_id=svnauth_group.group_id order by repository,path";
+$result = mysql_query($query);
+while (($result)and($row= mysql_fetch_array($result, MYSQL_BOTH))) {	
+	$gname=$row['group_name'];
+	$priv=$row['permission'];
+	$repos=$row['repository'];
+	$path=$row['path'];
+	switch($priv) 
+	{
+		case 'w':
+			$priv='rw';
+			break;
+		case 'n';
+			$priv='';
+	}
+    if(empty($path))
+    {  
+    	$priv_dir ="\n[$repos]\n";
+    }else{
+       $priv_dir = "\n[$repos:$path]\n";
+    }
+    $mypriv="@{$gname} = $priv \n"; 
+    if(strpos($access,$priv_dir))
+    {
+	    $access=str_replace($priv_dir,$priv_dir.$mypriv,$access);
+    }else
+	    $access = $access.$priv_dir.$mypriv;
+
+	
+}
 //echo str_replace("\n","<br>",$access);
+		if("[groups]\n" == $access)
+		{
+			echo "ÊùÉÈôê‰ø°ÊÅØ‰∏∫Á©∫ÔºÅ";
+			exit;
+		}
+ // backup befor gen_access
+                $today = date("Ymd_His");
+                $backupfile=$accessfile.$today;
+                if (!copy($accessfile, $backupfile)) {
+                    echo "failed to backup $accessfile...\n";
+                }
+                $fs_o=filesize($backupfile);
 
 		$handle=fopen($accessfile,'w+');
 		if (fwrite($handle, $access) === FALSE) {
-       			 echo "<strong>Error:</strong>≤ªƒ‹–¥»ÎµΩŒƒº˛ $accessfile ! ±£¥Ê ß∞‹£°";
+       			 echo "<strong>Error:</strong>‰∏çËÉΩÂÜôÂÖ•Âà∞Êñá‰ª∂ $accessfile ! ‰øùÂ≠òÂ§±Ë¥•ÔºÅ";
 		}else
-			echo "»®œﬁ…˙–ß≥…π¶£°";
+			echo "ÊùÉÈôêÁîüÊïàÊàêÂäüÔºÅ";
 		fclose($handle);
+  // only backup the file which filesize is reduced
+                $fs_n=filesize($accessfile);
+                if($fs_n > $fs_o)unlink($backupfile);
+
 		$fromurl=$_GET['fromurl'];
 		if(empty($fromurl))$fromurl='dirpriv.php';	
-		echo "&nbsp;&nbsp;&nbsp;&nbsp;<a href=$fromurl>∑µªÿ</a>";		
+		echo "&nbsp;&nbsp;&nbsp;&nbsp;<a href=$fromurl>ËøîÂõû</a>";		
+ // record info
+		 openlog("svnMaiaLog", LOG_PID | LOG_PERROR, LOG_LOCAL0);
+                 $time = date("Y/m/d H:i:s");
+		if(isset($_SESSION['username'])){
+			$t_user=$_SESSION['username'];
+		}else
+			$t_user='auto priv';
+                 syslog(LOG_ERR, "$accessfile changed by $t_user,$fromurl, $time");
 		
 
 

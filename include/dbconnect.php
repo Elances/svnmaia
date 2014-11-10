@@ -1,16 +1,16 @@
 <?php
-	$mlink=mysql_connect(SERVER,USERNAME2,PASSWORD2) or die("Êı¾İ¿âÁ´½ÓÊ§°Ü£¡ÇëÁªÏµ¹ÜÀíÔ±");
-	mysql_select_db(DBNAME) or die("²»ÄÜÑ¡ÔñÊı¾İ¿â£¡");
+	$mlink=mysql_connect(SERVER,USERNAME2,PASSWORD2) or die("æ•°æ®åº“é“¾æ¥å¤±è´¥ï¼è¯·è”ç³»ç®¡ç†å‘˜");
+	mysql_select_db(DBNAME) or die("ä¸èƒ½é€‰æ‹©æ•°æ®åº“ï¼");
 //	mysql_query("SET NAMES UTF8"); 
 	$program_char='gbk';
 
 	$pattern='/(\d+)\.\d+\.\d+/i';
-# Èç¹ûÊı¾İÖĞÎÄÂÒÂë£¬ÇëÈ¥µôÏÂÃæ¾ä×ÓµÄ×¢ÊÍ·û'#'
+# å¦‚æœæ•°æ®ä¸­æ–‡ä¹±ç ï¼Œè¯·å»æ‰ä¸‹é¢å¥å­çš„æ³¨é‡Šç¬¦'#'
 #	preg_match($pattern,mysql_get_server_info(),$out);
 	if($out[1] > 4) //mysql version > 4
 	{
 
-//È¡³öµ±Ç°Êı¾İ¿âµÄ×Ö·û¼¯
+//å–å‡ºå½“å‰æ•°æ®åº“çš„å­—ç¬¦é›†
 
 	$sql='SELECT @@character_set_database';
 	$result = mysql_query($sql);

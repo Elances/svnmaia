@@ -1,15 +1,15 @@
 <?php
 session_start();
-header("content-type:text/html; charset=gb2312");
+include('../include/charset.php');
   // error_reporting(0);
 if (!isset($_SESSION['username'])){	
-	echo "ÇëÏÈ<a href='./loginfrm.php'>µÇÂ¼</a> £¡";
+	echo "è¯·å…ˆ<a href='./loginfrm.php'>ç™»å½•</a> ï¼";
 	echo" <script>setTimeout('document.location.href=\"./loginfrm.php\"',0)</script>";  	
 	exit;
 }
 if ($_SESSION['role'] !='admin')
 {
-	echo "ÄúÎŞÈ¨½øĞĞ´Ë²Ù×÷£¡";
+	echo "æ‚¨æ— æƒè¿›è¡Œæ­¤æ“ä½œï¼";
 	exit;
 }
 include('../../../config.inc');
@@ -23,7 +23,7 @@ $userArray=$_POST["userArray"];
 	$paras_array='';
 	if(empty($userArray))
 	{
-	  echo " <script>window.alert(\"Ñ¡ÔñÎª¿Õ£¡\")</script>";
+	  echo " <script>window.alert(\"é€‰æ‹©ä¸ºç©ºï¼\")</script>";
 			echo " <script>setTimeout('document.location.href=\"javascript:history.back()\"',3)</script>";
 			exit;	
 	}			
@@ -35,24 +35,24 @@ $userArray=$_POST["userArray"];
  
 	$paras=implode(' or ',$paras_array);
 	$sc=true;
-	if($action == 'ÖØÉèÓĞĞ§ÆÚ')
+	if($action == 'é‡è®¾æœ‰æ•ˆæœŸ')
 	{
 		$expire=$_POST['expire'];
 		if(is_numeric($expire)){
 			//$expire=mktime(0, 0, 0, date("m")  , date("d")+$expire, date("Y"));
 			$expire=date('Y-m-d' , strtotime("+$expire day"));
-			$query="update svnauth_user set expire=\"$expire\" where $paras";
+			$query="update svnauth_user set expire=\"$expire\" , infotimes=0 where $paras";
 			mysql_query($query) or $sc=false;
 		}
 	}
-	if($action == 'µ½ÆÚ²»Í¨Öª')
+	if($action == 'åˆ°æœŸä¸é€šçŸ¥')
 	{
 		$query="update svnauth_user set infotimes=4 where $paras";
 		mysql_query($query) or $sc=false;
 	}
 	if($sc)
 	{
-		echo "<p style='text-align:center;line-height:2;border:solid 1px;background:#ecf0e1;margin-top:200px;'><br>ÉèÖÃ³É¹¦£¡<br>Äã¿ÉÁ¢¿Ì<a href='./scheme.php'>ÔËĞĞÇåÀí¼Æ»®</a>½øĞĞÇåÀí£¡";
-		echo "<br>»òÕß<a href=./cleanuser.php>·µ»Ø¼ÌĞø²Ù×÷</a>£¡<br></p>";
+		echo "<p style='text-align:center;line-height:2;border:solid 1px;background:#ecf0e1;margin-top:200px;'><br>è®¾ç½®æˆåŠŸï¼<br>ä½ å¯ç«‹åˆ»<a href='./scheme.php'>è¿è¡Œæ¸…ç†è®¡åˆ’</a>è¿›è¡Œæ¸…ç†ï¼";
+		echo "<br>æˆ–è€…<a href=./cleanuser.php>è¿”å›ç»§ç»­æ“ä½œ</a>ï¼<br></p>";
 	}
 ?>
